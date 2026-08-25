@@ -35,6 +35,7 @@ import {
   postApiV1MediaConfirm,
   postApiV1Post,
 } from "@lib/api-client/generated/sdk.gen"
+import { MEDIA_UPLOADS_ENABLED } from "@frontends/dashboard/lib/features"
 import { DraftsDialog, type DraftItem } from "@frontends/dashboard/components/DraftsDialog"
 import { ScheduleDialog } from "@frontends/dashboard/components/ScheduleDialog"
 import {
@@ -749,10 +750,14 @@ export function SubmitForm({ fixedCommunity }: SubmitFormProps) {
             <Link2 className="size-4" />
             Link
           </TabsTrigger>
-          <TabsTrigger value="media">
-            <Image className="size-4" />
-            Media
-          </TabsTrigger>
+          {/* Every path through the Media tab needs an upload, so hide it wholesale rather
+              than leaving a tab that dead-ends on a 503. */}
+          {MEDIA_UPLOADS_ENABLED && (
+            <TabsTrigger value="media">
+              <Image className="size-4" />
+              Media
+            </TabsTrigger>
+          )}
         </TabsList>
       </Tabs>
 

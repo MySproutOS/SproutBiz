@@ -17,6 +17,7 @@ import {
 } from "@lib/api-client/generated/sdk.gen"
 import { ImageCropDialog } from "@frontends/dashboard/components/ImageCropDialog"
 import { mediaUrl } from "@frontends/dashboard/lib/mediaUrl"
+import { MEDIA_UPLOADS_ENABLED } from "@frontends/dashboard/lib/features"
 import { uploadToPresigned } from "@frontends/dashboard/lib/mediaUpload"
 import { ImagePlus } from "lucide-react"
 import { toast } from "sonner"
@@ -113,16 +114,18 @@ export function CommunityAppearanceDialog({
                 />
               ) : null}
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-fit"
-              disabled={uploading}
-              onClick={() => bannerInputRef.current?.click()}
-            >
-              <ImagePlus className="size-4" />
-              Change banner
-            </Button>
+            {MEDIA_UPLOADS_ENABLED && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-fit"
+                disabled={uploading}
+                onClick={() => bannerInputRef.current?.click()}
+              >
+                <ImagePlus className="size-4" />
+                Change banner
+              </Button>
+            )}
             <input
               ref={bannerInputRef}
               type="file"
@@ -145,16 +148,22 @@ export function CommunityAppearanceDialog({
             />
             <div className="flex flex-col gap-1">
               <Label>Icon</Label>
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-fit"
-                disabled={uploading}
-                onClick={() => iconInputRef.current?.click()}
-              >
-                <ImagePlus className="size-4" />
-                Change icon
-              </Button>
+              {MEDIA_UPLOADS_ENABLED ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-fit"
+                  disabled={uploading}
+                  onClick={() => iconInputRef.current?.click()}
+                >
+                  <ImagePlus className="size-4" />
+                  Change icon
+                </Button>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Image uploads are turned off for now.
+                </p>
+              )}
               <input
                 ref={iconInputRef}
                 type="file"
