@@ -30,7 +30,7 @@ sudo chown -R ubuntu:ubuntu /srv/forum
 
 echo
 echo "==> Done. Next:"
-echo "    1. Copy docker-compose.production.yml, garage.toml, and bin/deploy/*.sh to /opt/forum"
+echo "    1. Copy docker-compose.production.yml and bin/deploy/*.sh to /opt/forum"
 echo "    2. Write /opt/forum/.env and /opt/forum/.env.production (chmod 600)"
 echo "    3. docker login ghcr.io -u SproutOS-Agent   (needs a token with read:packages)"
-echo "    4. bring the data services up, then run garage-init-prod.sh"
+echo "    4. bring the data services up, then run the migrator"
