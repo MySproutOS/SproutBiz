@@ -25,7 +25,7 @@ chmod 700 /opt/forum/letsencrypt
 # deliberately NOT on /data -- that spindle carries Kafka and ClickHouse, the noisiest IO on
 # the machine.
 echo "==> Creating /srv/forum data directories on the root disk"
-sudo mkdir -p /srv/forum/{postgres,valkey,elasticsearch,garage/data,garage/meta}
+sudo mkdir -p /srv/forum/{postgres,valkey,elasticsearch}
 sudo chown -R ubuntu:ubuntu /srv/forum
 
 echo
