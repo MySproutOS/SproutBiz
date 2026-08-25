@@ -1,5 +1,9 @@
 # Deployed to /opt/forum/garage.toml. rpc_secret and admin_token are generated per-host with
 # `openssl rand -hex 32` and filled in there; they are not committed.
+#
+# The two placeholders are deliberately different strings: with one shared placeholder, a
+# single sed fills both with the same value and the admin token silently becomes the RPC
+# secret.
 
 metadata_dir = "/var/lib/garage/meta"
 data_dir = "/var/lib/garage/data"
@@ -10,7 +14,7 @@ replication_factor = 1
 
 rpc_bind_addr = "[::]:3901"
 rpc_public_addr = "127.0.0.1:3901"
-rpc_secret = "REPLACE_ME_OPENSSL_RAND_HEX_32"
+rpc_secret = "REPLACE_ME_RPC_SECRET"
 
 [s3_api]
 s3_region = "garage"
@@ -27,4 +31,4 @@ index = "index.html"
 
 [admin]
 api_bind_addr = "[::]:3903"
-admin_token = "REPLACE_ME_OPENSSL_RAND_HEX_32"
+admin_token = "REPLACE_ME_ADMIN_TOKEN"
