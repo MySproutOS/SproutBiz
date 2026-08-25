@@ -39,6 +39,11 @@ export default async function HomeLanding() {
           open, whether or not that is flattering.
         </p>
         <div className="flex flex-wrap items-center gap-3">
+          {/* Getting started is the primary action: the page's whole argument is that anyone
+              can take part, so the button that acts on that should be the loudest one. */}
+          <Link href="/onboarding" className={buttonVariants({ size: "lg" })}>
+            Get started
+          </Link>
           <DonateButton />
           <Link href="/revenue" className={buttonVariants({ variant: "outline", size: "lg" })}>
             See every business

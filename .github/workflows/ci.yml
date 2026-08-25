@@ -44,8 +44,21 @@ jobs:
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
+      # The rate limiter is backed by Valkey, and it fails open when Valkey is unreachable.
+      # Without this service its tests would pass vacuously in CI -- every request "allowed"
+      # because nothing is counting -- which is worse than not testing it at all.
+      valkey:
+        image: valkey/valkey:9.0-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "valkey-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     env:
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/main
+      VALKEY_URL: redis://localhost:6379
     steps:
       - uses: actions/checkout@v5
       - name: Install pnpm

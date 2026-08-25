@@ -36,7 +36,8 @@ export function DonateButton() {
 
   return (
     <div className="flex flex-col gap-2">
-      <Button onClick={donate} disabled={pending} size="lg">
+      {/* Secondary to "Get started": funding matters, but taking part matters more. */}
+      <Button onClick={donate} disabled={pending} size="lg" variant="outline">
         {pending ? "Redirecting…" : "Fund the experiment"}
       </Button>
       {error && <span className="text-sm text-destructive">{error}</span>}
