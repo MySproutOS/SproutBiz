@@ -120,8 +120,8 @@ describe.skipIf(process.env.CI === "true")("crudNotification.emit gate", () => {
   })
 
   it("skips when the recipient set the type level to off", async () => {
-    await crudUserNotificationPreference(db).upsert(userA, "chat_request", "off")
-    const result = await crudNotification(db).emit("chat_request", {
+    await crudUserNotificationPreference(db).upsert(userA, "mod_invite", "off")
+    const result = await crudNotification(db).emit("mod_invite", {
       userId: userA,
       actorUserId: userB,
     })

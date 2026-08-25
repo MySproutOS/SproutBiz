@@ -9,7 +9,6 @@ export const NOTIFICATION_TYPES = [
   "new_follower",
   "mod_invite",
   "mod_action_on_you",
-  "chat_request",
   "join_request_approved",
   "welcome",
 ] as const

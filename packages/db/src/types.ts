@@ -41,35 +41,6 @@ export interface Account {
   userId: string
 }
 
-export interface ChatConversation {
-  createdAt: Generated<Timestamp>
-  createdByUserId: string | null
-  id: string
-  isGroup: Generated<boolean>
-  lastMessageAt: Generated<Timestamp>
-  name: string | null
-}
-
-export interface ChatMessage {
-  body: string
-  conversationId: string
-  createdAt: Generated<Timestamp>
-  deletedAt: Timestamp | null
-  id: string
-  senderUserId: string | null
-}
-
-export interface ChatParticipant {
-  conversationId: string
-  createdAt: Generated<Timestamp>
-  hiddenAt: Timestamp | null
-  id: string
-  lastReadAt: Timestamp | null
-  role: Generated<string>
-  status: Generated<string>
-  userId: string
-}
-
 export interface Comment {
   approvedAt: Timestamp | null
   approvedByUserId: string | null
@@ -359,7 +330,6 @@ export interface Notification {
   archivedAt: Timestamp | null
   commentId: string | null
   communityId: string | null
-  conversationId: string | null
   createdAt: Generated<Timestamp>
   id: string
   postId: string | null
@@ -605,7 +575,6 @@ export interface UserSettings {
   allowFollows: Generated<boolean>
   autoplayMedia: Generated<boolean>
   blurMature: Generated<boolean>
-  chatRequestPolicy: Generated<string>
   createdAt: Generated<Timestamp>
   defaultMarkdownEditor: Generated<boolean>
   displayMode: Generated<string>
@@ -650,9 +619,6 @@ export interface WikiRevision {
 
 export interface DB {
   account: Account
-  chatConversation: ChatConversation
-  chatMessage: ChatMessage
-  chatParticipant: ChatParticipant
   comment: Comment
   commentFollow: CommentFollow
   commentReport: CommentReport

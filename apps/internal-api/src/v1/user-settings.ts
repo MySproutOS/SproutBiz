@@ -18,7 +18,6 @@ type UserSettingsResponse = Static<typeof userSettingsSchemaResponse>
 const USER_SETTINGS_DEFAULTS: UserSettingsResponse = {
   displayMode: "auto",
   feedView: "card",
-  chatRequestPolicy: "everyone",
   defaultMarkdownEditor: false,
   showMature: false,
   blurMature: true,
@@ -38,7 +37,6 @@ function toResponse(settings: UserSettingsResponse): UserSettingsResponse {
   return {
     displayMode: settings.displayMode,
     feedView: settings.feedView,
-    chatRequestPolicy: settings.chatRequestPolicy,
     defaultMarkdownEditor: settings.defaultMarkdownEditor,
     showMature: settings.showMature,
     blurMature: settings.blurMature,

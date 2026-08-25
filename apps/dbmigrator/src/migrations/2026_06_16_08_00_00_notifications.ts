@@ -10,9 +10,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("post_id", "uuid", (col) => col.references("post.id").onDelete("cascade"))
     .addColumn("comment_id", "uuid", (col) => col.references("comment.id").onDelete("cascade"))
     .addColumn("community_id", "uuid", (col) => col.references("community.id").onDelete("cascade"))
-    .addColumn("conversation_id", "uuid", (col) =>
-      col.references("chat_conversation.id").onDelete("cascade"),
-    )
     .addColumn("preview_snapshot", "jsonb")
     .addColumn("read_at", "timestamptz")
     .addColumn("archived_at", "timestamptz")

@@ -10,8 +10,6 @@ import {
 
 import { client } from "../client.gen"
 import {
-  deleteApiV1ChatByConversationIdParticipantsByUserId,
-  deleteApiV1ChatMessageByMessageId,
   deleteApiV1CommentActionFollowByCommentId,
   deleteApiV1CommentActionSaveByCommentId,
   deleteApiV1CommentById,
@@ -42,9 +40,6 @@ import {
   deleteApiV1UserMeDelete,
   deleteApiV1UserMeSocialLinksById,
   getApiV1AuthMe,
-  getApiV1Chat,
-  getApiV1ChatByConversationIdMessages,
-  getApiV1ChatUnreadCount,
   getApiV1CommentPostByPostId,
   getApiV1CommunityByIdSettings,
   getApiV1CommunityByName,
@@ -114,7 +109,6 @@ import {
   getApiV1WikiByCommunityNameBySlug,
   getApiV1WikiByCommunityNameBySlugRevisions,
   type Options,
-  patchApiV1ChatByConversationId,
   patchApiV1CommentById,
   patchApiV1CommunityById,
   patchApiV1CommunityMemberByCommunityIdMembership,
@@ -133,14 +127,6 @@ import {
   patchApiV1UserMe,
   patchApiV1UserMeSettings,
   postApiV1AuthLogout,
-  postApiV1ChatByConversationIdAccept,
-  postApiV1ChatByConversationIdHide,
-  postApiV1ChatByConversationIdIgnore,
-  postApiV1ChatByConversationIdLeave,
-  postApiV1ChatByConversationIdMessages,
-  postApiV1ChatByConversationIdRead,
-  postApiV1ChatDm,
-  postApiV1ChatGroup,
   postApiV1Comment,
   postApiV1Community,
   postApiV1CommunityJoinRequestByIdApprove,
@@ -214,12 +200,6 @@ import {
   putApiV1WikiByCommunityNameBySlug,
 } from "../sdk.gen"
 import type {
-  DeleteApiV1ChatByConversationIdParticipantsByUserIdData,
-  DeleteApiV1ChatByConversationIdParticipantsByUserIdError,
-  DeleteApiV1ChatByConversationIdParticipantsByUserIdResponse,
-  DeleteApiV1ChatMessageByMessageIdData,
-  DeleteApiV1ChatMessageByMessageIdError,
-  DeleteApiV1ChatMessageByMessageIdResponse,
   DeleteApiV1CommentActionFollowByCommentIdData,
   DeleteApiV1CommentActionFollowByCommentIdResponse,
   DeleteApiV1CommentActionSaveByCommentIdData,
@@ -302,13 +282,6 @@ import type {
   DeleteApiV1UserMeSocialLinksByIdResponse,
   GetApiV1AuthMeData,
   GetApiV1AuthMeResponse,
-  GetApiV1ChatByConversationIdMessagesData,
-  GetApiV1ChatByConversationIdMessagesError,
-  GetApiV1ChatByConversationIdMessagesResponse,
-  GetApiV1ChatData,
-  GetApiV1ChatResponse,
-  GetApiV1ChatUnreadCountData,
-  GetApiV1ChatUnreadCountResponse,
   GetApiV1CommentPostByPostIdData,
   GetApiV1CommentPostByPostIdError,
   GetApiV1CommentPostByPostIdResponse,
@@ -482,9 +455,6 @@ import type {
   GetApiV1WikiByCommunityNameData,
   GetApiV1WikiByCommunityNameError,
   GetApiV1WikiByCommunityNameResponse,
-  PatchApiV1ChatByConversationIdData,
-  PatchApiV1ChatByConversationIdError,
-  PatchApiV1ChatByConversationIdResponse,
   PatchApiV1CommentByIdData,
   PatchApiV1CommentByIdError,
   PatchApiV1CommentByIdResponse,
@@ -539,30 +509,6 @@ import type {
   PostApiV1AuthLogoutData,
   PostApiV1AuthLogoutError,
   PostApiV1AuthLogoutResponse,
-  PostApiV1ChatByConversationIdAcceptData,
-  PostApiV1ChatByConversationIdAcceptError,
-  PostApiV1ChatByConversationIdAcceptResponse,
-  PostApiV1ChatByConversationIdHideData,
-  PostApiV1ChatByConversationIdHideError,
-  PostApiV1ChatByConversationIdHideResponse,
-  PostApiV1ChatByConversationIdIgnoreData,
-  PostApiV1ChatByConversationIdIgnoreError,
-  PostApiV1ChatByConversationIdIgnoreResponse,
-  PostApiV1ChatByConversationIdLeaveData,
-  PostApiV1ChatByConversationIdLeaveError,
-  PostApiV1ChatByConversationIdLeaveResponse,
-  PostApiV1ChatByConversationIdMessagesData,
-  PostApiV1ChatByConversationIdMessagesError,
-  PostApiV1ChatByConversationIdMessagesResponse,
-  PostApiV1ChatByConversationIdReadData,
-  PostApiV1ChatByConversationIdReadError,
-  PostApiV1ChatByConversationIdReadResponse,
-  PostApiV1ChatDmData,
-  PostApiV1ChatDmError,
-  PostApiV1ChatDmResponse,
-  PostApiV1ChatGroupData,
-  PostApiV1ChatGroupError,
-  PostApiV1ChatGroupResponse,
   PostApiV1CommentData,
   PostApiV1CommentError,
   PostApiV1CommentResponse,
@@ -6316,433 +6262,6 @@ export const patchApiV1RemovalReasonReasonByIdMutation = (
   > = {
     mutationFn: async (fnOptions) => {
       const { data } = await patchApiV1RemovalReasonReasonById({
-        ...options,
-        ...fnOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-export const getApiV1ChatQueryKey = (options?: Options<GetApiV1ChatData>) =>
-  createQueryKey("getApiV1Chat", options)
-
-/**
- * List the current user's chat conversations
- */
-export const getApiV1ChatOptions = (options?: Options<GetApiV1ChatData>) =>
-  queryOptions<
-    GetApiV1ChatResponse,
-    DefaultError,
-    GetApiV1ChatResponse,
-    ReturnType<typeof getApiV1ChatQueryKey>
-  >({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getApiV1Chat({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: getApiV1ChatQueryKey(options),
-  })
-
-export const getApiV1ChatUnreadCountQueryKey = (options?: Options<GetApiV1ChatUnreadCountData>) =>
-  createQueryKey("getApiV1ChatUnreadCount", options)
-
-/**
- * Total number of conversations with unread messages
- */
-export const getApiV1ChatUnreadCountOptions = (options?: Options<GetApiV1ChatUnreadCountData>) =>
-  queryOptions<
-    GetApiV1ChatUnreadCountResponse,
-    DefaultError,
-    GetApiV1ChatUnreadCountResponse,
-    ReturnType<typeof getApiV1ChatUnreadCountQueryKey>
-  >({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getApiV1ChatUnreadCount({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: getApiV1ChatUnreadCountQueryKey(options),
-  })
-
-/**
- * Create or reuse a direct message conversation and send the first message
- */
-export const postApiV1ChatDmMutation = (
-  options?: Partial<Options<PostApiV1ChatDmData>>,
-): UseMutationOptions<
-  PostApiV1ChatDmResponse,
-  PostApiV1ChatDmError,
-  Options<PostApiV1ChatDmData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    PostApiV1ChatDmResponse,
-    PostApiV1ChatDmError,
-    Options<PostApiV1ChatDmData>
-  > = {
-    mutationFn: async (fnOptions) => {
-      const { data } = await postApiV1ChatDm({
-        ...options,
-        ...fnOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-/**
- * Create a group chat and send the first message
- */
-export const postApiV1ChatGroupMutation = (
-  options?: Partial<Options<PostApiV1ChatGroupData>>,
-): UseMutationOptions<
-  PostApiV1ChatGroupResponse,
-  PostApiV1ChatGroupError,
-  Options<PostApiV1ChatGroupData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    PostApiV1ChatGroupResponse,
-    PostApiV1ChatGroupError,
-    Options<PostApiV1ChatGroupData>
-  > = {
-    mutationFn: async (fnOptions) => {
-      const { data } = await postApiV1ChatGroup({
-        ...options,
-        ...fnOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-export const getApiV1ChatByConversationIdMessagesQueryKey = (
-  options: Options<GetApiV1ChatByConversationIdMessagesData>,
-) => createQueryKey("getApiV1ChatByConversationIdMessages", options)
-
-/**
- * Fetch messages for a conversation (polling via ?after, backscroll via ?cursor)
- */
-export const getApiV1ChatByConversationIdMessagesOptions = (
-  options: Options<GetApiV1ChatByConversationIdMessagesData>,
-) =>
-  queryOptions<
-    GetApiV1ChatByConversationIdMessagesResponse,
-    GetApiV1ChatByConversationIdMessagesError,
-    GetApiV1ChatByConversationIdMessagesResponse,
-    ReturnType<typeof getApiV1ChatByConversationIdMessagesQueryKey>
-  >({
-    queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getApiV1ChatByConversationIdMessages({
-        ...options,
-        ...queryKey[0],
-        signal,
-        throwOnError: true,
-      })
-      return data
-    },
-    queryKey: getApiV1ChatByConversationIdMessagesQueryKey(options),
-  })
-
-export const getApiV1ChatByConversationIdMessagesInfiniteQueryKey = (
-  options: Options<GetApiV1ChatByConversationIdMessagesData>,
-): QueryKey<Options<GetApiV1ChatByConversationIdMessagesData>> =>
-  createQueryKey("getApiV1ChatByConversationIdMessages", options, true)
-
-/**
- * Fetch messages for a conversation (polling via ?after, backscroll via ?cursor)
- */
-export const getApiV1ChatByConversationIdMessagesInfiniteOptions = (
-  options: Options<GetApiV1ChatByConversationIdMessagesData>,
-) => {
-  const opts = infiniteQueryOptions<
-    GetApiV1ChatByConversationIdMessagesResponse,
-    GetApiV1ChatByConversationIdMessagesError,
-    InfiniteData<GetApiV1ChatByConversationIdMessagesResponse>,
-    QueryKey<Options<GetApiV1ChatByConversationIdMessagesData>>,
-    | string
-    | Pick<
-        QueryKey<Options<GetApiV1ChatByConversationIdMessagesData>>[0],
-        "body" | "headers" | "path" | "query"
-      >
-  >(
-    // @ts-ignore
-    {
-      queryFn: async ({ pageParam, queryKey, signal }) => {
-        // @ts-ignore
-        const page: Pick<
-          QueryKey<Options<GetApiV1ChatByConversationIdMessagesData>>[0],
-          "body" | "headers" | "path" | "query"
-        > =
-          typeof pageParam === "object"
-            ? pageParam
-            : {
-                query: {
-                  after: pageParam,
-                },
-              }
-        const params = createInfiniteParams(queryKey, page)
-        const { data } = await getApiV1ChatByConversationIdMessages({
-          ...options,
-          ...params,
-          signal,
-          throwOnError: true,
-        })
-        return data
-      },
-      queryKey: getApiV1ChatByConversationIdMessagesInfiniteQueryKey(options),
-    },
-  )
-  return opts as Omit<typeof opts, "initialData">
-}
-
-/**
- * Send a message to a conversation
- */
-export const postApiV1ChatByConversationIdMessagesMutation = (
-  options?: Partial<Options<PostApiV1ChatByConversationIdMessagesData>>,
-): UseMutationOptions<
-  PostApiV1ChatByConversationIdMessagesResponse,
-  PostApiV1ChatByConversationIdMessagesError,
-  Options<PostApiV1ChatByConversationIdMessagesData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    PostApiV1ChatByConversationIdMessagesResponse,
-    PostApiV1ChatByConversationIdMessagesError,
-    Options<PostApiV1ChatByConversationIdMessagesData>
-  > = {
-    mutationFn: async (fnOptions) => {
-      const { data } = await postApiV1ChatByConversationIdMessages({
-        ...options,
-        ...fnOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-/**
- * Mark a conversation as read
- */
-export const postApiV1ChatByConversationIdReadMutation = (
-  options?: Partial<Options<PostApiV1ChatByConversationIdReadData>>,
-): UseMutationOptions<
-  PostApiV1ChatByConversationIdReadResponse,
-  PostApiV1ChatByConversationIdReadError,
-  Options<PostApiV1ChatByConversationIdReadData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    PostApiV1ChatByConversationIdReadResponse,
-    PostApiV1ChatByConversationIdReadError,
-    Options<PostApiV1ChatByConversationIdReadData>
-  > = {
-    mutationFn: async (fnOptions) => {
-      const { data } = await postApiV1ChatByConversationIdRead({
-        ...options,
-        ...fnOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-/**
- * Accept a chat request
- */
-export const postApiV1ChatByConversationIdAcceptMutation = (
-  options?: Partial<Options<PostApiV1ChatByConversationIdAcceptData>>,
-): UseMutationOptions<
-  PostApiV1ChatByConversationIdAcceptResponse,
-  PostApiV1ChatByConversationIdAcceptError,
-  Options<PostApiV1ChatByConversationIdAcceptData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    PostApiV1ChatByConversationIdAcceptResponse,
-    PostApiV1ChatByConversationIdAcceptError,
-    Options<PostApiV1ChatByConversationIdAcceptData>
-  > = {
-    mutationFn: async (fnOptions) => {
-      const { data } = await postApiV1ChatByConversationIdAccept({
-        ...options,
-        ...fnOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-/**
- * Ignore a chat request
- */
-export const postApiV1ChatByConversationIdIgnoreMutation = (
-  options?: Partial<Options<PostApiV1ChatByConversationIdIgnoreData>>,
-): UseMutationOptions<
-  PostApiV1ChatByConversationIdIgnoreResponse,
-  PostApiV1ChatByConversationIdIgnoreError,
-  Options<PostApiV1ChatByConversationIdIgnoreData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    PostApiV1ChatByConversationIdIgnoreResponse,
-    PostApiV1ChatByConversationIdIgnoreError,
-    Options<PostApiV1ChatByConversationIdIgnoreData>
-  > = {
-    mutationFn: async (fnOptions) => {
-      const { data } = await postApiV1ChatByConversationIdIgnore({
-        ...options,
-        ...fnOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-/**
- * Leave a conversation
- */
-export const postApiV1ChatByConversationIdLeaveMutation = (
-  options?: Partial<Options<PostApiV1ChatByConversationIdLeaveData>>,
-): UseMutationOptions<
-  PostApiV1ChatByConversationIdLeaveResponse,
-  PostApiV1ChatByConversationIdLeaveError,
-  Options<PostApiV1ChatByConversationIdLeaveData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    PostApiV1ChatByConversationIdLeaveResponse,
-    PostApiV1ChatByConversationIdLeaveError,
-    Options<PostApiV1ChatByConversationIdLeaveData>
-  > = {
-    mutationFn: async (fnOptions) => {
-      const { data } = await postApiV1ChatByConversationIdLeave({
-        ...options,
-        ...fnOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-/**
- * Hide a conversation until the next message
- */
-export const postApiV1ChatByConversationIdHideMutation = (
-  options?: Partial<Options<PostApiV1ChatByConversationIdHideData>>,
-): UseMutationOptions<
-  PostApiV1ChatByConversationIdHideResponse,
-  PostApiV1ChatByConversationIdHideError,
-  Options<PostApiV1ChatByConversationIdHideData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    PostApiV1ChatByConversationIdHideResponse,
-    PostApiV1ChatByConversationIdHideError,
-    Options<PostApiV1ChatByConversationIdHideData>
-  > = {
-    mutationFn: async (fnOptions) => {
-      const { data } = await postApiV1ChatByConversationIdHide({
-        ...options,
-        ...fnOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-/**
- * Rename a group conversation (host only)
- */
-export const patchApiV1ChatByConversationIdMutation = (
-  options?: Partial<Options<PatchApiV1ChatByConversationIdData>>,
-): UseMutationOptions<
-  PatchApiV1ChatByConversationIdResponse,
-  PatchApiV1ChatByConversationIdError,
-  Options<PatchApiV1ChatByConversationIdData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    PatchApiV1ChatByConversationIdResponse,
-    PatchApiV1ChatByConversationIdError,
-    Options<PatchApiV1ChatByConversationIdData>
-  > = {
-    mutationFn: async (fnOptions) => {
-      const { data } = await patchApiV1ChatByConversationId({
-        ...options,
-        ...fnOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-/**
- * Remove a participant from a group conversation (host only)
- */
-export const deleteApiV1ChatByConversationIdParticipantsByUserIdMutation = (
-  options?: Partial<Options<DeleteApiV1ChatByConversationIdParticipantsByUserIdData>>,
-): UseMutationOptions<
-  DeleteApiV1ChatByConversationIdParticipantsByUserIdResponse,
-  DeleteApiV1ChatByConversationIdParticipantsByUserIdError,
-  Options<DeleteApiV1ChatByConversationIdParticipantsByUserIdData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    DeleteApiV1ChatByConversationIdParticipantsByUserIdResponse,
-    DeleteApiV1ChatByConversationIdParticipantsByUserIdError,
-    Options<DeleteApiV1ChatByConversationIdParticipantsByUserIdData>
-  > = {
-    mutationFn: async (fnOptions) => {
-      const { data } = await deleteApiV1ChatByConversationIdParticipantsByUserId({
-        ...options,
-        ...fnOptions,
-        throwOnError: true,
-      })
-      return data
-    },
-  }
-  return mutationOptions
-}
-
-/**
- * Delete one of your own messages
- */
-export const deleteApiV1ChatMessageByMessageIdMutation = (
-  options?: Partial<Options<DeleteApiV1ChatMessageByMessageIdData>>,
-): UseMutationOptions<
-  DeleteApiV1ChatMessageByMessageIdResponse,
-  DeleteApiV1ChatMessageByMessageIdError,
-  Options<DeleteApiV1ChatMessageByMessageIdData>
-> => {
-  const mutationOptions: UseMutationOptions<
-    DeleteApiV1ChatMessageByMessageIdResponse,
-    DeleteApiV1ChatMessageByMessageIdError,
-    Options<DeleteApiV1ChatMessageByMessageIdData>
-  > = {
-    mutationFn: async (fnOptions) => {
-      const { data } = await deleteApiV1ChatMessageByMessageId({
         ...options,
         ...fnOptions,
         throwOnError: true,

@@ -86,7 +86,6 @@ const app = new Hono()
           postId: n.postId,
           commentId: n.commentId,
           communityId: n.communityId,
-          conversationId: n.conversationId,
           previewSnapshot: n.previewSnapshot,
           isRead: n.readAt !== null,
           createdAt: n.createdAt.toISOString(),

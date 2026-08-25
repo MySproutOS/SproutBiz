@@ -2,7 +2,6 @@ import {
   ArrowBigUp,
   AtSign,
   Bell,
-  Mail,
   MessageSquare,
   PartyPopper,
   Shield,
@@ -46,7 +45,6 @@ const ICONS: Record<string, LucideIcon> = {
   new_follower: UserPlus,
   mod_invite: Shield,
   mod_action_on_you: Shield,
-  chat_request: Mail,
   join_request_approved: PartyPopper,
   welcome: PartyPopper,
 }
@@ -81,8 +79,6 @@ export function describeNotification(n: NotificationItem): string {
       return community
         ? `A moderator action in ${community} affected you`
         : "A moderator action affected you"
-    case "chat_request":
-      return `${actor} wants to chat with you`
     case "join_request_approved":
       return community
         ? `Your request to join ${community} was approved`
@@ -117,8 +113,6 @@ export function destinationFor(n: NotificationItem): string {
   switch (n.type) {
     case "new_follower":
       return s?.actorUsername ? `/user/${s.actorUsername}` : "/notifications"
-    case "chat_request":
-      return "/chat?filter=requests"
     case "join_request_approved":
       return s?.communityName ? `/r/${s.communityName}` : "/notifications"
     case "welcome":
@@ -183,11 +177,6 @@ export const PREFERENCE_TYPES: { type: string; label: string; description: strin
     type: "mod_action_on_you",
     label: "Moderator actions",
     description: "When a moderator action affects you or your content.",
-  },
-  {
-    type: "chat_request",
-    label: "Chat requests",
-    description: "When someone requests to chat with you.",
   },
   {
     type: "join_request_approved",

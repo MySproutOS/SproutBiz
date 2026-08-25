@@ -32,7 +32,6 @@ export const notificationListSchemaResponse = Type.Object({
       postId: Nullable(UUID7String),
       commentId: Nullable(UUID7String),
       communityId: Nullable(UUID7String),
-      conversationId: Nullable(UUID7String),
       previewSnapshot: Nullable(previewSnapshotSchema),
       isRead: Type.Boolean(),
       createdAt: Type.String({ format: "date-time" }),

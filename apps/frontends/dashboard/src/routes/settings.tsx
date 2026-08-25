@@ -129,12 +129,6 @@ const TOGGLES: { key: keyof SettingsBody; label: string; description: string }[]
   },
 ]
 
-const CHAT_POLICIES: { value: NonNullable<SettingsBody["chatRequestPolicy"]>; label: string }[] = [
-  { value: "everyone", label: "Everyone" },
-  { value: "accounts_30d", label: "Accounts older than 30 days" },
-  { value: "nobody", label: "Nobody" },
-]
-
 function AccountTab() {
   const { data: user } = useQuery(getApiV1UserMeOptions())
   const deleteMutation = useMutation({
@@ -523,39 +517,6 @@ function PreferencesTab() {
               </div>
             </div>
           ))}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Chat</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <Label>Who can send you chat requests</Label>
-              <p className="text-sm text-muted-foreground">Control who can message you.</p>
-            </div>
-            <Select
-              value={settings?.chatRequestPolicy ?? "everyone"}
-              onValueChange={(next) => {
-                save({
-                  chatRequestPolicy: next as NonNullable<SettingsBody["chatRequestPolicy"]>,
-                })
-              }}
-            >
-              <SelectTrigger className="w-56">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {CHAT_POLICIES.map(({ value, label }) => (
-                  <SelectItem key={value} value={value}>
-                    {label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
         </CardContent>
       </Card>
     </div>

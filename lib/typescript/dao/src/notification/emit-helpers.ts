@@ -328,19 +328,6 @@ export async function emitUserBanned(
   })
 }
 
-export async function emitChatRequest(
-  db: Kysely<DB>,
-  args: { recipientUserId: string; actorUserId: string; conversationId: string },
-): Promise<void> {
-  const actorUsername = await loadActorUsername(db, args.actorUserId)
-  await crudNotification(db).emit("chat_request", {
-    userId: args.recipientUserId,
-    actorUserId: args.actorUserId,
-    conversationId: args.conversationId,
-    previewSnapshot: { actorUsername },
-  })
-}
-
 export async function emitJoinRequestApproved(
   db: Kysely<DB>,
   args: { userId: string; actorUserId: string; communityId: string },

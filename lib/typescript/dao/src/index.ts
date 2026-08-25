@@ -64,7 +64,6 @@ export { crudNotification } from "./notification/crud"
 export { fetchNotification } from "./notification/fetch"
 export type { NotificationCursor } from "./notification/fetch"
 export {
-  emitChatRequest,
   emitCommentReplyAndMentions,
   emitCommentUpvoteMilestone,
   emitContentRemoved,

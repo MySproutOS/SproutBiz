@@ -8,16 +8,9 @@ const displayModeSchema = Type.Union([
 
 const feedViewSchema = Type.Union([Type.Literal("card"), Type.Literal("compact")])
 
-const chatRequestPolicySchema = Type.Union([
-  Type.Literal("everyone"),
-  Type.Literal("accounts_30d"),
-  Type.Literal("nobody"),
-])
-
 export const userSettingsSchemaResponse = Type.Object({
   displayMode: Type.String(),
   feedView: Type.String(),
-  chatRequestPolicy: Type.String(),
   defaultMarkdownEditor: Type.Boolean(),
   showMature: Type.Boolean(),
   blurMature: Type.Boolean(),
@@ -34,7 +27,6 @@ export const userSettingsSchemaResponse = Type.Object({
 export const userSettingsUpdateSchemaRequest = Type.Object({
   displayMode: Type.Optional(displayModeSchema),
   feedView: Type.Optional(feedViewSchema),
-  chatRequestPolicy: Type.Optional(chatRequestPolicySchema),
   defaultMarkdownEditor: Type.Optional(Type.Boolean()),
   showMature: Type.Optional(Type.Boolean()),
   blurMature: Type.Optional(Type.Boolean()),

@@ -11,7 +11,6 @@ interface EmitArgs {
   postId?: string | null
   commentId?: string | null
   communityId?: string | null
-  conversationId?: string | null
   previewSnapshot?: PreviewSnapshot
 }
 
@@ -39,7 +38,6 @@ export function crudNotification(db: Kysely<DB>) {
         postId: args.postId ?? null,
         commentId: args.commentId ?? null,
         communityId: args.communityId ?? null,
-        conversationId: args.conversationId ?? null,
         previewSnapshot: (args.previewSnapshot ?? null) as never,
       })
       .execute()

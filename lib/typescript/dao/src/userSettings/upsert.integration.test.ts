@@ -33,7 +33,6 @@ describe.skipIf(process.env.CI === "true")("crudUserSettings.upsert", () => {
     expect(created.displayMode).toBe("dark")
     expect(created.feedView).toBe("card")
     expect(created.blurMature).toBe(true)
-    expect(created.chatRequestPolicy).toBe("everyone")
   })
 
   it("updates only the patched fields on a second upsert", async () => {

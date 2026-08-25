@@ -33,7 +33,6 @@ import {
 } from "@lib/api-client/generated/@tanstack/react-query.gen"
 import { LogOut, Menu, Monitor, Moon, Plus, Settings, Sun, User } from "lucide-react"
 import { useState } from "react"
-import { ChatButton } from "@frontends/dashboard/components/ChatButton"
 import { NotificationBell } from "@frontends/dashboard/components/NotificationBell"
 import { toast } from "sonner"
 
@@ -150,7 +149,6 @@ export function TopNav() {
 
         {/* Right zone: actions */}
         <div className="flex flex-1 items-center justify-end gap-1">
-          <ChatButton />
           <NotificationBell />
           <Link
             to="/submit"

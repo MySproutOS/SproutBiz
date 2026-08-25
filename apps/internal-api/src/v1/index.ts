@@ -1,7 +1,6 @@
 import { Hono } from "hono"
 import { RegExpRouter } from "hono/router/reg-exp-router"
 import auth from "./auth"
-import chat from "./chat"
 import comment from "./comment"
 import commentAction from "./comment-action"
 import commentVote from "./comment-vote"
@@ -80,7 +79,6 @@ const app = new Hono({
   .route("/mod-log", modLog)
   .route("/mod-saved-response", modSavedResponse)
   .route("/removal-reason", removalReason)
-  .route("/chat", chat)
   .route("/modmail", modmail)
   .route("/notification", notification)
 

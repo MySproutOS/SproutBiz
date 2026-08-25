@@ -39,7 +39,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("show_mature", "boolean", (col) => col.notNull().defaultTo(sql`false`))
     .addColumn("blur_mature", "boolean", (col) => col.notNull().defaultTo(sql`true`))
     .addColumn("allow_follows", "boolean", (col) => col.notNull().defaultTo(sql`true`))
-    .addColumn("chat_request_policy", "text", (col) => col.notNull().defaultTo(sql`'everyone'`))
     .addColumn("show_in_search", "boolean", (col) => col.notNull().defaultTo(sql`true`))
     .addColumn("show_recommendations", "boolean", (col) => col.notNull().defaultTo(sql`true`))
     .addColumn("autoplay_media", "boolean", (col) => col.notNull().defaultTo(sql`true`))

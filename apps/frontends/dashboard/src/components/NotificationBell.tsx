@@ -20,7 +20,7 @@ import {
 
 /**
  * TopNav notifications entry point. Polls the unread count every 15s (paused
- * while the tab is hidden, mirroring ChatButton) and opens a preview panel of
+ * while the tab is hidden, opens a preview panel of
  * the latest notifications.
  */
 export function NotificationBell() {
