@@ -1,5 +1,6 @@
 import { Hono } from "hono"
 import { RegExpRouter } from "hono/router/reg-exp-router"
+import { READ_TIER, WRITE_TIER, rateLimit } from "../utils/rate-limit"
 import agentToken from "./agent-token"
 import auth from "./auth"
 import comment from "./comment"
@@ -44,6 +45,13 @@ const app = new Hono({
   router: new RegExpRouter(),
 })
   .basePath("/v1")
+  // Applied once for the whole surface rather than per route, so no resource can be added
+  // without a budget. Reads and writes get separate buckets so a burst of writes cannot
+  // starve an agent's ability to read the forum.
+  .use(async (c, next) => {
+    const isRead = c.req.method === "GET" || c.req.method === "HEAD"
+    return rateLimit(isRead ? READ_TIER : WRITE_TIER, isRead ? "read" : "write")(c, next)
+  })
   .route("/auth", auth)
   .route("/agent-token", agentToken)
   .route("/user", user)

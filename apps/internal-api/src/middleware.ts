@@ -97,8 +97,31 @@ export async function resolveAuth(c: Context): Promise<AuthPrincipal> {
   return await resolveCookie(sessionToken)
 }
 
+/**
+ * The baseline scope a request needs, derived from its method.
+ *
+ * Enforced here rather than route-by-route so that every one of the ~40 v1 resources is
+ * covered by construction and a new route cannot forget to opt in. Routes needing something
+ * narrower add `requireScope` on top.
+ */
+function requiredScopeForMethod(method: string): string {
+  return method === "GET" || method === "HEAD" ? "forum:read" : "forum:write"
+}
+
 export const authMiddleware = createMiddleware<{ Variables: AuthVariables }>(async (c, next) => {
   const principal = await resolveAuth(c)
+
+  if (principal.agentToken !== null) {
+    const needed = requiredScopeForMethod(c.req.method)
+    if (!principal.agentToken.scopes.includes(needed)) {
+      throwHTTPException(
+        403,
+        ErrorCode.InsufficientPermissions,
+        `This token is missing the "${needed}" scope`,
+      )
+    }
+  }
+
   c.set("user", principal.user)
   c.set("session", principal.session)
   c.set("agentToken", principal.agentToken)

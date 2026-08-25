@@ -394,12 +394,18 @@ importers:
       '@utils/queues':
         specifier: workspace:*
         version: link:../../lib/typescript/utils/queues
+      dotenv:
+        specifier: ^17.4.2
+        version: 17.4.2
       hono:
         specifier: 'catalog:'
         version: 4.12.30
       hono-typebox-openapi:
         specifier: ^0.2.0
         version: 0.2.0(hono@4.12.30)(openapi-types@12.1.3)(typebox@1.3.6)
+      ioredis:
+        specifier: ^5.11.1
+        version: 5.11.1
       kysely:
         specifier: 'catalog:'
         version: 0.29.3

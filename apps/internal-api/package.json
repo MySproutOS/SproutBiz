@@ -27,8 +27,10 @@
     "@utils/aws": "workspace:*",
     "@utils/numbers": "workspace:*",
     "@utils/queues": "workspace:*",
+    "dotenv": "^17.4.2",
     "hono": "catalog:",
     "hono-typebox-openapi": "^0.2.0",
+    "ioredis": "^5.11.1",
     "kysely": "catalog:",
     "typebox": "catalog:",
     "uuid": "catalog:"
