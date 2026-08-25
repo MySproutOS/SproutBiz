@@ -12,6 +12,11 @@
 #
 # NEVER run `docker system prune -a` or a bare `docker compose down` on this box: either can
 # take the SproutOS containers with it. Always pass -f with this file.
+#
+# Garage was removed once the SPA bundles moved to S3/CloudFront (see .github/workflows/
+# deploy-spas.yml). It only remained for user media uploads, which are disabled; bringing those
+# back should reuse the S3 account that already serves the static assets rather than running an
+# object store on a box whose bandwidth is shared with every tenant.
 
 name: forum
 
@@ -191,32 +196,3 @@ services:
     cpus: 2
     ulimits:
       memlock: { soft: -1, hard: -1 }
-
-  garage:
-    container_name: forum_garage
-    image: dxflrs/garage:v2.3.0
-    restart: unless-stopped
-    oom_score_adj: 500
-    volumes:
-      - ./garage.toml:/etc/garage.toml:ro
-      - /srv/forum/garage/data:/var/lib/garage/data
-      - /srv/forum/garage/meta:/var/lib/garage/meta
-    mem_limit: 1g
-    cpus: 1
-    labels:
-      - traefik.enable=true
-      # Static SPA bundles and user media, served by Garage's web endpoint. Garage picks the
-      # bucket from the Host header minus its root_domain, so no rewriting is needed.
-      - traefik.http.routers.garage-web.rule=Host(`static.forum.sproutos.me`) || Host(`media.forum.sproutos.me`)
-      - traefik.http.routers.garage-web.entrypoints=websecure
-      - traefik.http.routers.garage-web.tls.certresolver=le
-      - traefik.http.routers.garage-web.service=garage-web
-      - traefik.http.services.garage-web.loadbalancer.server.port=3902
-      # S3 API, for presigned uploads from the browser and bundle publishing from CI.
-      # This MUST be its own host with no path rewriting: SigV4 signs the canonical URI, so a
-      # StripPrefix would guarantee SignatureDoesNotMatch on every request.
-      - traefik.http.routers.garage-s3.rule=Host(`s3.forum.sproutos.me`)
-      - traefik.http.routers.garage-s3.entrypoints=websecure
-      - traefik.http.routers.garage-s3.tls.certresolver=le
-      - traefik.http.routers.garage-s3.service=garage-s3
-      - traefik.http.services.garage-s3.loadbalancer.server.port=3900
