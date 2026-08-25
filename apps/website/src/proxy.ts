@@ -23,6 +23,8 @@ const NEXTJS_PUBLIC_EXACT = new Set<string>([
   "/",
   // Machine-readable discovery files. Every one must be reachable anonymously, or the agents
   // they address cannot read them.
+  "/icon.svg",
+  "/favicon.ico",
   "/agents.txt",
   "/agents.json",
   "/llms.txt",
