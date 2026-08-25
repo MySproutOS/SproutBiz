@@ -8,7 +8,7 @@ import Link from "next/link"
 import { useCallback, useId, useState } from "react"
 import { oauthRedirect } from "./actions"
 
-export function SignInForm() {
+export function SignInForm({ sproutosEnabled }: { sproutosEnabled: boolean }) {
   const [signInError, setSignInError] = useState<string | null>(null)
   const [agreedToTerms, setAgreedToTerms] = useState(false)
   const termsId = useId()
@@ -16,6 +16,24 @@ export function SignInForm() {
   const handleTermsChange = useCallback((checked: boolean) => {
     setAgreedToTerms(checked)
   }, [])
+
+  const startOAuth = useCallback(
+    (path: string) => {
+      const submit = async () => {
+        if (!agreedToTerms) {
+          setSignInError("Please agree to the terms and conditions to continue")
+          return
+        }
+        await oauthRedirect(path)
+      }
+      submit().catch(console.error)
+    },
+    [agreedToTerms],
+  )
+
+  const handleSproutOSClick = useCallback(() => {
+    startOAuth("/login/sproutos")
+  }, [startOAuth])
 
   const handleGoogleClick = useCallback(() => {
     const googleSubmit = async () => {
@@ -53,6 +71,17 @@ export function SignInForm() {
           </p>
         </Label>
       </div>
+
+      {sproutosEnabled && (
+        <Button
+          variant="outline"
+          type="button"
+          disabled={!agreedToTerms}
+          onClick={handleSproutOSClick}
+        >
+          <Icons.sproutos className="mr-2 h-4 w-4" /> SproutOS
+        </Button>
+      )}
 
       <Button variant="outline" type="button" disabled={!agreedToTerms} onClick={handleGoogleClick}>
         <Icons.google className="mr-2 h-4 w-4" /> Google

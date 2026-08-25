@@ -1,9 +1,4 @@
-import { crudAccount } from "@lib/dao/account/crud"
-import { fetchAccount } from "@lib/dao/account/fetch"
-import { crudUser } from "@lib/dao/user/crud"
-import { fetchUser } from "@lib/dao/user/fetch"
-import { db } from "@template-nextjs/db"
-import { createSession, generateSessionToken, setSessionTokenCookie } from "@website/lib/auth"
+import { completeOAuthLogin } from "@website/lib/oauth-user"
 import { oauthGoogle } from "@website/lib/oauth"
 import type { OAuth2Tokens } from "arctic"
 import { decodeIdToken } from "arctic"
@@ -18,24 +13,6 @@ interface GoogleClaims {
   family_name: string
   given_name: string
   exp: number
-}
-
-async function generateUniqueUsername(email: string): Promise<string> {
-  const base =
-    email
-      .split("@")[0]
-      .toLowerCase()
-      .replace(/[^a-z0-9_-]/g, "") || "user"
-  let candidate = base
-  while (await fetchUser(db).isUsernameTaken(candidate)) {
-    const length = 4 + Math.floor(Math.random() * 3)
-    const suffix = Math.random()
-      .toString(36)
-      .replace(/[^a-z0-9]/g, "")
-      .slice(0, length)
-    candidate = `${base}${suffix}`
-  }
-  return candidate
 }
 
 export async function GET(request: Request): Promise<Response> {
@@ -68,59 +45,26 @@ export async function GET(request: Request): Promise<Response> {
     })
   }
   const claims = decodeIdToken(tokens.idToken()) as GoogleClaims
-  const googleUserId = claims.sub
-  const name = claims.name
-  const email = claims.email
-  const image = claims.picture
-  // const emailVerified = claims.email_verified
-  const exp = claims.exp
 
-  const existingAccount = await fetchAccount(db).getOneByProvider("google", googleUserId, [
-    "userId",
-  ])
+  const { isNewAccount } = await completeOAuthLogin(
+    "google",
+    {
+      providerAccountId: claims.sub,
+      email: claims.email,
+      name: claims.name,
+      image: claims.picture,
+    },
+    {
+      scope: tokens.scopes().join(" "),
+      idToken: tokens.idToken(),
+      accessToken: tokens.accessToken(),
+      tokenType: tokens.tokenType(),
+      expiresAt: claims.exp,
+    },
+  )
 
-  if (existingAccount) {
-    const sessionToken = generateSessionToken()
-    const session = await createSession(sessionToken, existingAccount.userId)
-    await setSessionTokenCookie(sessionToken, session.expires)
-    return new Response(null, {
-      status: 302,
-      headers: {
-        Location: "/",
-      },
-    })
-  }
-
-  const existingUser = await fetchUser(db).getOneByEmail(email, ["id"])
-  const userId =
-    existingUser?.id ??
-    (
-      await crudUser(db).createUser({
-        name,
-        email,
-        image,
-        username: await generateUniqueUsername(email),
-      })
-    ).id
-  await crudAccount(db).createAccount({
-    userId,
-    provider: "google",
-    providerAccountId: googleUserId,
-    type: "oauth",
-    scope: tokens.scopes().join(" "),
-    idToken: tokens.idToken(),
-    accessToken: tokens.accessToken(),
-    tokenType: tokens.tokenType(),
-    expiresAt: exp,
-  })
-
-  const sessionToken = generateSessionToken()
-  const session = await createSession(sessionToken, userId)
-  await setSessionTokenCookie(sessionToken, session.expires)
   return new Response(null, {
     status: 302,
-    headers: {
-      Location: "/",
-    },
+    headers: { Location: isNewAccount ? "/onboarding" : "/" },
   })
 }

@@ -1,3 +1,4 @@
+import { isSproutOSConfigured } from "@website/lib/oauth"
 import type { Metadata } from "next"
 
 import { Suspense } from "react"
@@ -17,7 +18,7 @@ export default function SignInPage() {
           <p className="text-sm text-muted-foreground">Sign up or sign in to your account</p>
         </div>
         <Suspense>
-          <SignInForm />
+          <SignInForm sproutosEnabled={isSproutOSConfigured()} />
         </Suspense>
       </div>
     </div>

@@ -105,6 +105,18 @@ function handleCsrfAndCookies(request: NextRequest): NextResponse | null {
     return response
   }
 
+  // The local OAuth stub is called server-to-server by our own callback route, so it has no
+  // Origin and uses Basic auth rather than Bearer. In production the provider's token
+  // endpoint is a different host entirely and never reaches this proxy; the stub only looks
+  // like a cross-site POST because it is temporarily hosted inside this app. It is
+  // development-only and guarded at the route itself.
+  if (
+    process.env.NODE_ENV === "development" &&
+    request.nextUrl.pathname.startsWith("/dev-login/")
+  ) {
+    return null
+  }
+
   // Bearer-authenticated requests are exempt from the CSRF origin check. CSRF exploits
   // *ambient* credentials: the browser attaches cookies to a cross-site request on its own,
   // so a state-changing request needs a same-origin proof. It never attaches an
