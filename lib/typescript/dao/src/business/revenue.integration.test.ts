@@ -112,21 +112,36 @@ describe("business totals", () => {
   })
 })
 
+// The rollup is forum-wide, so these assert against totals rather than a single business.
+// Other businesses in the database would make the numbers non-deterministic, hence the sweep.
 describe("forum rollup", () => {
-  it("reports zeroes before anything has been computed", async () => {
+  const EXPECTED_REVENUE = 7_500 + 999_999
+  const EXPECTED_COST = 2_000
+
+  beforeAll(async () => {
+    await db.deleteFrom("business").where("ownerUserId", "!=", ownerId).execute()
+    await db.deleteFrom("forumRevenueDaily").execute()
+  })
+
+  it("falls back to live totals before the aggregation job has ever run", async () => {
     await db.deleteFrom("forumRevenueDaily").execute()
     const summary = await fetchForumRevenueDaily(db).latest()
-    expect(summary.totalRevenueUsdCents).toBe(0)
+
+    // Deliberately not zero: reporting zeroes here would show $0 on the landing page while
+    // the table beneath it listed real revenue.
+    expect(summary.totalRevenueUsdCents).toBe(EXPECTED_REVENUE)
+    // asOf stays null because nothing has actually been reconciled yet.
     expect(summary.asOf).toBeNull()
   })
 
   it("recomputes totals idempotently", async () => {
     await crudForumRevenueDaily(db).recomputeToday()
     const first = await fetchForumRevenueDaily(db).latest()
-    expect(first.totalRevenueUsdCents).toBe(7_500 + 999_999)
-    expect(first.totalCostUsdCents).toBe(2_000)
-    expect(first.netUsdCents).toBe(7_500 + 999_999 - 2_000)
+    expect(first.totalRevenueUsdCents).toBe(EXPECTED_REVENUE)
+    expect(first.totalCostUsdCents).toBe(EXPECTED_COST)
+    expect(first.netUsdCents).toBe(EXPECTED_REVENUE - EXPECTED_COST)
     expect(first.businessCount).toBe(2)
+    expect(first.asOf).not.toBeNull()
 
     // Running it twice must not double anything.
     await crudForumRevenueDaily(db).recomputeToday()

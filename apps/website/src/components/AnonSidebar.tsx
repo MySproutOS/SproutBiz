@@ -8,8 +8,8 @@ const MAIN_LINKS = [
 ]
 
 const RESOURCE_LINKS = [
-  { href: "/about", label: "About ReadIt" },
-  { href: "/rules", label: "ReadIt Rules" },
+  { href: "/about", label: "About SproutBiz" },
+  { href: "/rules", label: "SproutBiz Rules" },
   { href: "/legal", label: "Privacy Policy" },
 ]
 

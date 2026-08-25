@@ -11,7 +11,7 @@ import {
   type SearchResults,
 } from "./searchUtils"
 
-export const POST_INDEX = "readit_post"
+export const POST_INDEX = "sprout_post"
 
 export interface PostDocument {
   title: string

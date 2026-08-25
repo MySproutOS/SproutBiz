@@ -4,7 +4,7 @@ import { PostFeed, type FeedPost } from "@frontends/dashboard/components/PostFee
 import { RecentPostsRail } from "@frontends/dashboard/components/RecentPostsRail"
 import { SuggestedCommunitiesRail } from "@frontends/dashboard/components/SuggestedCommunitiesRail"
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/home")({
   component: DashboardHome,
 })
 
@@ -19,7 +19,7 @@ const HOME_SORTS = [
 function permalinkFor(post: FeedPost): string {
   if (post.community) return `/r/${post.community.name}/comments/${post.id}`
   if (post.author) return `/user/${post.author.username}/comments/${post.id}`
-  return "/"
+  return "/home"
 }
 
 function DashboardHome() {

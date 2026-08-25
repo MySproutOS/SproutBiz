@@ -3,7 +3,7 @@ import { client } from "./client"
 import type { IndexDefinition } from "./indexBootstrap"
 import { hitsFrom, type SearchResults } from "./searchUtils"
 
-export const USER_INDEX = "readit_user"
+export const USER_INDEX = "sprout_user"
 
 export interface UserDocument {
   username: string

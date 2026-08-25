@@ -394,7 +394,7 @@ function CustomFeedsSection() {
 }
 
 const MAIN_NAV = [
-  { to: "/" as const, label: "Home", icon: Home },
+  { to: "/home" as const, label: "Home", icon: Home },
   { to: "/popular" as const, label: "Popular", icon: TrendingUp },
   { to: "/explore" as const, label: "Explore", icon: Compass },
 ]
@@ -572,7 +572,7 @@ export function AppSidebar() {
                   render={
                     // oxlint-disable-next-line no-html-link-for-pages -- /about is a Next.js page outside the SPA router
                     <a href="/about">
-                      <span>About ReadIt</span>
+                      <span>About SproutBiz</span>
                     </a>
                   }
                 />
@@ -583,7 +583,7 @@ export function AppSidebar() {
                   render={
                     // oxlint-disable-next-line no-html-link-for-pages -- /rules is a Next.js page outside the SPA router
                     <a href="/rules">
-                      <span>ReadIt Rules</span>
+                      <span>SproutBiz Rules</span>
                     </a>
                   }
                 />

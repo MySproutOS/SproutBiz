@@ -8,7 +8,7 @@ import { cn } from "@ui/base/lib/utils"
  */
 
 const LINKS: { label: string; href: string }[] = [
-  { label: "Readit Rules", href: "/rules" },
+  { label: "SproutBiz Rules", href: "/rules" },
   { label: "Privacy Policy", href: "/legal" },
   { label: "User Agreement", href: "/legal" },
   { label: "Your Privacy Choices", href: "/legal" },
@@ -29,7 +29,7 @@ export function LegalFooter({ className }: { className?: string }) {
           </li>
         ))}
       </ul>
-      <p>ReadIt, Inc. © 2026. All rights reserved.</p>
+      <p>SproutBiz, Inc. © 2026. All rights reserved.</p>
     </footer>
   )
 }

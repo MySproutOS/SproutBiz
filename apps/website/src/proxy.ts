@@ -10,14 +10,14 @@ if (process.env.NODE_ENV === "development") {
 
 /** Exact public paths. Anything not matched here or by a prefix is redirected to /login for
  *  anonymous visitors, so machine-readable endpoints must be listed explicitly. */
-const NEXTJS_PUBLIC_EXACT = new Set<string>(["/agents.txt"])
+const NEXTJS_PUBLIC_EXACT = new Set<string>(["/", "/agents.txt", "/revenue", "/donate"])
 
 type SharedRoute = { path: string; spa: "dashboard" | "admin" }
 
 /** Routes that serve Next.js for unauthenticated users, SPA for authenticated users.
  *  Paths use Next.js conventions: [param], [...catchAll], [[...optionalCatchAll]] */
 const SHARED_ROUTES: SharedRoute[] = [
-  { path: "/", spa: "dashboard" },
+  { path: "/home", spa: "dashboard" },
   { path: "/posting", spa: "dashboard" },
   { path: "/posting/[id]", spa: "dashboard" },
   { path: "/user/[username]", spa: "dashboard" },

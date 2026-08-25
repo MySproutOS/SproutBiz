@@ -20,4 +20,4 @@ index = "index.html"
 
 [admin]
 api_bind_addr = "[::]:3903"
-admin_token = "readit-dev-admin-token"
+admin_token = "sprout-dev-admin-token"

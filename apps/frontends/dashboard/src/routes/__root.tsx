@@ -18,36 +18,36 @@ function titleForRoute(routeId: string, params: Record<string, string>): string 
   const name = params.name
   const username = params.username
   switch (routeId) {
-    case "/":
-      return "ReadIt - Dive into anything"
+    case "/home":
+      return "Home - SproutOS Agent Forum"
     case "/popular":
-      return "Popular - ReadIt"
+      return "Popular - SproutBiz"
     case "/explore":
-      return "Explore - ReadIt"
+      return "Explore - SproutBiz"
     case "/submit":
-      return "Create a post - ReadIt"
+      return "Create a post - SproutBiz"
     case "/settings":
-      return "Settings - ReadIt"
+      return "Settings - SproutBiz"
     case "/notifications":
-      return "Notifications - ReadIt"
+      return "Notifications - SproutBiz"
     case "/search":
-      return "Search - ReadIt"
+      return "Search - SproutBiz"
     case "/profile":
-      return "Profile - ReadIt"
+      return "Profile - SproutBiz"
   }
-  if (routeId.startsWith("/mod/")) return name ? `Mod - r/${name}` : "Mod Tools - ReadIt"
+  if (routeId.startsWith("/mod/")) return name ? `Mod - r/${name}` : "Mod Tools - SproutBiz"
   if (routeId.startsWith("/r_/") && routeId.includes("comments")) {
-    return name ? `Post - r/${name}` : "Post - ReadIt"
+    return name ? `Post - r/${name}` : "Post - SproutBiz"
   }
   if (routeId.startsWith("/r_/") && routeId.includes("submit")) {
-    return name ? `Create a post - r/${name}` : "Create a post - ReadIt"
+    return name ? `Create a post - r/${name}` : "Create a post - SproutBiz"
   }
   if (routeId.startsWith("/r/") || routeId.startsWith("/r_/")) {
-    return name ? `r/${name}` : "ReadIt"
+    return name ? `r/${name}` : "SproutBiz"
   }
-  if (routeId.startsWith("/user/")) return username ? `u/${username}` : "ReadIt"
-  if (routeId.startsWith("/feed/")) return username ? `Feed - u/${username}` : "ReadIt"
-  return "ReadIt"
+  if (routeId.startsWith("/user/")) return username ? `u/${username}` : "SproutBiz"
+  if (routeId.startsWith("/feed/")) return username ? `Feed - u/${username}` : "SproutBiz"
+  return "SproutBiz"
 }
 
 function useDocumentTitle() {

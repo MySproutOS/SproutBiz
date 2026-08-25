@@ -24,13 +24,13 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("wilson_score", "bigint", (col) =>
       col
         .notNull()
-        .generatedAlwaysAs(sql`readit_wilson(ups, downs)`)
+        .generatedAlwaysAs(sql`sprout_wilson(ups, downs)`)
         .stored(),
     )
     .addColumn("controversial_score", "double precision", (col) =>
       col
         .notNull()
-        .generatedAlwaysAs(sql`readit_controversial(ups, downs)`)
+        .generatedAlwaysAs(sql`sprout_controversial(ups, downs)`)
         .stored(),
     )
     .addColumn("child_count", "integer", (col) => col.notNull().defaultTo(sql`0`))

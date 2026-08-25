@@ -33,6 +33,23 @@ cd apps/dbmigrator/src && npx kysely migrate:make <name>
 pnpm run openapi --workspace=website
 ```
 
+## Browser automation (Claude in Chrome)
+
+Two Chrome extensions are connected to this account, and only one of them can reach the
+local dev server. The other fails every navigation with `Frame with ID 0 is showing error
+page` even though the page serves fine over curl, which looks like an app bug and is not.
+
+**Use `deviceId 2bd1938a-89f4-4008-8687-7334259f3cce`** (listed as "Browser 1", named "Han"
+when connected interactively). Select it before any browser action:
+
+```
+mcp__claude-in-chrome__select_browser  deviceId=2bd1938a-89f4-4008-8687-7334259f3cce
+```
+
+The other browser, `57d94861-7978-45e5-b802-b9bd1ddccc9b` ("Browser 2"), does not work for
+local development. Note that `list_connected_browsers` reports the generic "Browser 1" /
+"Browser 2" names rather than any name set via `switch_browser`, so match on the deviceId.
+
 ## Architecture
 
 This is a TypeScript monorepo with npm workspaces:

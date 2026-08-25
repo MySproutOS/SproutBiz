@@ -61,7 +61,7 @@ export function permalinkForPost(post: PostResult): string {
 
 export function CommentResultCard({ result }: { result: CommentResult }) {
   const { comment } = result
-  const href = `/r/${result.communityName ?? "readit"}/comments/${comment.postId}?comment=${comment.id}`
+  const href = `/r/${result.communityName ?? "sprout"}/comments/${comment.postId}?comment=${comment.id}`
   return (
     <article className="rounded-lg border bg-card p-3">
       <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">

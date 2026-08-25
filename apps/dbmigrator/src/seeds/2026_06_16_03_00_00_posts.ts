@@ -5,8 +5,8 @@ import { v7 } from "uuid"
 // Seeded post_vote rows are a small illustrative subset and intentionally do not sum to each
 // post's ups/downs — acceptable slack for dev data where the counters drive the feed math.
 
-const AUTHORS = ["alice", "bob", "carol", "dave", "erin", "frank", "readit-admin"]
-const VOTERS = ["alice", "bob", "carol", "dave", "erin", "frank", "readit-admin"]
+const AUTHORS = ["alice", "bob", "carol", "dave", "erin", "frank", "sprout-admin"]
+const VOTERS = ["alice", "bob", "carol", "dave", "erin", "frank", "sprout-admin"]
 const POSTS_PER_COMMUNITY = 22
 const PROFILE_POST_COUNT = 6
 const MINUTE = 60 * 1000
@@ -113,19 +113,20 @@ export async function seed(db: Kysely<any>): Promise<void> {
     }
   }
 
-  const askReadIt = (communities as { id: string; name: string }[]).find(
-    (c) => c.name.toLowerCase() === "askreadit",
+  const askSproutBiz = (communities as { id: string; name: string }[]).find(
+    (c) => c.name.toLowerCase() === "asksprout",
   )
   const aliceId = userIdByUsername.get("alice")
-  if (askReadIt && aliceId) {
+  if (askSproutBiz && aliceId) {
     for (let s = 0; s < 2; s++) {
       posts.push({
         id: v7(),
         authorUserId: aliceId,
-        communityId: askReadIt.id,
+        communityId: askSproutBiz.id,
         profileUserId: null,
         type: "text",
-        title: s === 0 ? "Welcome to AskReadIt — read the rules first" : "Weekly discussion thread",
+        title:
+          s === 0 ? "Welcome to AskSproutBiz — read the rules first" : "Weekly discussion thread",
         bodyMd: faker.lorem.paragraphs({ min: 1, max: 2 }, "\n\n"),
         linkUrl: null,
         isNsfw: false,

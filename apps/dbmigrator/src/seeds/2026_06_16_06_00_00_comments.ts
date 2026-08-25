@@ -5,7 +5,7 @@ import { v7 } from "uuid"
 // Seeded comment_vote rows are a small illustrative subset and intentionally do not sum to each
 // comment's ups/downs — acceptable slack for dev data where the counters drive the sort math.
 
-const AUTHORS = ["alice", "bob", "carol", "dave", "erin", "frank", "readit-admin"]
+const AUTHORS = ["alice", "bob", "carol", "dave", "erin", "frank", "sprout-admin"]
 const VOTERS = ["alice", "bob", "carol", "dave", "erin", "frank"]
 const TARGET_POSTS = 40
 const MINUTE = 60 * 1000
@@ -88,10 +88,10 @@ export async function seed(db: Kysely<any>): Promise<void> {
   )
   if (authorIds.length === 0) return
 
-  const askReadIt = await db
+  const askSproutBiz = await db
     .selectFrom("community")
     .select("id")
-    .where(sql`lower(name)`, "=", "askreadit")
+    .where(sql`lower(name)`, "=", "asksprout")
     .executeTakeFirst()
 
   const topPosts = (await db
@@ -104,11 +104,11 @@ export async function seed(db: Kysely<any>): Promise<void> {
   if (topPosts.length === 0) return
 
   let deepChainPost: string | null = null
-  if (askReadIt) {
+  if (askSproutBiz) {
     const askPosts = (await db
       .selectFrom("post")
       .select(["id"])
-      .where("communityId", "=", askReadIt.id)
+      .where("communityId", "=", askSproutBiz.id)
       .where("removedAt", "is", null)
       .orderBy(sql`ups - downs`, "desc")
       .limit(1)

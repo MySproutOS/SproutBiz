@@ -10,6 +10,7 @@ import { type Job, Worker } from "bullmq"
 import { processDraftExpiry } from "./jobs/draftExpiry"
 import { processEsBackfill } from "./jobs/esBackfill"
 import { processLinkPreviewFetch } from "./jobs/linkPreviewFetch"
+import { runRevenueAggregate } from "./jobs/revenueAggregate"
 import {
   processEsSyncComment,
   processEsSyncCommunity,
@@ -82,6 +83,9 @@ function makeSlowWorker() {
       }
       if (job.name === "link-preview-fetch") {
         await processLinkPreviewFetch(job.data as JobPayloadMap["link-preview-fetch"])
+      }
+      if (job.name === "revenue-aggregate-daily") {
+        await runRevenueAggregate()
       }
     },
     { connection, concurrency: 5, removeOnComplete: { age: 86400 } },

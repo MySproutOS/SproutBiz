@@ -5,8 +5,8 @@ import * as React from "react"
 export type Theme = "light" | "dark" | "system"
 export type ResolvedTheme = "light" | "dark"
 
-export const THEME_STORAGE_KEY = "readit-theme"
-export const THEME_COOKIE_NAME = "readit-theme"
+export const THEME_STORAGE_KEY = "sprout-theme"
+export const THEME_COOKIE_NAME = "sprout-theme"
 
 type ThemeContextValue = {
   theme: Theme

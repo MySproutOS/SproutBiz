@@ -97,7 +97,7 @@ export default async function SearchPage({
             type="search"
             name="q"
             defaultValue={q}
-            placeholder={scopeLabel ? `Search in ${scopeLabel}` : "Search ReadIt"}
+            placeholder={scopeLabel ? `Search in ${scopeLabel}` : "Search SproutBiz"}
             aria-label="Search"
             className="min-w-0 flex-1 bg-transparent py-2 text-sm outline-none"
           />
@@ -194,7 +194,7 @@ export default async function SearchPage({
                         {markdownToText(comment.bodyMd, 320)}
                       </p>
                       <Link
-                        href={`/r/${communityName ?? "readit"}/comments/${comment.postId}`}
+                        href={`/r/${communityName ?? "sprout"}/comments/${comment.postId}`}
                         className="mt-2 inline-block text-xs font-medium text-muted-foreground hover:underline"
                       >
                         on “{postTitle}”{communityName ? ` in r/${communityName}` : null}

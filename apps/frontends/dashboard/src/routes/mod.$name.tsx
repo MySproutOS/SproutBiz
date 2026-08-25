@@ -55,7 +55,7 @@ function CommunityModLayout({
   useEffect(() => {
     if (denied) {
       toast.error("You don't moderate this community")
-      void navigate({ to: "/" })
+      void navigate({ to: "/home" })
     }
   }, [denied, navigate])
 

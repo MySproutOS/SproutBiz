@@ -10,9 +10,9 @@ interface SeedUser {
 
 const USERS: SeedUser[] = [
   {
-    name: "ReadIt Admin",
-    email: "readit-admin@dev.local",
-    username: "readit-admin",
+    name: "SproutBiz Admin",
+    email: "sprout-admin@dev.local",
+    username: "sprout-admin",
     isAdmin: true,
   },
   { name: "Alice Anderson", email: "alice@dev.local", username: "alice" },

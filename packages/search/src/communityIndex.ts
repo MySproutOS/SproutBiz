@@ -4,7 +4,7 @@ import { type CommunityViewerAccess, communityAccessFilter } from "./communityAc
 import type { IndexDefinition } from "./indexBootstrap"
 import { hitsFrom, nsfwFilter, type SearchResults } from "./searchUtils"
 
-export const COMMUNITY_INDEX = "readit_community"
+export const COMMUNITY_INDEX = "sprout_community"
 
 export interface CommunityDocument {
   name: string

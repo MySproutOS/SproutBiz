@@ -15,6 +15,7 @@ export interface JobPayloadMap {
   "es-sync-user": { userId: string }
   "es-backfill": Record<string, never>
   "link-preview-fetch": { postId: string; linkUrl: string }
+  "revenue-aggregate-daily": Record<string, never>
 }
 
 export type JobName = keyof JobPayloadMap
@@ -31,6 +32,7 @@ const jobQueues: { [K in JobName]: Queue } = {
   "es-sync-user": fastQueue,
   "es-backfill": slowQueue,
   "link-preview-fetch": slowQueue,
+  "revenue-aggregate-daily": slowQueue,
 }
 
 export async function enqueue<K extends JobName>(
@@ -164,6 +166,9 @@ export async function enqueueLinkPreviewFetch(postId: string, linkUrl: string): 
 const RISING_RECOMPUTE_INTERVAL_MS = 90 * 1000
 const RECURRING_POST_SCHEDULER_INTERVAL_MS = 15 * 60 * 1000
 const DRAFT_EXPIRY_INTERVAL_MS = 24 * 60 * 60 * 1000
+// Often enough that the public figures are never far behind, cheap enough to ignore: the
+// job is two grouped SUMs over indexed columns.
+const REVENUE_AGGREGATE_INTERVAL_MS = 10 * 60 * 1000
 
 // Registers all recurring schedulers. Idempotent — `upsertJobScheduler` reconciles the
 // schedule on every boot, so calling this on every worker start is safe.
@@ -182,5 +187,10 @@ export async function registerRepeatables(): Promise<void> {
     "draft-expiry",
     { every: DRAFT_EXPIRY_INTERVAL_MS },
     { name: "draft-expiry", data: {} },
+  )
+  await slowQueue.upsertJobScheduler(
+    "revenue-aggregate-daily",
+    { every: REVENUE_AGGREGATE_INTERVAL_MS },
+    { name: "revenue-aggregate-daily", data: {} },
   )
 }

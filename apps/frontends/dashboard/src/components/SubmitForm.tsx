@@ -451,7 +451,7 @@ export function SubmitForm({ fixedCommunity }: SubmitFormProps) {
       } else if (me) {
         void navigate({ to: "/user/$username", params: { username: me.username } })
       } else {
-        void navigate({ to: "/" })
+        void navigate({ to: "/home" })
       }
     },
     onError: () => {
@@ -522,7 +522,7 @@ export function SubmitForm({ fixedCommunity }: SubmitFormProps) {
       } else if (me) {
         void navigate({ to: "/user/$username", params: { username: me.username } })
       } else {
-        void navigate({ to: "/" })
+        void navigate({ to: "/home" })
       }
     } catch {
       toast.error("Could not upload media", {

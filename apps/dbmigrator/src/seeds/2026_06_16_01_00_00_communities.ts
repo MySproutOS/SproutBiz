@@ -28,8 +28,8 @@ interface CommunityDef {
 
 const COMMUNITIES: CommunityDef[] = [
   {
-    name: "AskReadIt",
-    displayName: "Ask ReadIt",
+    name: "AskSproutBiz",
+    displayName: "Ask SproutBiz",
     description: "The place to ask and answer thought-provoking questions.",
     topicName: "Q&As & Stories",
     visibility: "public",
@@ -103,7 +103,7 @@ const COMMUNITIES: CommunityDef[] = [
   {
     name: "cooking",
     displayName: "Cooking",
-    description: "For the cooks of ReadIt and those who want to learn how to cook.",
+    description: "For the cooks of SproutBiz and those who want to learn how to cook.",
     topicName: "Food & Drinks",
     visibility: "public",
     isNsfw: false,
@@ -158,7 +158,7 @@ const COMMUNITIES: CommunityDef[] = [
   {
     name: "music",
     displayName: "Music",
-    description: "The musical community of ReadIt.",
+    description: "The musical community of SproutBiz.",
     topicName: "Music",
     visibility: "public",
     isNsfw: false,

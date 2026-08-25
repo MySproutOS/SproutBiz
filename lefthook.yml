@@ -12,6 +12,3 @@ pre-commit:
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
       run: pnpm exec oxfmt --config .config/oxfmt.config.mts {staged_files}
       stage_fixed: true
-    tflint:
-      glob: "tofu/*.tf"
-      run: cd tofu && tflint

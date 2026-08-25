@@ -11,7 +11,7 @@ import {
   type SearchResults,
 } from "./searchUtils"
 
-export const COMMENT_INDEX = "readit_comment"
+export const COMMENT_INDEX = "sprout_comment"
 
 export interface CommentDocument {
   post_id: string

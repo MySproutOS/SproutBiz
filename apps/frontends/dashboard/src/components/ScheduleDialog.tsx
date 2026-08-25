@@ -51,7 +51,7 @@ export function ScheduleDialog({ open, onOpenChange, getPayload }: ScheduleDialo
     onSuccess: () => {
       toast.success("Post scheduled")
       onOpenChange(false)
-      void navigate({ to: "/" })
+      void navigate({ to: "/home" })
     },
     onError: () => {
       toast.error("Could not schedule post")

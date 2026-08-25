@@ -7,7 +7,7 @@ import { deletePost, indexPost, POST_INDEX, postIndexDefinition, searchPosts } f
 const publicId = randomUUID()
 const privateId = randomUUID()
 const privateCommunityId = randomUUID()
-const token = `readitacltest${Date.now()}`
+const token = `sproutacltest${Date.now()}`
 
 let esAvailable = false
 

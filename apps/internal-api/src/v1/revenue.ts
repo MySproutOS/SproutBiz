@@ -24,7 +24,7 @@ function iso(date: Date | null): string | null {
 /** A Postgres `date` arrives as a Date. Rendering it with String() would leak the server's
  *  local timezone into the response ("Sat Aug 01 2026 ..."), so format it as YYYY-MM-DD. */
 function isoDay(value: Date | string): string {
-  return value instanceof Date ? value.toISOString().slice(0, 10) : String(value)
+  return value instanceof Date ? value.toISOString().slice(0, 10) : value
 }
 
 // Public on purpose: the whole point of the experiment is that the numbers are open, and

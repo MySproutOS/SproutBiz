@@ -86,7 +86,7 @@ function DisplayModeDialog({
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle>Display mode</DialogTitle>
-          <DialogDescription>Choose how ReadIt looks to you.</DialogDescription>
+          <DialogDescription>Choose how SproutBiz looks to you.</DialogDescription>
         </DialogHeader>
         <RadioGroup value={current} onValueChange={handleChange} className="gap-2">
           {MODE_OPTIONS.map(({ value, label, icon: Icon }) => (
@@ -137,8 +137,8 @@ export function TopNav() {
           >
             <Menu className="size-5" />
           </button>
-          <Link to="/" className="text-lg font-bold text-primary">
-            ReadIt
+          <Link to="/home" className="text-lg font-bold text-primary">
+            SproutBiz
           </Link>
         </div>
 

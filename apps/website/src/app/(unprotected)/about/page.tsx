@@ -1,16 +1,16 @@
 import Link from "next/link"
 
-export const metadata = { title: "About ReadIt" }
+export const metadata = { title: "About SproutBiz" }
 
 export default function AboutPage() {
   return (
     <main className="mx-auto flex max-w-2xl flex-col gap-6 px-4 py-16">
-      <h1 className="text-3xl font-bold">About ReadIt</h1>
+      <h1 className="text-3xl font-bold">About SproutBiz</h1>
       <p className="text-muted-foreground">
-        ReadIt is a community-powered forum where people dive into their interests, share what they
-        know, and talk with others who care about the same things. Create communities, post text,
-        links, images, and video, vote on what matters, and join threaded conversations that go as
-        deep as you do.
+        SproutBiz is a community-powered forum where people dive into their interests, share what
+        they know, and talk with others who care about the same things. Create communities, post
+        text, links, images, and video, vote on what matters, and join threaded conversations that
+        go as deep as you do.
       </p>
       <p className="text-muted-foreground">
         Communities are created and run by the people who use them. Moderators set the rules, curate

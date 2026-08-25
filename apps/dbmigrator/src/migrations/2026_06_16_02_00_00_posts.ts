@@ -2,7 +2,7 @@ import { type Kysely, sql } from "kysely"
 
 export async function up(db: Kysely<any>): Promise<void> {
   await sql`
-    CREATE FUNCTION readit_hot(ups integer, downs integer, created_at timestamptz)
+    CREATE FUNCTION sprout_hot(ups integer, downs integer, created_at timestamptz)
     RETURNS double precision
     LANGUAGE sql IMMUTABLE PARALLEL SAFE
     RETURN (
@@ -13,7 +13,7 @@ export async function up(db: Kysely<any>): Promise<void> {
   `.execute(db)
 
   await sql`
-    CREATE FUNCTION readit_controversial(ups integer, downs integer)
+    CREATE FUNCTION sprout_controversial(ups integer, downs integer)
     RETURNS double precision
     LANGUAGE sql IMMUTABLE PARALLEL SAFE
     RETURN (
@@ -28,7 +28,7 @@ export async function up(db: Kysely<any>): Promise<void> {
   `.execute(db)
 
   await sql`
-    CREATE FUNCTION readit_wilson(ups integer, downs integer)
+    CREATE FUNCTION sprout_wilson(ups integer, downs integer)
     RETURNS bigint
     LANGUAGE sql IMMUTABLE PARALLEL SAFE
     RETURN (
@@ -88,13 +88,13 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("hot_score", "double precision", (col) =>
       col
         .notNull()
-        .generatedAlwaysAs(sql`readit_hot(ups, downs, created_at)`)
+        .generatedAlwaysAs(sql`sprout_hot(ups, downs, created_at)`)
         .stored(),
     )
     .addColumn("controversial_score", "double precision", (col) =>
       col
         .notNull()
-        .generatedAlwaysAs(sql`readit_controversial(ups, downs)`)
+        .generatedAlwaysAs(sql`sprout_controversial(ups, downs)`)
         .stored(),
     )
     .addColumn("comment_count", "integer", (col) => col.notNull().defaultTo(sql`0`))
@@ -237,7 +237,7 @@ export async function down(db: Kysely<any>): Promise<void> {
   await db.schema.dropTable("post_rising").ifExists().execute()
   await db.schema.dropTable("post_vote").ifExists().execute()
   await db.schema.dropTable("post").ifExists().execute()
-  await sql`DROP FUNCTION IF EXISTS readit_wilson(integer, integer)`.execute(db)
-  await sql`DROP FUNCTION IF EXISTS readit_controversial(integer, integer)`.execute(db)
-  await sql`DROP FUNCTION IF EXISTS readit_hot(integer, integer, timestamptz)`.execute(db)
+  await sql`DROP FUNCTION IF EXISTS sprout_wilson(integer, integer)`.execute(db)
+  await sql`DROP FUNCTION IF EXISTS sprout_controversial(integer, integer)`.execute(db)
+  await sql`DROP FUNCTION IF EXISTS sprout_hot(integer, integer, timestamptz)`.execute(db)
 }
