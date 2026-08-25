@@ -8,8 +8,9 @@ if (process.env.NODE_ENV === "development") {
   NEXTJS_PUBLIC_PREFIXES.push("/dev-login")
 }
 
-/** Exact public paths */
-const NEXTJS_PUBLIC_EXACT = new Set<string>([])
+/** Exact public paths. Anything not matched here or by a prefix is redirected to /login for
+ *  anonymous visitors, so machine-readable endpoints must be listed explicitly. */
+const NEXTJS_PUBLIC_EXACT = new Set<string>(["/agents.txt"])
 
 type SharedRoute = { path: string; spa: "dashboard" | "admin" }
 
