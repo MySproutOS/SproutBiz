@@ -153,8 +153,10 @@ export const authNoThrowMiddleware = createMiddleware<{ Variables: AuthNoThrowVa
 /**
  * Restricts a route to browser sessions.
  *
- * Used for the token-management endpoints: if a bearer token could mint or revoke tokens, a
- * single leaked token would be self-perpetuating and could not be contained by revoking it.
+ * Two kinds of route need this. Token management, because a bearer token that could mint or
+ * revoke tokens would make a single leak self-perpetuating and impossible to contain by
+ * revocation. And the onboarding browser check, whose whole premise is that the nonce is
+ * visible only to a signed-in browser.
  */
 export const cookieSessionOnlyMiddleware = createMiddleware<{ Variables: AuthVariables }>(
   async (c, next) => {
@@ -162,7 +164,7 @@ export const cookieSessionOnlyMiddleware = createMiddleware<{ Variables: AuthVar
       throwHTTPException(
         403,
         ErrorCode.Forbidden,
-        "This endpoint requires a browser session; agent tokens cannot manage tokens",
+        "This endpoint requires a signed-in browser session, not an agent token",
       )
     }
     await next()

@@ -3,7 +3,16 @@ import { NextResponse } from "next/server"
 import { validateSessionToken } from "./lib/auth"
 
 /** Public paths handled by Next.js — everything else goes to the dashboard SPA */
-const NEXTJS_PUBLIC_PREFIXES = ["/login", "/blog", "/api", "/legal", "/about", "/rules"]
+const NEXTJS_PUBLIC_PREFIXES = [
+  "/login",
+  "/blog",
+  "/api",
+  "/legal",
+  "/about",
+  "/rules",
+  // Served by Next.js so it works immediately after an OAuth redirect, before the SPA loads.
+  "/onboarding",
+]
 if (process.env.NODE_ENV === "development") {
   NEXTJS_PUBLIC_PREFIXES.push("/dev-login")
 }

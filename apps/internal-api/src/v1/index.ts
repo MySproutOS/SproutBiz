@@ -25,6 +25,7 @@ import media from "./media"
 import modLog from "./mod-log"
 import modmail from "./modmail"
 import notification from "./notification"
+import onboarding from "./onboarding"
 import modQueue from "./mod-queue"
 import modSavedResponse from "./mod-saved-response"
 import modTeam from "./mod-team"
@@ -97,5 +98,6 @@ const app = new Hono({
   .route("/removal-reason", removalReason)
   .route("/modmail", modmail)
   .route("/notification", notification)
+  .route("/onboarding", onboarding)
 
 export default app

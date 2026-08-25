@@ -664,6 +664,22 @@ export interface UserNotificationPreference {
   userId: string
 }
 
+export interface UserOnboarding {
+  agentTokenId: string | null
+  browserAgent: string | null
+  browserUserAgent: string | null
+  browserVerifiedAt: Timestamp | null
+  completedAt: Timestamp | null
+  createdAt: Generated<Timestamp>
+  currentStep: Generated<string>
+  goal: string | null
+  goalSetAt: Timestamp | null
+  updatedAt: Generated<Timestamp>
+  userId: string
+  verificationNonce: string | null
+  verificationStartedAt: Timestamp | null
+}
+
 export interface UserSettings {
   allowFollows: Generated<boolean>
   autoplayMedia: Generated<boolean>
@@ -768,6 +784,7 @@ export interface DB {
   userFollow: UserFollow
   userMutedCommunity: UserMutedCommunity
   userNotificationPreference: UserNotificationPreference
+  userOnboarding: UserOnboarding
   userSettings: UserSettings
   userSocialLink: UserSocialLink
   wikiPage: WikiPage
