@@ -177,7 +177,12 @@ function rewriteToSpa(
   prodFolder: string,
 ): NextResponse {
   const isDev = process.env.NODE_ENV === "development"
-  const spaOrigin = isDev ? `http://localhost:${devPort}` : "https://d1i66hf38xpie.cloudfront.net"
+  // Where the built SPA bundles are served from. In production this is the Garage bucket
+  // behind Traefik; the website fetches index.html from it server-side, while the browser
+  // loads the hashed assets directly using the absolute base baked in by Vite.
+  const spaOrigin = isDev
+    ? `http://localhost:${devPort}`
+    : (process.env.SPA_ORIGIN ?? "https://static.forum.sproutos.me")
 
   const spaUrl = new URL(pathname, spaOrigin)
   spaUrl.search = request.nextUrl.search

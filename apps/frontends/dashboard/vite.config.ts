@@ -13,7 +13,12 @@ const fontsourceFiles = (pkg: string) =>
   )
 
 export default defineConfig(({ mode }) => ({
-  base: mode === "production" ? "https://d1i66hf38xpie.cloudfront.net/dashboard/" : "/",
+  // Absolute in production: the document is served from the forum host while these assets
+  // come from the Garage static host, so relative URLs would resolve to the wrong origin.
+  base:
+    mode === "production"
+      ? `${process.env.VITE_SPA_BASE_URL ?? "https://static.forum.sproutos.me"}/dashboard/`
+      : "/",
   plugins: [
     tanstackRouter({ quoteStyle: "double" }),
     react(),

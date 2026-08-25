@@ -17,7 +17,11 @@ const PLATFORM_LABELS: Record<string, string> = {
   android: "Android",
 }
 
-export const revalidate = 300
+// Rendered per request rather than prerendered. These read the database, and prerendering
+// them would mean the Docker build needs a live database -- a build-time dependency on
+// production infrastructure that buys nothing here: the query is a single indexed row, and
+// the figures are fresher this way.
+export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
   title: "Revenue",

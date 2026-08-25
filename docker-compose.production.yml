@@ -1,0 +1,222 @@
+# Production stack for the OVH host (135.148.122.203), living at
+# /opt/forum/docker-compose.production.yml.
+#
+# This box ALSO runs the SproutOS backend from /opt/sproutos/docker-compose.yaml. Everything
+# here is namespaced to keep the two apart: project `forum`, containers `forum_*`, network
+# `forum_default`, data under /srv/forum. The SproutOS services are never touched.
+#
+# Two env files sit next to this one:
+#   .env             compose ${...} interpolation -- passwords and image tags
+#   .env.production  container runtime env, read via env_file
+# Both are written by hand on the server and never committed.
+#
+# NEVER run `docker system prune -a` or a bare `docker compose down` on this box: either can
+# take the SproutOS containers with it. Always pass -f with this file.
+
+name: forum
+
+x-app: &app
+  env_file: .env.production
+  restart: unless-stopped
+  # The box has no swap, so any overshoot goes straight to the OOM killer -- and
+  # sproutos_opensearch, at ~30 GB RSS, is its most attractive target. Every container here
+  # is capped, and volunteers itself first.
+  oom_score_adj: 500
+
+services:
+  traefik:
+    container_name: forum_traefik
+    # v3.6+: older Traefik Docker clients speak API <1.40, which Engine 29.x rejects.
+    image: traefik:v3.6
+    restart: unless-stopped
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=forum_default
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.le.acme.tlschallenge=true
+      - --certificatesresolvers.le.acme.email=sproutosagent@gmail.com
+      - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
+      - --accesslog=true
+      - --accesslog.filters.statuscodes=400-599
+    ports:
+      # The only published ports in this file. Everything else stays on the internal bridge,
+      # which is what keeps the SproutOS services 127.0.0.1-only.
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
+      # Host-side IPv6 publishing. Enabling IPv6 in the Docker daemon would require
+      # restarting dockerd, which bounces every SproutOS container -- Kafka included, with
+      # unclean-shutdown log recovery. This achieves a working AAAA without that.
+      - "[::]:80:80"
+      - "[::]:443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./letsencrypt:/letsencrypt
+    mem_limit: 256m
+    cpus: 0.5
+    ulimits:
+      nofile: { soft: 65536, hard: 65536 }
+
+  website:
+    <<: *app
+    container_name: forum_website
+    image: ghcr.io/sproutos-agent/forum-website:${WEBSITE_TAG:-latest}
+    mem_limit: 2g
+    cpus: 2
+    healthcheck:
+      # node:*-slim ships no curl or wget; use the built-in fetch.
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://localhost:3000/login').then(r=>{if(r.status>=500)process.exit(1)}).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      retries: 3
+      start_period: 30s
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.website.rule=Host(`forum.sproutos.me`)
+      - traefik.http.routers.website.entrypoints=websecure
+      - traefik.http.routers.website.tls.certresolver=le
+      - traefik.http.services.website.loadbalancer.server.port=3000
+
+  bullground:
+    <<: *app
+    container_name: forum_bullground
+    image: ghcr.io/sproutos-agent/forum-bullground:${BULLGROUND_TAG:-latest}
+    mem_limit: 2g
+    cpus: 1.5
+    stop_grace_period: 120s
+
+  # One-shot, profile-gated so `up -d` never starts it. The deploy script runs it before any
+  # container swap:
+  #   docker compose -f docker-compose.production.yml --profile migrate run --rm dbmigrator
+  # This is why Postgres needs no public port.
+  dbmigrator:
+    <<: *app
+    container_name: forum_dbmigrator
+    image: ghcr.io/sproutos-agent/forum-dbmigrator:${MIGRATOR_TAG:-latest}
+    profiles: ["migrate"]
+    restart: "no"
+    mem_limit: 512m
+
+  postgres:
+    container_name: forum_postgres
+    image: postgres:18
+    restart: unless-stopped
+    oom_score_adj: 500
+    # Bound the checkpoint bursts rather than letting them spike: this disk is shared with
+    # SproutOS OpenSearch's reads.
+    command:
+      - postgres
+      - -c
+      - shared_buffers=1GB
+      - -c
+      - effective_cache_size=3GB
+      - -c
+      - work_mem=32MB
+      - -c
+      - max_connections=100
+      - -c
+      - max_wal_size=2GB
+      - -c
+      - min_wal_size=256MB
+      - -c
+      - checkpoint_completion_target=0.9
+      - -c
+      - random_page_cost=1.1
+    environment:
+      - POSTGRES_USER=forum
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=main
+    volumes:
+      - /srv/forum/postgres:/var/lib/postgresql
+    mem_limit: 4g
+    cpus: 2
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U forum -d main"]
+      interval: 10s
+      retries: 5
+    # No ports: nothing off-box needs Postgres.
+
+  valkey:
+    container_name: forum_valkey
+    image: valkey/valkey:9.0-alpine
+    restart: unless-stopped
+    oom_score_adj: 500
+    command:
+      - valkey-server
+      - --requirepass
+      - ${VALKEY_PASSWORD}
+      - --maxmemory
+      - 768mb
+      # A queued job is real work; evicting one loses it silently. Refusing writes is loud,
+      # and correct.
+      - --maxmemory-policy
+      - noeviction
+      - --appendonly
+      - "yes"
+      - --appendfsync
+      - everysec
+    volumes:
+      - /srv/forum/valkey:/data
+    mem_limit: 1g
+    cpus: 0.5
+
+  elasticsearch:
+    container_name: forum_elasticsearch
+    image: elasticsearch:9.4.3
+    restart: unless-stopped
+    oom_score_adj: 500
+    environment:
+      - discovery.type=single-node
+      - cluster.name=forum
+      - xpack.security.enabled=true
+      - xpack.security.enrollment.enabled=false
+      - bootstrap.memory_lock=true
+      # Deliberately its own cluster, not SproutOS's OpenSearch: the @elastic/elasticsearch v9
+      # client enforces a product check that OpenSearch fails, and sharing would put forum
+      # writes in the same circuit breakers as tenant search.
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    volumes:
+      - /srv/forum/elasticsearch:/usr/share/elasticsearch/data
+    # ~2x heap: off-heap direct memory defaults to half the heap, plus metaspace and stacks.
+    mem_limit: 4g
+    cpus: 2
+    ulimits:
+      memlock: { soft: -1, hard: -1 }
+
+  garage:
+    container_name: forum_garage
+    image: dxflrs/garage:v2.3.0
+    restart: unless-stopped
+    oom_score_adj: 500
+    volumes:
+      - ./garage.toml:/etc/garage.toml:ro
+      - /srv/forum/garage/data:/var/lib/garage/data
+      - /srv/forum/garage/meta:/var/lib/garage/meta
+    mem_limit: 1g
+    cpus: 1
+    labels:
+      - traefik.enable=true
+      # Static SPA bundles and user media, served by Garage's web endpoint. Garage picks the
+      # bucket from the Host header minus its root_domain, so no rewriting is needed.
+      - traefik.http.routers.garage-web.rule=Host(`static.forum.sproutos.me`) || Host(`media.forum.sproutos.me`)
+      - traefik.http.routers.garage-web.entrypoints=websecure
+      - traefik.http.routers.garage-web.tls.certresolver=le
+      - traefik.http.routers.garage-web.service=garage-web
+      - traefik.http.services.garage-web.loadbalancer.server.port=3902
+      # S3 API, for presigned uploads from the browser and bundle publishing from CI.
+      # This MUST be its own host with no path rewriting: SigV4 signs the canonical URI, so a
+      # StripPrefix would guarantee SignatureDoesNotMatch on every request.
+      - traefik.http.routers.garage-s3.rule=Host(`s3.forum.sproutos.me`)
+      - traefik.http.routers.garage-s3.entrypoints=websecure
+      - traefik.http.routers.garage-s3.tls.certresolver=le
+      - traefik.http.routers.garage-s3.service=garage-s3
+      - traefik.http.services.garage-s3.loadbalancer.server.port=3900

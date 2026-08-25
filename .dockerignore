@@ -1,0 +1,18 @@
+# Build context is the repo root, so keep it small and never ship local state.
+node_modules
+**/node_modules
+.git
+.github
+.idea
+.next
+**/.next
+**/dist
+**/build
+.turbo
+**/.turbo
+# Secrets live on the server, never in an image layer.
+.env
+.env.*
+!.template.env
+*.log
+letsencrypt

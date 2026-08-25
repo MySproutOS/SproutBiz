@@ -23,7 +23,6 @@ env:
   NPM_CONFIG_FUND: false
 
 permissions:
-  id-token: write
   contents: read
 
 jobs:
@@ -76,22 +75,34 @@ jobs:
           max-files: 50
           max-size: 3gb
       - name: Build Dashboard
+        # Vite inlines these at build time, so they cannot be supplied at runtime.
+        env:
+          VITE_SPA_BASE_URL: https://static.forum.sproutos.me
+          VITE_PUBLIC_MEDIA_BASE_URL: https://media.forum.sproutos.me
         run: pnpm exec turbo run build --filter=dashboard
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::471112590391:role/github-actions-spa-deploy
-          aws-region: us-east-1
-      - name: Deploy to S3
+      - name: Publish dashboard bundle to Garage
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.GARAGE_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.GARAGE_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: garage
+          # Recent AWS CLI v2 sends CRC32 trailers that Garage rejects.
+          AWS_REQUEST_CHECKSUM_CALCULATION: when_required
         run: |
-          aws s3 sync apps/frontends/dashboard/dist/ s3://nextjs-spa-split/dashboard/ \
-            --delete \
+          # Hashed assets are immutable and safe to cache forever. index.html is not: it is
+          # the thing that points at the current hashes.
+          #
+          # No --delete: an open tab still holds the previous index.html and will keep asking
+          # for the assets it names. Leaving them costs a little storage and avoids breaking
+          # sessions mid-deploy; prune old bundles deliberately instead.
+          aws s3 sync apps/frontends/dashboard/dist/ s3://static.forum/dashboard/ \
+            --endpoint-url https://s3.forum.sproutos.me \
             --cache-control "public, max-age=31536000, immutable" \
             --exclude "index.html"
-          aws s3 cp apps/frontends/dashboard/dist/index.html s3://nextjs-spa-split/dashboard/index.html \
+          aws s3 cp apps/frontends/dashboard/dist/index.html s3://static.forum/dashboard/index.html \
+            --endpoint-url https://s3.forum.sproutos.me \
             --cache-control "no-cache"
-      - name: Invalidate CloudFront
-        run: aws cloudfront create-invalidation --distribution-id EWFWU5QPDS7B3 --paths "/dashboard/index.html"
+          # No CDN invalidation step: Garage serves these directly, so there is no edge cache
+          # to purge and no window where the two disagree.
 
   deploy-admin:
     name: Deploy Admin
@@ -120,19 +131,31 @@ jobs:
           max-files: 50
           max-size: 3gb
       - name: Build Admin
+        # Vite inlines these at build time, so they cannot be supplied at runtime.
+        env:
+          VITE_SPA_BASE_URL: https://static.forum.sproutos.me
+          VITE_PUBLIC_MEDIA_BASE_URL: https://media.forum.sproutos.me
         run: pnpm exec turbo run build --filter=admin
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::471112590391:role/github-actions-spa-deploy
-          aws-region: us-east-1
-      - name: Deploy to S3
+      - name: Publish admin bundle to Garage
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.GARAGE_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.GARAGE_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: garage
+          # Recent AWS CLI v2 sends CRC32 trailers that Garage rejects.
+          AWS_REQUEST_CHECKSUM_CALCULATION: when_required
         run: |
-          aws s3 sync apps/frontends/admin/dist/ s3://nextjs-spa-split/admin/ \
-            --delete \
+          # Hashed assets are immutable and safe to cache forever. index.html is not: it is
+          # the thing that points at the current hashes.
+          #
+          # No --delete: an open tab still holds the previous index.html and will keep asking
+          # for the assets it names. Leaving them costs a little storage and avoids breaking
+          # sessions mid-deploy; prune old bundles deliberately instead.
+          aws s3 sync apps/frontends/admin/dist/ s3://static.forum/admin/ \
+            --endpoint-url https://s3.forum.sproutos.me \
             --cache-control "public, max-age=31536000, immutable" \
             --exclude "index.html"
-          aws s3 cp apps/frontends/admin/dist/index.html s3://nextjs-spa-split/admin/index.html \
+          aws s3 cp apps/frontends/admin/dist/index.html s3://static.forum/admin/index.html \
+            --endpoint-url https://s3.forum.sproutos.me \
             --cache-control "no-cache"
-      - name: Invalidate CloudFront
-        run: aws cloudfront create-invalidation --distribution-id EWFWU5QPDS7B3 --paths "/admin/index.html"
+          # No CDN invalidation step: Garage serves these directly, so there is no edge cache
+          # to purge and no window where the two disagree.

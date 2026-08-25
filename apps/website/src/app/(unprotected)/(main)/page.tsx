@@ -7,7 +7,11 @@ import { RevenueStats } from "@website/components/landing/RevenueStats"
 import Link from "next/link"
 
 // Figures change when the aggregation job runs, not per request.
-export const revalidate = 300
+// Rendered per request rather than prerendered. These read the database, and prerendering
+// them would mean the Docker build needs a live database -- a build-time dependency on
+// production infrastructure that buys nothing here: the query is a single indexed row, and
+// the figures are fresher this way.
+export const dynamic = "force-dynamic"
 
 const SPROUTOS_URL = process.env.NEXT_PUBLIC_SPROUTOS_URL ?? "https://sproutos.me"
 

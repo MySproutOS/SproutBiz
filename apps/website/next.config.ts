@@ -3,6 +3,12 @@ import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  // Ship a self-contained server: standalone traces only the files actually reached, so the
+  // runtime image needs no node_modules.
+  output: "standalone",
+  // Mandatory in a pnpm workspace. Without it, tracing stops at the app directory and misses
+  // the symlinked workspace packages, which fails at runtime rather than at build.
+  outputFileTracingRoot: path.join(__dirname, "..", ".."),
   // Links routinely point at SPA routes served through the proxy (e.g. /dashboard),
   // which typed routes would reject as unknown Next.js routes
   typedRoutes: false,

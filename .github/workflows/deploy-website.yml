@@ -1,0 +1,84 @@
+name: Deploy website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/website/**"
+      - "lib/**"
+      - "packages/**"
+      - "pnpm-lock.yaml"
+      - "apps/website/Dockerfile"
+      - ".github/workflows/deploy-website.yml"
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Existing GHCR tag to redeploy (e.g. a previous commit SHA, to roll back). Leave empty to build this ref."
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  # Never let two deploys of the same service race for the same containers.
+  group: deploy-website
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # Build steps are skipped when a tag is supplied by hand: that redeploys an image that
+      # already exists, which is what makes rollback a one-click operation.
+      - name: Log in to GHCR
+        if: ${{ !inputs.image_tag }}
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        if: ${{ !inputs.image_tag }}
+        uses: docker/setup-buildx-action@v3
+
+      - name: Expose GitHub runtime for buildx cache
+        if: ${{ !inputs.image_tag }}
+        uses: crazy-max/ghaction-github-runtime@v3
+
+      - name: Build and push
+        if: ${{ !inputs.image_tag }}
+        run: |
+          docker buildx build --push \
+            -f apps/website/Dockerfile \
+            -t ghcr.io/sproutos-agent/forum-website:${{ github.sha }} \
+            -t ghcr.io/sproutos-agent/forum-website:latest \
+            --cache-from type=gha \
+            --cache-to type=gha,mode=max \
+            .
+
+      - name: Build and push the migrator
+        if: ${{ !inputs.image_tag }}
+        run: |
+          docker buildx build --push \
+            -f apps/dbmigrator/Dockerfile \
+            -t ghcr.io/sproutos-agent/forum-dbmigrator:${{ github.sha }} \
+            --cache-from type=gha \
+            --cache-to type=gha,mode=max \
+            .
+
+      - name: Deploy over SSH
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_USER: ${{ github.actor }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.OVH_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan 135.148.122.203 >> ~/.ssh/known_hosts 2>/dev/null
+          bin/deploy/deploy.sh website ${{ inputs.image_tag || github.sha }}
