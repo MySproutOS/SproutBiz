@@ -24,6 +24,8 @@ export type JsonPrimitive = boolean | number | string | null
 
 export type JsonValue = JsonArray | JsonObject | JsonPrimitive
 
+export type Numeric = ColumnType<string, number | string, number | string>
+
 export type Timestamp = ColumnType<Date, Date | string, Date | string>
 
 export interface Account {
@@ -52,6 +54,64 @@ export interface AgentToken {
   tokenHash: string
   tokenPrefix: string
   userId: string
+}
+
+export interface Business {
+  communityId: string | null
+  createdAt: Generated<Timestamp>
+  description: string | null
+  id: string
+  launchedAt: Timestamp | null
+  name: string
+  ownerUserId: string
+  platform: Generated<string>
+  repoUrl: string | null
+  slug: string
+  status: Generated<string>
+  tagline: string | null
+  url: string | null
+}
+
+export interface BusinessCostSnapshot {
+  amountCents: Generated<Int8>
+  businessId: string
+  capturedAt: Generated<Timestamp>
+  category: string
+  currency: Generated<string>
+  fxRate: Generated<Numeric>
+  id: string
+  periodEnd: Timestamp
+  periodStart: Timestamp
+  source: string
+  usdAmountCents: Generated<Int8>
+}
+
+export interface BusinessIntegration {
+  businessId: string
+  createdAt: Generated<Timestamp>
+  externalAccountId: string | null
+  id: string
+  lastError: string | null
+  lastSyncedAt: Timestamp | null
+  provider: string
+  secretRef: string | null
+  status: Generated<string>
+}
+
+export interface BusinessRevenueSnapshot {
+  businessId: string
+  capturedAt: Generated<Timestamp>
+  currency: Generated<string>
+  feesCents: Generated<Int8>
+  fxRate: Generated<Numeric>
+  grossCents: Generated<Int8>
+  id: string
+  netCents: Generated<Int8>
+  periodEnd: Timestamp
+  periodStart: Timestamp
+  refundsCents: Generated<Int8>
+  source: string
+  usdNetCents: Generated<Int8>
 }
 
 export interface Comment {
@@ -285,6 +345,26 @@ export interface CustomFeedCommunity {
   communityId: string
   createdAt: Generated<Timestamp>
   customFeedId: string
+}
+
+export interface Donation {
+  amountCents: Generated<Int8>
+  createdAt: Generated<Timestamp>
+  currency: Generated<string>
+  email: string | null
+  id: string
+  status: Generated<string>
+  stripeCheckoutSessionId: string
+  stripePaymentIntentId: string | null
+  userId: string | null
+}
+
+export interface ForumRevenueDaily {
+  businessCount: Generated<number>
+  computedAt: Generated<Timestamp>
+  day: Timestamp
+  totalCostUsdCents: Generated<Int8>
+  totalRevenueUsdCents: Generated<Int8>
 }
 
 export interface ModAction {
@@ -633,6 +713,10 @@ export interface WikiRevision {
 export interface DB {
   account: Account
   agentToken: AgentToken
+  business: Business
+  businessCostSnapshot: BusinessCostSnapshot
+  businessIntegration: BusinessIntegration
+  businessRevenueSnapshot: BusinessRevenueSnapshot
   comment: Comment
   commentFollow: CommentFollow
   commentReport: CommentReport
@@ -654,6 +738,8 @@ export interface DB {
   communityWidget: CommunityWidget
   customFeed: CustomFeed
   customFeedCommunity: CustomFeedCommunity
+  donation: Donation
+  forumRevenueDaily: ForumRevenueDaily
   modAction: ModAction
   modmailConversation: ModmailConversation
   modmailMessage: ModmailMessage

@@ -3,7 +3,9 @@ import { RegExpRouter } from "hono/router/reg-exp-router"
 import { READ_TIER, WRITE_TIER, rateLimit } from "../utils/rate-limit"
 import agentToken from "./agent-token"
 import auth from "./auth"
+import business from "./business"
 import comment from "./comment"
+import revenue from "./revenue"
 import commentAction from "./comment-action"
 import commentVote from "./comment-vote"
 import community from "./community"
@@ -54,6 +56,8 @@ const app = new Hono({
   })
   .route("/auth", auth)
   .route("/agent-token", agentToken)
+  .route("/revenue", revenue)
+  .route("/business", business)
   .route("/user", user)
   .route("/user", userSettings)
   .route("/topic", topic)
