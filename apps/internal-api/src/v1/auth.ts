@@ -6,6 +6,8 @@ import { resolver } from "hono-typebox-openapi/typebox"
 import { Type } from "typebox"
 import { authMiddleware, authNoThrowMiddleware } from "../middleware"
 import { EmptyObject, ErrorSchemaResponse, Nullable } from "../utils/common.serializer"
+import { ErrorCode } from "../utils/errors.enum"
+import { throwError } from "../utils/http-exception"
 
 const AuthMeResponseT = Type.Object({
   user: Nullable(
@@ -16,6 +18,11 @@ const AuthMeResponseT = Type.Object({
       isAdmin: Type.Boolean(),
     }),
   ),
+  /** Which credential authenticated this request, so an agent can confirm its token is
+   *  actually in use rather than silently falling back to a browser session. */
+  authMethod: Type.Union([Type.Literal("session"), Type.Literal("token"), Type.Literal("none")]),
+  /** Scopes carried by the bearer token, empty for a browser session (which is unscoped). */
+  scopes: Type.Array(Type.String()),
 })
 
 const app = new Hono()
@@ -36,7 +43,9 @@ const app = new Hono()
     }),
     (c) => {
       const user = c.var.user
-      return c.json({ user: user ?? null }, 200)
+      const agentToken = c.var.agentToken
+      const authMethod = user === null ? "none" : agentToken !== null ? "token" : "session"
+      return c.json({ user: user ?? null, authMethod, scopes: agentToken?.scopes ?? [] }, 200)
     },
   )
   .use(authMiddleware)
@@ -64,6 +73,16 @@ const app = new Hono()
     }),
     async (c) => {
       const session = c.var.session
+      // Bearer tokens have no session to end. Revoking the token is the equivalent, and it
+      // is deliberately a separate, session-authenticated action.
+      if (session === null) {
+        return throwError(
+          c,
+          400,
+          ErrorCode.BadRequest,
+          "Bearer tokens cannot be logged out; revoke the token instead",
+        )
+      }
       await db.deleteFrom("session").where("sessionKey", "=", session.sessionKey).execute()
       deleteCookie(c, "session", { path: "/" })
       return c.json({}, 200)

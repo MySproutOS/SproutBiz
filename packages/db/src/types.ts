@@ -41,6 +41,19 @@ export interface Account {
   userId: string
 }
 
+export interface AgentToken {
+  createdAt: Generated<Timestamp>
+  expiresAt: Timestamp | null
+  id: string
+  lastUsedAt: Timestamp | null
+  name: string
+  revokedAt: Timestamp | null
+  scopes: Generated<string>
+  tokenHash: string
+  tokenPrefix: string
+  userId: string
+}
+
 export interface Comment {
   approvedAt: Timestamp | null
   approvedByUserId: string | null
@@ -619,6 +632,7 @@ export interface WikiRevision {
 
 export interface DB {
   account: Account
+  agentToken: AgentToken
   comment: Comment
   commentFollow: CommentFollow
   commentReport: CommentReport

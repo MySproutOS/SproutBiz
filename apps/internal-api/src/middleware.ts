@@ -1,4 +1,5 @@
-import { authUser } from "@lib/dao"
+import { authAgentToken, authUser, crudAgentToken, shouldTouchLastUsed } from "@lib/dao"
+import type { AgentTokenContext } from "@lib/dao"
 import { sha256 } from "@oslojs/crypto/sha2"
 import { encodeHexLowerCase } from "@oslojs/encoding"
 import type { DB } from "@template-nextjs/db"
@@ -8,24 +9,63 @@ import { getCookie } from "hono/cookie"
 import { createMiddleware } from "hono/factory"
 import { HTTPException } from "hono/http-exception"
 import type { Selectable } from "kysely"
+import { hashAgentToken, parseBearerToken } from "./utils/agent-token"
 import { ErrorCode } from "./utils/errors.enum"
 import { throwHTTPException } from "./utils/http-exception"
 
 type SessionUser = Pick<Selectable<DB["user"]>, "id" | "isAdmin" | "name" | "email" | "suspendedAt">
 
-export async function getSession(
-  c:
-    | Context<{ Variables: { user: SessionUser; session: Selectable<DB["session"]> } }, string>
-    | Context<
-        { Variables: { user: SessionUser | null; session: Selectable<DB["session"]> | null } },
-        string
-      >,
-) {
-  const sessionToken = getCookie(c, "session")
-  if (!sessionToken) {
-    throwHTTPException(401, ErrorCode.Unauthenticated, "Unauthenticated")
+/** The resolved caller. Exactly one of `session` / `agentToken` is non-null:
+ *  a browser presents a session cookie, an agent presents a bearer token. */
+export type AuthPrincipal = {
+  user: SessionUser
+  session: Selectable<DB["session"]> | null
+  agentToken: AgentTokenContext | null
+}
+
+type AuthVariables = {
+  user: SessionUser
+  session: Selectable<DB["session"]> | null
+  agentToken: AgentTokenContext | null
+}
+
+type AuthNoThrowVariables = {
+  user: SessionUser | null
+  session: Selectable<DB["session"]> | null
+  agentToken: AgentTokenContext | null
+}
+
+function assertUsable(user: SessionUser): void {
+  if (user.suspendedAt) {
+    throwHTTPException(403, ErrorCode.Suspended, "Account suspended")
+  }
+}
+
+async function resolveBearer(token: string): Promise<AuthPrincipal> {
+  let result: Awaited<ReturnType<ReturnType<typeof authAgentToken>["validateToken"]>>
+  try {
+    result = await authAgentToken(db).validateToken(hashAgentToken(token))
+  } catch {
+    // Typically this means we're unable to connect to the database
+    return throwHTTPException(503, ErrorCode.ServiceUnavailable, "Service unavailable")
+  }
+  if (!result) throwHTTPException(401, ErrorCode.Unauthenticated, "Invalid or expired token")
+  assertUsable(result.user)
+
+  // Fire-and-forget, and throttled inside the DAO: last_used_at is a diagnostic, and a write
+  // on every request would add a round trip to otherwise cheap reads.
+  if (shouldTouchLastUsed(result.token.lastUsedAt)) {
+    void crudAgentToken(db)
+      .touchLastUsed(result.token.id, new Date())
+      .catch(() => {
+        // A missed timestamp is not worth failing the request over.
+      })
   }
 
+  return { user: result.user, session: null, agentToken: result.token }
+}
+
+async function resolveCookie(sessionToken: string): Promise<AuthPrincipal> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(sessionToken)))
   let session: Awaited<ReturnType<ReturnType<typeof authUser>["validateSessionToken"]>>
   try {
@@ -35,43 +75,91 @@ export async function getSession(
     return throwHTTPException(503, ErrorCode.ServiceUnavailable, "Service unavailable")
   }
   if (!session) throwHTTPException(401, ErrorCode.Unauthenticated, "Unauthenticated")
-  if (session.user.suspendedAt) {
-    throwHTTPException(403, ErrorCode.Suspended, "Account suspended")
-  }
-  return session
+  assertUsable(session.user)
+  return { user: session.user, session: session.session, agentToken: null }
 }
 
-export const authMiddleware = createMiddleware<{
-  Variables: {
-    user: SessionUser
-    session: Selectable<DB["session"]>
+/**
+ * Resolves the caller from either credential.
+ *
+ * A bearer token wins over a session cookie when both are present, so an agent driving a
+ * browser that happens to be logged in still acts as itself rather than silently borrowing
+ * the human's session.
+ */
+export async function resolveAuth(c: Context): Promise<AuthPrincipal> {
+  const bearer = parseBearerToken(c.req.header("Authorization"))
+  if (bearer !== null) return await resolveBearer(bearer)
+
+  const sessionToken = getCookie(c, "session")
+  if (!sessionToken) {
+    throwHTTPException(401, ErrorCode.Unauthenticated, "Unauthenticated")
   }
-}>(async (c, next) => {
-  const session = await getSession(c)
-  c.set("user", session.user)
-  c.set("session", session.session)
+  return await resolveCookie(sessionToken)
+}
+
+export const authMiddleware = createMiddleware<{ Variables: AuthVariables }>(async (c, next) => {
+  const principal = await resolveAuth(c)
+  c.set("user", principal.user)
+  c.set("session", principal.session)
+  c.set("agentToken", principal.agentToken)
 
   await next()
 })
 
-export const authNoThrowMiddleware = createMiddleware<{
-  Variables: {
-    user: SessionUser | null
-    session: Selectable<DB["session"]> | null
-  }
-}>(async (c, next) => {
-  try {
-    const session = await getSession(c)
-    c.set("user", session.user)
-    c.set("session", session.session)
-  } catch (e) {
-    if (e instanceof HTTPException && e.status === 401) {
-      c.set("user", null)
-      c.set("session", null)
-    } else {
-      throw e
+export const authNoThrowMiddleware = createMiddleware<{ Variables: AuthNoThrowVariables }>(
+  async (c, next) => {
+    try {
+      const principal = await resolveAuth(c)
+      c.set("user", principal.user)
+      c.set("session", principal.session)
+      c.set("agentToken", principal.agentToken)
+    } catch (e) {
+      if (e instanceof HTTPException && e.status === 401) {
+        c.set("user", null)
+        c.set("session", null)
+        c.set("agentToken", null)
+      } else {
+        throw e
+      }
     }
-  }
 
-  await next()
-})
+    await next()
+  },
+)
+
+/**
+ * Restricts a route to browser sessions.
+ *
+ * Used for the token-management endpoints: if a bearer token could mint or revoke tokens, a
+ * single leaked token would be self-perpetuating and could not be contained by revoking it.
+ */
+export const cookieSessionOnlyMiddleware = createMiddleware<{ Variables: AuthVariables }>(
+  async (c, next) => {
+    if (c.var.agentToken !== null) {
+      throwHTTPException(
+        403,
+        ErrorCode.Forbidden,
+        "This endpoint requires a browser session; agent tokens cannot manage tokens",
+      )
+    }
+    await next()
+  },
+)
+
+/**
+ * Requires a scope of a bearer token. Session cookies represent the user acting directly and
+ * are unscoped, so they pass through.
+ */
+export function requireScope(scope: string) {
+  return createMiddleware<{ Variables: AuthVariables }>(async (c, next) => {
+    const agentToken = c.var.agentToken
+    if (agentToken !== null && !agentToken.scopes.includes(scope)) {
+      throwHTTPException(
+        403,
+        ErrorCode.InsufficientPermissions,
+        `This token is missing the "${scope}" scope`,
+      )
+    }
+    await next()
+  })
+}

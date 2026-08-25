@@ -104,6 +104,18 @@ function handleCsrfAndCookies(request: NextRequest): NextResponse | null {
     return response
   }
 
+  // Bearer-authenticated requests are exempt from the CSRF origin check. CSRF exploits
+  // *ambient* credentials: the browser attaches cookies to a cross-site request on its own,
+  // so a state-changing request needs a same-origin proof. It never attaches an
+  // Authorization header on its own -- an agent or server has to set it deliberately -- so a
+  // bearer request cannot be forged cross-site and has nothing to prove. Without this,
+  // `curl -X POST -H "Authorization: Bearer ..."` sends no Origin and 403s here before ever
+  // reaching the API, which would make the whole agent-facing API write-only-in-theory.
+  // Cookie-authenticated requests fall through to the unchanged check below.
+  if (/^Bearer\s+\S/i.test(request.headers.get("Authorization") ?? "")) {
+    return null
+  }
+
   const originHeader = request.headers.get("Origin")
   const hostHeader = request.headers.get("X-Forwarded-Host") ?? request.headers.get("Host")
   if (originHeader === null || hostHeader === null) {

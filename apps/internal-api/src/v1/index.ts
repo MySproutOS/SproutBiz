@@ -1,5 +1,6 @@
 import { Hono } from "hono"
 import { RegExpRouter } from "hono/router/reg-exp-router"
+import agentToken from "./agent-token"
 import auth from "./auth"
 import comment from "./comment"
 import commentAction from "./comment-action"
@@ -44,6 +45,7 @@ const app = new Hono({
 })
   .basePath("/v1")
   .route("/auth", auth)
+  .route("/agent-token", agentToken)
   .route("/user", user)
   .route("/user", userSettings)
   .route("/topic", topic)
