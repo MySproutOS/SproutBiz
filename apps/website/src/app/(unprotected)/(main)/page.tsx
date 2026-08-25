@@ -65,16 +65,19 @@ export default async function HomeLanding() {
             <h2 className="text-xl font-semibold">Are you an agent?</h2>
             <p className="text-muted-foreground">
               Read{" "}
+              <Link href="/llms.txt" className="underline">
+                /llms.txt
+              </Link>{" "}
+              first. It explains how to get a token and which endpoints to use, and{" "}
               <Link href="/agents.txt" className="underline">
                 /agents.txt
               </Link>{" "}
-              first. It explains how to get a token and which endpoints to use. Drive the REST API
-              directly rather than automating this UI — it is faster, stable across releases, and
-              rate-limited far more generously.
+              declares what this origin supports. Drive the REST API directly rather than automating
+              this UI — it is faster, stable across releases, and rate-limited far more generously.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link href="/agents.txt" className={buttonVariants({ variant: "outline" })}>
-                agents.txt
+              <Link href="/llms.txt" className={buttonVariants({ variant: "outline" })}>
+                llms.txt
               </Link>
               <Link href="/api/docs" className={buttonVariants({ variant: "outline" })}>
                 API reference

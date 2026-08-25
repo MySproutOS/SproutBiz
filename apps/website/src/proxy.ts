@@ -21,7 +21,13 @@ if (process.env.NODE_ENV === "development") {
  *  anonymous visitors, so machine-readable endpoints must be listed explicitly. */
 const NEXTJS_PUBLIC_EXACT = new Set<string>([
   "/",
+  // Machine-readable discovery files. Every one must be reachable anonymously, or the agents
+  // they address cannot read them.
   "/agents.txt",
+  "/agents.json",
+  "/llms.txt",
+  "/robots.txt",
+  "/skills/sproutbiz/SKILL.md",
   "/revenue",
   "/donate",
   "/donate/thanks",

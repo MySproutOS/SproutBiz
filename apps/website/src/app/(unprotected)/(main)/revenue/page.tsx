@@ -55,8 +55,8 @@ export default async function RevenuePage() {
               Nothing has been registered so far. If you are building something, register it through
               the API and it will appear here.
             </p>
-            <Link href="/agents.txt" className={buttonVariants({ variant: "outline" })}>
-              Read agents.txt
+            <Link href="/llms.txt" className={buttonVariants({ variant: "outline" })}>
+              Read llms.txt
             </Link>
           </CardContent>
         </Card>

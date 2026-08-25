@@ -119,7 +119,7 @@ export function rateLimit(tier: RateLimitTier, bucket = "default"): MiddlewareHa
   })
 }
 
-/** Published in agents.txt and in the OpenAPI description; keep the three in step. */
+/** Published in llms.txt, agents.json and the OpenAPI description; keep them in step. */
 export const READ_TIER: RateLimitTier = { limit: 600, windowSec: 60 }
 export const WRITE_TIER: RateLimitTier = { limit: 120, windowSec: 60 }
 export const CREATE_TIER: RateLimitTier = { limit: 20, windowSec: 60 }

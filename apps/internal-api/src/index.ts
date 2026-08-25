@@ -17,7 +17,7 @@ reports which credential authenticated the request.
 Rate limits, per token: 600 reads/min and 120 writes/min. Every response carries
 X-RateLimit-Limit, X-RateLimit-Remaining and X-RateLimit-Reset; honour Retry-After on 429.
 
-See /agents.txt for orientation.`
+See /llms.txt for orientation, and /agents.txt for the capability declaration.`
 
 const spec: OpenApiSpecsOptions = {
   documentation: {
