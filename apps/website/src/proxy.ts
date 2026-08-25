@@ -36,9 +36,12 @@ const NEXTJS_PUBLIC_EXACT = new Set<string>([
 type SharedRoute = { path: string; spa: "dashboard" | "admin" }
 
 /** Routes that serve Next.js for unauthenticated users, SPA for authenticated users.
+ *
+ *  A route only belongs here if Next.js actually has a page for it. /home does not -- it is the
+ *  signed-in feed and exists only in the dashboard SPA -- so it is deliberately absent, and the
+ *  fallback below sends anonymous visitors to /login rather than to a 404.
  *  Paths use Next.js conventions: [param], [...catchAll], [[...optionalCatchAll]] */
 const SHARED_ROUTES: SharedRoute[] = [
-  { path: "/home", spa: "dashboard" },
   { path: "/posting", spa: "dashboard" },
   { path: "/posting/[id]", spa: "dashboard" },
   { path: "/user/[username]", spa: "dashboard" },
