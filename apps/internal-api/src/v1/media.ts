@@ -10,8 +10,10 @@ import { Hono } from "hono"
 import { describeRoute } from "hono-typebox-openapi"
 import { resolver, validator } from "hono-typebox-openapi/typebox"
 import { authMiddleware } from "../middleware"
+import { mediaUploadsEnabled } from "../utils/features"
 import { EmptyObject, ErrorSchemaResponse } from "../utils/common.serializer"
-import { throwBadRequest, throwForbidden, throwNotFound } from "../utils/http-exception"
+import { ErrorCode } from "../utils/errors.enum"
+import { throwBadRequest, throwError, throwForbidden, throwNotFound } from "../utils/http-exception"
 import {
   mediaAvatarUploadSchemaRequest,
   mediaBannerUploadSchemaRequest,
@@ -62,6 +64,22 @@ const confirmResponse = {
 
 const app = new Hono()
   .use(authMiddleware)
+  // One gate for the whole router rather than nine per-route checks: every endpoint below
+  // either issues a presigned upload or confirms one, so there is no path through here that
+  // should work while uploads are off. A new endpoint added later is covered by default,
+  // which is the failure mode worth designing for.
+  .use(async (c, next) => {
+    if (!mediaUploadsEnabled()) {
+      return throwError(
+        c,
+        503,
+        ErrorCode.ServiceUnavailable,
+        "Media uploads are currently disabled on this deployment",
+      )
+    }
+    await next()
+    return undefined
+  })
   .post(
     "/confirm",
     describeRoute({

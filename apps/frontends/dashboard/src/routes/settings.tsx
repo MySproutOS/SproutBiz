@@ -47,6 +47,7 @@ import { PREFERENCE_TYPES } from "@frontends/dashboard/components/notifications/
 import { AccountEngagementCards } from "@frontends/dashboard/components/AccountEngagementCards"
 import { ImageCropDialog } from "@frontends/dashboard/components/ImageCropDialog"
 import { mediaUrl } from "@frontends/dashboard/lib/mediaUrl"
+import { MEDIA_UPLOADS_ENABLED } from "@frontends/dashboard/lib/features"
 import { uploadToPresigned } from "@frontends/dashboard/lib/mediaUpload"
 import { ImagePlus } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
@@ -291,17 +292,19 @@ function ProfileTab() {
                   className="h-full w-full object-cover"
                 />
               ) : null}
-              <Button
-                type="button"
-                size="sm"
-                variant="secondary"
-                className="absolute bottom-2 right-2"
-                disabled={uploading}
-                onClick={() => bannerInputRef.current?.click()}
-              >
-                <ImagePlus className="size-4" />
-                Change
-              </Button>
+              {MEDIA_UPLOADS_ENABLED && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="secondary"
+                  className="absolute bottom-2 right-2"
+                  disabled={uploading}
+                  onClick={() => bannerInputRef.current?.click()}
+                >
+                  <ImagePlus className="size-4" />
+                  Change
+                </Button>
+              )}
             </div>
             <input
               ref={bannerInputRef}
@@ -327,17 +330,23 @@ function ProfileTab() {
             </Avatar>
             <div className="flex flex-col gap-1">
               <Label>Avatar</Label>
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                className="w-fit"
-                disabled={uploading}
-                onClick={() => avatarInputRef.current?.click()}
-              >
-                <ImagePlus className="size-4" />
-                Change avatar
-              </Button>
+              {MEDIA_UPLOADS_ENABLED ? (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  className="w-fit"
+                  disabled={uploading}
+                  onClick={() => avatarInputRef.current?.click()}
+                >
+                  <ImagePlus className="size-4" />
+                  Change avatar
+                </Button>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Image uploads are turned off for now.
+                </p>
+              )}
             </div>
             <input
               ref={avatarInputRef}
