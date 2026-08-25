@@ -1,5 +1,14 @@
 name: Deploy SPAs
 
+# Publishes the built dashboard and admin bundles to the forum's S3 bucket, served through
+# CloudFront at static.forum.sproutos.me.
+#
+# Credentials come from GitHub's OIDC provider, not from stored keys: the role in
+# MySproutOS/SproutOS (tofu/forum-static.tf) trusts exactly
+# `repo:SproutOS-Agent/SproutOS-Agent-Forum:ref:refs/heads/main`, and can write that one bucket
+# and invalidate that one distribution and nothing else in the account. A pull request from a
+# fork carries its own repository in the OIDC subject and so cannot assume it.
+
 on:
   push:
     branches: [main]
@@ -8,26 +17,33 @@ on:
       - "apps/frontends/admin/**"
       - "lib/typescript/ui/**"
       - "lib/typescript/api-client/**"
+      - ".github/workflows/deploy-spas.yml"
   workflow_dispatch:
     inputs:
       spa:
         description: "Which SPA to deploy"
         required: true
         type: choice
-        options:
-          - all
-          - dashboard
-          - admin
+        options: [all, dashboard, admin]
 
 env:
   NPM_CONFIG_FUND: false
+  STATIC_HOST: https://static.forum.sproutos.me
+  MEDIA_HOST: https://media.forum.sproutos.me
 
 permissions:
   contents: read
+  # Required to mint the OIDC token the role is assumed with. Without it the assume step fails
+  # with a credentials error that says nothing about permissions.
+  id-token: write
+
+concurrency:
+  group: deploy-spas
+  cancel-in-progress: false
 
 jobs:
   changes:
-    name: Detect Changes
+    name: Detect changes
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     outputs:
@@ -48,114 +64,90 @@ jobs:
               - 'lib/typescript/ui/**'
               - 'lib/typescript/api-client/**'
 
-  deploy-dashboard:
-    name: Deploy Dashboard
+  deploy:
+    name: Deploy ${{ matrix.spa }}
     needs: changes
     if: |
       always() && (
-        (github.event_name == 'workflow_dispatch' && (inputs.spa == 'dashboard' || inputs.spa == 'all')) ||
-        (github.event_name == 'push' && needs.changes.outputs.dashboard == 'true')
-      )
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: "24.14.0"
-          cache: "pnpm"
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.4.2
-        with:
-          max-age: 1w
-          max-files: 50
-          max-size: 3gb
-      - name: Build Dashboard
-        # Vite inlines these at build time, so they cannot be supplied at runtime.
-        env:
-          VITE_SPA_BASE_URL: https://static.forum.sproutos.me
-          VITE_PUBLIC_MEDIA_BASE_URL: https://media.forum.sproutos.me
-        run: pnpm exec turbo run build --filter=dashboard
-      - name: Publish dashboard bundle to Garage
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.GARAGE_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.GARAGE_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: garage
-          # Recent AWS CLI v2 sends CRC32 trailers that Garage rejects.
-          AWS_REQUEST_CHECKSUM_CALCULATION: when_required
-        run: |
-          # Hashed assets are immutable and safe to cache forever. index.html is not: it is
-          # the thing that points at the current hashes.
-          #
-          # No --delete: an open tab still holds the previous index.html and will keep asking
-          # for the assets it names. Leaving them costs a little storage and avoids breaking
-          # sessions mid-deploy; prune old bundles deliberately instead.
-          aws s3 sync apps/frontends/dashboard/dist/ s3://static.forum/dashboard/ \
-            --endpoint-url https://s3.forum.sproutos.me \
-            --cache-control "public, max-age=31536000, immutable" \
-            --exclude "index.html"
-          aws s3 cp apps/frontends/dashboard/dist/index.html s3://static.forum/dashboard/index.html \
-            --endpoint-url https://s3.forum.sproutos.me \
-            --cache-control "no-cache"
-          # No CDN invalidation step: Garage serves these directly, so there is no edge cache
-          # to purge and no window where the two disagree.
-
-  deploy-admin:
-    name: Deploy Admin
-    needs: changes
-    if: |
-      always() && (
-        (github.event_name == 'workflow_dispatch' && (inputs.spa == 'admin' || inputs.spa == 'all')) ||
+        (github.event_name == 'workflow_dispatch') ||
+        (github.event_name == 'push' && needs.changes.outputs.dashboard == 'true') ||
         (github.event_name == 'push' && needs.changes.outputs.admin == 'true')
       )
     runs-on: ubuntu-latest
+    strategy:
+      # Independent uploads to different prefixes; one failing should not cancel the other.
+      fail-fast: false
+      matrix:
+        spa: [dashboard, admin]
     steps:
+      - name: Skip when this SPA is unchanged
+        id: gate
+        run: |
+          want='${{ github.event.inputs.spa }}'
+          changed_dashboard='${{ needs.changes.outputs.dashboard }}'
+          changed_admin='${{ needs.changes.outputs.admin }}'
+          spa='${{ matrix.spa }}'
+          run=false
+          if [ '${{ github.event_name }}' = 'workflow_dispatch' ]; then
+            [ "$want" = 'all' ] || [ "$want" = "$spa" ] && run=true
+          else
+            [ "$spa" = 'dashboard' ] && [ "$changed_dashboard" = 'true' ] && run=true
+            [ "$spa" = 'admin' ] && [ "$changed_admin" = 'true' ] && run=true
+          fi
+          echo "run=$run" >> "$GITHUB_OUTPUT"
+
       - uses: actions/checkout@v5
+        if: steps.gate.outputs.run == 'true'
       - name: Install pnpm
+        if: steps.gate.outputs.run == 'true'
         uses: pnpm/action-setup@v4
       - name: Setup Node.js
+        if: steps.gate.outputs.run == 'true'
         uses: actions/setup-node@v5
         with:
           node-version: "24.14.0"
           cache: "pnpm"
       - name: Install dependencies
+        if: steps.gate.outputs.run == 'true'
         run: pnpm install --frozen-lockfile
-      - name: Cache for Turbo
-        uses: rharkor/caching-for-turbo@v2.4.2
-        with:
-          max-age: 1w
-          max-files: 50
-          max-size: 3gb
-      - name: Build Admin
+
+      - name: Build ${{ matrix.spa }}
+        if: steps.gate.outputs.run == 'true'
         # Vite inlines these at build time, so they cannot be supplied at runtime.
         env:
-          VITE_SPA_BASE_URL: https://static.forum.sproutos.me
-          VITE_PUBLIC_MEDIA_BASE_URL: https://media.forum.sproutos.me
-        run: pnpm exec turbo run build --filter=admin
-      - name: Publish admin bundle to Garage
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.GARAGE_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.GARAGE_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: garage
-          # Recent AWS CLI v2 sends CRC32 trailers that Garage rejects.
-          AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+          VITE_SPA_BASE_URL: ${{ env.STATIC_HOST }}
+          VITE_PUBLIC_MEDIA_BASE_URL: ${{ env.MEDIA_HOST }}
+        run: pnpm exec turbo run build --filter=${{ matrix.spa }}
+
+      - name: Assume the publish role
+        if: steps.gate.outputs.run == 'true'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Publish to S3
+        if: steps.gate.outputs.run == 'true'
         run: |
-          # Hashed assets are immutable and safe to cache forever. index.html is not: it is
-          # the thing that points at the current hashes.
+          # Hashed filenames are immutable and safe to cache for a year. index.html is the thing
+          # that points at the current hashes, so it must never be cached.
           #
-          # No --delete: an open tab still holds the previous index.html and will keep asking
-          # for the assets it names. Leaving them costs a little storage and avoids breaking
-          # sessions mid-deploy; prune old bundles deliberately instead.
-          aws s3 sync apps/frontends/admin/dist/ s3://static.forum/admin/ \
-            --endpoint-url https://s3.forum.sproutos.me \
+          # No --delete: an open tab still holds the previous index.html and will keep asking for
+          # the assets it names. The bucket's lifecycle rule expires old *versions*; old keys are
+          # pruned deliberately, not mid-deploy.
+          aws s3 sync apps/frontends/${{ matrix.spa }}/dist/ \
+            "s3://${{ vars.AWS_S3_BUCKET }}/${{ matrix.spa }}/" \
             --cache-control "public, max-age=31536000, immutable" \
             --exclude "index.html"
-          aws s3 cp apps/frontends/admin/dist/index.html s3://static.forum/admin/index.html \
-            --endpoint-url https://s3.forum.sproutos.me \
+          aws s3 cp apps/frontends/${{ matrix.spa }}/dist/index.html \
+            "s3://${{ vars.AWS_S3_BUCKET }}/${{ matrix.spa }}/index.html" \
             --cache-control "no-cache"
-          # No CDN invalidation step: Garage serves these directly, so there is no edge cache
-          # to purge and no window where the two disagree.
+
+      - name: Invalidate the entry point
+        if: steps.gate.outputs.run == 'true'
+        # Only index.html. The hashed assets are new keys on every build, so invalidating them
+        # would pay for a purge of paths CloudFront has never seen.
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ vars.AWS_CLOUDFRONT_DISTRIBUTION_ID }}" \
+            --paths "/${{ matrix.spa }}/index.html"

@@ -183,9 +183,11 @@ function rewriteToSpa(
   prodFolder: string,
 ): NextResponse {
   const isDev = process.env.NODE_ENV === "development"
-  // Where the built SPA bundles are served from. In production this is the Garage bucket
-  // behind Traefik; the website fetches index.html from it server-side, while the browser
-  // loads the hashed assets directly using the absolute base baked in by Vite.
+  // Where the built SPA bundles are served from. In production that is S3 behind CloudFront
+  // (provisioned in MySproutOS/SproutOS, tofu/forum-static.tf): the website fetches index.html
+  // from it server-side, while the browser loads the hashed assets directly using the absolute
+  // base Vite baked in. Deliberately not the OVH box -- that machine's bandwidth is shared with
+  // every tenant's search and queue traffic.
   const spaOrigin = isDev
     ? `http://localhost:${devPort}`
     : (process.env.SPA_ORIGIN ?? "https://static.forum.sproutos.me")

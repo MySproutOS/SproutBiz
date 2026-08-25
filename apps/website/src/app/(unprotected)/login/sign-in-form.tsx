@@ -35,17 +35,6 @@ export function SignInForm({ sproutosEnabled }: { sproutosEnabled: boolean }) {
     startOAuth("/login/sproutos")
   }, [startOAuth])
 
-  const handleGoogleClick = useCallback(() => {
-    const googleSubmit = async () => {
-      if (!agreedToTerms) {
-        setSignInError("Please agree to the terms and conditions to continue")
-        return
-      }
-      await oauthRedirect("/login/google")
-    }
-    googleSubmit().catch(console.error)
-  }, [agreedToTerms])
-
   return (
     <div className="grid gap-6">
       {signInError && (
@@ -82,10 +71,6 @@ export function SignInForm({ sproutosEnabled }: { sproutosEnabled: boolean }) {
           <Icons.sproutos className="mr-2 h-4 w-4" /> SproutOS
         </Button>
       )}
-
-      <Button variant="outline" type="button" disabled={!agreedToTerms} onClick={handleGoogleClick}>
-        <Icons.google className="mr-2 h-4 w-4" /> Google
-      </Button>
     </div>
   )
 }
