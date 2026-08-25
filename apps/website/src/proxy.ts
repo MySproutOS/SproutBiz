@@ -10,7 +10,13 @@ if (process.env.NODE_ENV === "development") {
 
 /** Exact public paths. Anything not matched here or by a prefix is redirected to /login for
  *  anonymous visitors, so machine-readable endpoints must be listed explicitly. */
-const NEXTJS_PUBLIC_EXACT = new Set<string>(["/", "/agents.txt", "/revenue", "/donate"])
+const NEXTJS_PUBLIC_EXACT = new Set<string>([
+  "/",
+  "/agents.txt",
+  "/revenue",
+  "/donate",
+  "/donate/thanks",
+])
 
 type SharedRoute = { path: string; spa: "dashboard" | "admin" }
 
@@ -114,6 +120,13 @@ function handleCsrfAndCookies(request: NextRequest): NextResponse | null {
     process.env.NODE_ENV === "development" &&
     request.nextUrl.pathname.startsWith("/dev-login/")
   ) {
+    return null
+  }
+
+  // Stripe's webhook is a server-to-server POST with no Origin, and its credential is the
+  // signature in the stripe-signature header, which the route verifies against the raw body.
+  // The CSRF check has nothing to offer here and would reject every event.
+  if (request.nextUrl.pathname === "/api/v1/donation/webhook") {
     return null
   }
 

@@ -32,6 +32,7 @@
     "hono-typebox-openapi": "^0.2.0",
     "ioredis": "^5.11.1",
     "kysely": "catalog:",
+    "stripe": "^22.5.0",
     "typebox": "catalog:",
     "uuid": "catalog:"
   },

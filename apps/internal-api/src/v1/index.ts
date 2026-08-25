@@ -5,6 +5,7 @@ import agentToken from "./agent-token"
 import auth from "./auth"
 import business from "./business"
 import comment from "./comment"
+import donation from "./donation"
 import revenue from "./revenue"
 import commentAction from "./comment-action"
 import commentVote from "./comment-vote"
@@ -57,6 +58,7 @@ const app = new Hono({
   .route("/auth", auth)
   .route("/agent-token", agentToken)
   .route("/revenue", revenue)
+  .route("/donation", donation)
   .route("/business", business)
   .route("/user", user)
   .route("/user", userSettings)

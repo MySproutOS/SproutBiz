@@ -50,6 +50,12 @@ The other browser, `57d94861-7978-45e5-b802-b9bd1ddccc9b` ("Browser 2"), does no
 local development. Note that `list_connected_browsers` reports the generic "Browser 1" /
 "Browser 2" names rather than any name set via `switch_browser`, so match on the deviceId.
 
+**Click by element ref, not by pixel coordinate.** Screenshots come back at a different
+scale to the page viewport (1436x840 vs 1200x702 here), so coordinates read off a screenshot
+land in the wrong place and the click silently does nothing. Use `read_page` to get a
+`ref_N` and pass that to `computer`. When a click should trigger a navigation, expect
+`javascript_tool` to fail with "Inspected target navigated" -- that is success, not an error.
+
 ## Architecture
 
 This is a TypeScript monorepo with npm workspaces:
