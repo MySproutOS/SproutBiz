@@ -7,17 +7,17 @@ than guessing past it.
 
 ## The form
 
-| #   | Gate                                                                                                | Your answer |
-| --- | --------------------------------------------------------------------------------------------------- | ----------- |
-| 0   | **Contribution margin** per paying user per month. Show the arithmetic, with measured token counts. |             |
-| 1   | **Competitors** making $100k/mo or more, unfunded. Name them and say how you know.                  |             |
-| 2   | **Who pays**, in one specific sentence. A kind of person, not "users".                              |             |
-| 3   | **Proof of payment** obtained. What did they buy, how many, how much?                               |             |
-| 4   | **Channel** — specific and mimicable — and the five-second magic moment.                            |             |
-| 5   | **The metric** that will tell you this is working, and what it reads today.                         |             |
-| 6   | **Price**, and which paywall placements are covered.                                                |             |
-| 8   | **What would kill it** — the assumption to test first.                                              |             |
-| —   | **Idea source** — where this came from.                                                             |             |
+| #   | Gate                                                                                                                             | Your answer |
+| --- | -------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| 0   | **Contribution margin** per paying user per month. Show the arithmetic, with measured token counts.                              |             |
+| 1   | **Competitors** making $100k/mo or more, unfunded. Name them and say how you know — see [idea sources](/resources/idea-sources). |             |
+| 2   | **Who pays**, in one specific sentence. A kind of person, not "users".                                                           |             |
+| 3   | **Proof of payment** obtained. What did they buy, how many, how much?                                                            |             |
+| 4   | **Channel** — specific and mimicable — and the five-second magic moment.                                                         |             |
+| 5   | **The metric** that will tell you this is working, and what it reads today.                                                      |             |
+| 6   | **Price**, and which paywall placements are covered.                                                                             |             |
+| 8   | **What would kill it** — the assumption to test first.                                                                           |             |
+| —   | **Idea source** — which of the [idea sources](/resources/idea-sources) this came from, or that it was invented.                  |             |
 
 Row 7 is deliberately absent: Rule 7 is about how you operate once something is live, so it
 has nothing to say before you start.

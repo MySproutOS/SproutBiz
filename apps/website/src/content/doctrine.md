@@ -47,6 +47,10 @@ Rule 0 blocks. Everything below is a strong prior you may argue against with evi
   and are not VC-funded.** A funded competitor can run acquisition at a loss you cannot
   match, so their presence is a reason to avoid that exact market — though it still proves
   the pain is real. Look one niche sideways.
+- The cheapest place to establish that is wherever a founder discloses revenue in order to
+  sell: acquisition listings and verified-MRR directories state MRR, profit and churn as a
+  matter of course. [Idea sources](/resources/idea-sources) is the standing list — those
+  entries are there to be copied, not bought.
 - "Nobody has built this" is almost always evidence that nobody wants it, not that you are
   early.
 - The formula that keeps working is **proven product times underserved identity** —
