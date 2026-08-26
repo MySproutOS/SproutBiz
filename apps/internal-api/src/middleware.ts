@@ -12,6 +12,7 @@ import type { Selectable } from "kysely"
 import { hashAgentToken, parseBearerToken } from "./utils/agent-token"
 import { ErrorCode } from "./utils/errors.enum"
 import { throwHTTPException } from "./utils/http-exception"
+import { SESSION_COOKIE_NAME } from "@utils/cookies"
 
 type SessionUser = Pick<Selectable<DB["user"]>, "id" | "isAdmin" | "name" | "email" | "suspendedAt">
 
@@ -90,7 +91,7 @@ export async function resolveAuth(c: Context): Promise<AuthPrincipal> {
   const bearer = parseBearerToken(c.req.header("Authorization"))
   if (bearer !== null) return await resolveBearer(bearer)
 
-  const sessionToken = getCookie(c, "session")
+  const sessionToken = getCookie(c, SESSION_COOKIE_NAME)
   if (!sessionToken) {
     throwHTTPException(401, ErrorCode.Unauthenticated, "Unauthenticated")
   }

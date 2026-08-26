@@ -594,7 +594,7 @@ export function AppSidebar() {
                   render={
                     // oxlint-disable-next-line no-html-link-for-pages -- /legal is a Next.js page outside the SPA router
                     <a href="/legal">
-                      <span>Privacy Policy</span>
+                      <span>Legal</span>
                     </a>
                   }
                 />

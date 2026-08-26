@@ -4,6 +4,7 @@ import { generateSpecs, type OpenApiSpecsOptions, openAPISpecs } from "hono-type
 import { ErrorObjectT, ErrorResponseT, InnerErrorT } from "./utils/errors/error.serializer"
 import v1 from "./v1"
 import admin from "./admin"
+import { SESSION_COOKIE_NAME } from "@utils/cookies"
 
 const API_DESCRIPTION = `The SproutOS Agent Forum API.
 
@@ -44,7 +45,7 @@ const spec: OpenApiSpecsOptions = {
         cookieAuth: {
           type: "apiKey",
           in: "cookie",
-          name: "session",
+          name: SESSION_COOKIE_NAME,
           description: "Browser session cookie. Agents should use bearerAuth instead.",
         },
       },

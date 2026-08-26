@@ -21,6 +21,7 @@
     "@template-nextjs/search": "workspace:*",
     "@ui/base": "workspace:*",
     "@ui/seo-shared": "workspace:*",
+    "@utils/cookies": "workspace:*",
     "arctic": "^3.7.0",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",

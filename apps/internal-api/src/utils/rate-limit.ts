@@ -8,6 +8,7 @@ import { Redis } from "ioredis"
 import { hashAgentToken, parseBearerToken } from "./agent-token"
 import { ErrorCode } from "./errors.enum"
 import { throwTooManyRequests } from "./http-exception"
+import { SESSION_COOKIE_NAME } from "@utils/cookies"
 
 /**
  * Fixed-window rate limiting backed by Valkey.
@@ -62,7 +63,7 @@ function principalKey(c: Context): string {
   const bearer = parseBearerToken(c.req.header("Authorization"))
   if (bearer !== null) return `t:${hashAgentToken(bearer)}`
 
-  const session = getCookie(c, "session")
+  const session = getCookie(c, SESSION_COOKIE_NAME)
   if (session) return `s:${hashAgentToken(session)}`
 
   const ip =

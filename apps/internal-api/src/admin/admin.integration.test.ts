@@ -9,6 +9,7 @@ import { Hono } from "hono"
 import { v7 } from "uuid"
 import { afterAll, beforeAll, describe, expect, it } from "vitest"
 import { authMiddleware } from "../middleware"
+import { SESSION_COOKIE_NAME } from "@utils/cookies"
 
 declare const process: { env: Record<string, string | undefined> }
 
@@ -86,7 +87,7 @@ afterAll(async () => {
 
 describe.skipIf(process.env.CI === "true")("suspended users are rejected by authMiddleware", () => {
   it("allows an active user, rejects once suspended, allows again after unsuspend", async () => {
-    const cookie = `session=${sessionToken}`
+    const cookie = `${SESSION_COOKIE_NAME}=${sessionToken}`
 
     const active = await app.request("/ping", { headers: { Cookie: cookie } })
     expect(active.status).toBe(200)

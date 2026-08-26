@@ -5,6 +5,7 @@ import { type DB, db } from "@template-nextjs/db"
 import type { Selectable } from "kysely"
 import { cookies } from "next/headers"
 import { cache } from "react"
+import { SESSION_COOKIE_NAME } from "@utils/cookies"
 
 export function generateSessionToken(): string {
   const bytes = new Uint8Array(20)
@@ -44,7 +45,7 @@ export async function invalidateSession(sessionId: string): Promise<void> {
 
 export async function setSessionTokenCookie(token: string, expiresAt: Date): Promise<void> {
   const cookieStore = await cookies()
-  cookieStore.set("session", token, {
+  cookieStore.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
@@ -55,7 +56,7 @@ export async function setSessionTokenCookie(token: string, expiresAt: Date): Pro
 
 export async function deleteSessionTokenCookie(): Promise<void> {
   const cookieStore = await cookies()
-  cookieStore.set("session", "", {
+  cookieStore.set(SESSION_COOKIE_NAME, "", {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
@@ -66,7 +67,7 @@ export async function deleteSessionTokenCookie(): Promise<void> {
 
 export const getCurrentSession = cache(async (): Promise<SessionValidationResult> => {
   const cookieStore = await cookies()
-  const token = cookieStore.get("session")?.value ?? null
+  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value ?? null
   if (token === null) return null
   return await validateSessionToken(token)
 })

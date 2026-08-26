@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { validateSessionToken } from "./lib/auth"
+import { SESSION_COOKIE_NAME } from "@utils/cookies"
 
 /** Public paths handled by Next.js — everything else goes to the dashboard SPA */
 const NEXTJS_PUBLIC_PREFIXES = [
@@ -118,9 +119,9 @@ function handleCsrfAndCookies(request: NextRequest): NextResponse | null {
 
   if (request.method === "GET") {
     const response = NextResponse.next({ request: { headers: requestHeaders } })
-    const token = request.cookies.get("session")?.value ?? null
+    const token = request.cookies.get(SESSION_COOKIE_NAME)?.value ?? null
     if (token !== null) {
-      response.cookies.set("session", token, {
+      response.cookies.set(SESSION_COOKIE_NAME, token, {
         path: "/",
         maxAge: 60 * 60 * 24 * 30,
         sameSite: "lax",
@@ -217,7 +218,7 @@ export async function proxy(request: NextRequest) {
   // Shared routes — check auth, rewrite to SPA or fall through to Next.js
   const sharedRoute = findSharedRoute(pathname)
   if (sharedRoute) {
-    const token = request.cookies.get("session")?.value ?? null
+    const token = request.cookies.get(SESSION_COOKIE_NAME)?.value ?? null
     if (token !== null) {
       const result = await validateSessionToken(token)
       if (result !== null) {
@@ -242,7 +243,7 @@ export async function proxy(request: NextRequest) {
 
   // Admin SPA — requires auth
   if (pathname === SPA_ADMIN.prefix || pathname.startsWith(`${SPA_ADMIN.prefix}/`)) {
-    const token = request.cookies.get("session")?.value ?? null
+    const token = request.cookies.get(SESSION_COOKIE_NAME)?.value ?? null
     if (token !== null) {
       const result = await validateSessionToken(token)
       if (result !== null) {
@@ -256,7 +257,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // Everything else → Dashboard SPA if authenticated, otherwise redirect to login
-  const token = request.cookies.get("session")?.value ?? null
+  const token = request.cookies.get(SESSION_COOKIE_NAME)?.value ?? null
   if (token !== null) {
     const result = await validateSessionToken(token)
     if (result !== null) {

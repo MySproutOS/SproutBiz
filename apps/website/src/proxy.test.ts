@@ -9,13 +9,14 @@ vi.mock("./lib/auth", () => ({
   validateSessionToken: vi.fn<typeof validateSessionToken>(),
 }))
 import { validateSessionToken } from "./lib/auth"
+import { SESSION_COOKIE_NAME } from "@utils/cookies"
 const mockValidate = vi.mocked(validateSessionToken)
 
 const VALID_SESSION = { session: {}, user: {} } as Awaited<ReturnType<typeof validateSessionToken>>
 
 function makeRequest(urlPath: string, sessionToken?: string) {
   const req = new NextRequest(`https://example.com${urlPath}`)
-  if (sessionToken) req.cookies.set("session", sessionToken)
+  if (sessionToken) req.cookies.set(SESSION_COOKIE_NAME, sessionToken)
   return req
 }
 

@@ -388,6 +388,9 @@ importers:
       '@utils/aws':
         specifier: workspace:*
         version: link:../../lib/typescript/utils/aws
+      '@utils/cookies':
+        specifier: workspace:*
+        version: link:../../lib/typescript/utils/cookies
       '@utils/numbers':
         specifier: workspace:*
         version: link:../../lib/typescript/utils/numbers
@@ -461,6 +464,9 @@ importers:
       '@ui/seo-shared':
         specifier: workspace:*
         version: link:../../lib/typescript/ui/seo-shared
+      '@utils/cookies':
+        specifier: workspace:*
+        version: link:../../lib/typescript/utils/cookies
       arctic:
         specifier: ^3.7.0
         version: 3.7.0
@@ -678,6 +684,8 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 26.1.1
+
+  lib/typescript/utils/cookies: {}
 
   lib/typescript/utils/numbers: {}
 

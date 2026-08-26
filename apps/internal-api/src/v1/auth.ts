@@ -8,6 +8,7 @@ import { authMiddleware, authNoThrowMiddleware } from "../middleware"
 import { EmptyObject, ErrorSchemaResponse, Nullable } from "../utils/common.serializer"
 import { ErrorCode } from "../utils/errors.enum"
 import { throwError } from "../utils/http-exception"
+import { SESSION_COOKIE_NAME } from "@utils/cookies"
 
 const AuthMeResponseT = Type.Object({
   user: Nullable(
@@ -84,7 +85,7 @@ const app = new Hono()
         )
       }
       await db.deleteFrom("session").where("sessionKey", "=", session.sessionKey).execute()
-      deleteCookie(c, "session", { path: "/" })
+      deleteCookie(c, SESSION_COOKIE_NAME, { path: "/" })
       return c.json({}, 200)
     },
   )

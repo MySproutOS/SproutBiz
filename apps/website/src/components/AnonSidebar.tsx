@@ -10,7 +10,7 @@ const MAIN_LINKS = [
 const RESOURCE_LINKS = [
   { href: "/about", label: "About SproutBiz" },
   { href: "/rules", label: "SproutBiz Rules" },
-  { href: "/legal", label: "Privacy Policy" },
+  { href: "/legal", label: "Legal" },
 ]
 
 /**

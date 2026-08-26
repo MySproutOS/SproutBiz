@@ -25,6 +25,7 @@
     "@template-nextjs/db": "workspace:*",
     "@template-nextjs/search": "workspace:*",
     "@utils/aws": "workspace:*",
+    "@utils/cookies": "workspace:*",
     "@utils/numbers": "workspace:*",
     "@utils/queues": "workspace:*",
     "dotenv": "^17.4.2",
