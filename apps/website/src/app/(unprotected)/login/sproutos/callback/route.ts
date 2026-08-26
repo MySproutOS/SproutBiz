@@ -109,16 +109,25 @@ export async function GET(request: Request): Promise<Response> {
       fetch(sproutosConfig.userinfoUrl!, {
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
-      // Introspection authenticates the *client*, not the user, so the credentials go in the
-      // body rather than the Authorization header -- that header carries the access token.
+      /*
+        Introspection authenticates the *client*, not the user, and SproutOS takes those
+        credentials in `x-client-*` headers rather than in the body or via Basic. That is a
+        deviation from RFC 7662, which reuses the token endpoint's client authentication -- and the
+        token endpoint here does take them in the body, so the two endpoints on the same provider
+        disagree. Sending them the way the RFC describes gets a 500: the handler reads a missing
+        header as an empty client id and looks it up against a uuid column, and Postgres raises
+        before any OAuth error can be returned.
+      */
       fetch(sproutosConfig.introspectUrl!, {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "x-client-id": sproutosConfig.clientId!,
+          "x-client-secret": sproutosConfig.clientSecret!,
+        },
         body: new URLSearchParams({
           token: accessToken,
           token_type_hint: "access_token",
-          client_id: sproutosConfig.clientId!,
-          client_secret: sproutosConfig.clientSecret!,
         }),
       }),
     ])
