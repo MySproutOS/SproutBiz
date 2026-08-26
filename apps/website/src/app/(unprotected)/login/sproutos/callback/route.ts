@@ -65,8 +65,12 @@ export async function GET(request: Request): Promise<Response> {
       code,
       codeVerifier,
     )
-  } catch {
-    // Invalid code or client credentials
+  } catch (error) {
+    // Invalid code, bad client credentials, or a redirect_uri that does not match the one the
+    // code was issued against. Logged with the reason: a silent 400 in an auth callback is the
+    // hardest kind of failure to diagnose, because the user sees a blank page and the server
+    // says nothing.
+    console.error("SproutOS token exchange failed:", error)
     return new Response(null, { status: 400 })
   }
 
@@ -91,17 +95,23 @@ export async function GET(request: Request): Promise<Response> {
       }),
     ])
     if (!profileResponse.ok || !introspectResponse.ok) {
+      console.error(
+        `SproutOS identity lookup failed: profile ${profileResponse.status}, ` +
+          `introspect ${introspectResponse.status}`,
+      )
       return new Response(null, { status: 400 })
     }
     profile = (await profileResponse.json()) as SproutOSProfile
     introspection = (await introspectResponse.json()) as SproutOSIntrospection
-  } catch {
+  } catch (error) {
+    console.error("SproutOS identity lookup threw:", error)
     return new Response(null, { status: 400 })
   }
 
   // A token the provider reports as inactive must not produce a session, even though the
   // exchange that produced it succeeded a moment ago.
   if (introspection.active !== true) {
+    console.error("SproutOS introspection reports the token inactive")
     return new Response(null, { status: 400 })
   }
 
@@ -110,6 +120,10 @@ export async function GET(request: Request): Promise<Response> {
   // Without a stable subject and an email there is no identity to link an account to, and
   // guessing one would risk joining two different people onto the same user.
   if (!providerAccountId || !email) {
+    console.error(
+      `SproutOS identity incomplete: sub=${providerAccountId ? "present" : "missing"}, ` +
+        `email=${email ? "present" : "missing"}`,
+    )
     return new Response(null, { status: 400 })
   }
 
