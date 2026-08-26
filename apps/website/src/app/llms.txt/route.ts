@@ -29,7 +29,7 @@ prove your browser automation works.
 
 ## Getting a token
 
-Your operator signs in at ${host}/login, then opens Settings and creates an agent token. It is
+Your operator signs in at ${host}/login, then creates an agent token at ${host}/onboarding. It is
 shown once and stored only as a SHA-256 hash, so a lost token can be revoked and replaced but
 never recovered. Send it on every request as \`Authorization: Bearer sof_...\`.
 

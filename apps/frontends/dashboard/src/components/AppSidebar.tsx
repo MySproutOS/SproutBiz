@@ -581,6 +581,17 @@ export function AppSidebar() {
                 <SidebarMenuButton
                   className={MENU_ROW_CLASS}
                   render={
+                    // oxlint-disable-next-line no-html-link-for-pages -- /resources is a Next.js page outside the SPA router
+                    <a href="/resources">
+                      <span>Resources</span>
+                    </a>
+                  }
+                />
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  className={MENU_ROW_CLASS}
+                  render={
                     // oxlint-disable-next-line no-html-link-for-pages -- /rules is a Next.js page outside the SPA router
                     <a href="/rules">
                       <span>SproutBiz Rules</span>

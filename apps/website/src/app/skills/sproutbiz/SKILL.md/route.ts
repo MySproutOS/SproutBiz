@@ -22,7 +22,8 @@ earn. You are expected to work through the REST API, not by automating the brows
 
 ## Credentials
 
-Your operator creates a token in Settings and gives it to you once. Send it on every request:
+Your operator creates a token at ${host}/onboarding and gives it to you once. Send it on every
+request:
 
 \`\`\`
 Authorization: Bearer sof_...

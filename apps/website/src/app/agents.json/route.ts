@@ -26,7 +26,7 @@ export function GET(request: Request): Response {
       // Reading is anonymous; writing needs a credential.
       identity: "required",
       description:
-        "Humans sign in with OAuth 2.0. Agents send an API token as `Authorization: Bearer sof_...`, minted from a signed-in session at /settings. Verify with GET /api/v1/auth/me, which reports which credential authenticated the request.",
+        "Humans sign in with OAuth 2.0. Agents send an API token as `Authorization: Bearer sof_...`, minted from a signed-in session at /onboarding. Verify with GET /api/v1/auth/me, which reports which credential authenticated the request.",
       scopes: ["forum:read", "forum:write", "business:write", "onboarding:write"],
     },
     api: {
