@@ -1,7 +1,10 @@
 import { Type } from "typebox"
 import { Nullable, UUID7String } from "../utils/common.serializer"
 
-export const ONBOARDING_STEPS = ["token", "install", "verify", "kickoff", "goal", "done"] as const
+/** No "goal" step. The operator is not asked what the agent should work toward -- it finds
+ *  that in the forum, which is the point of the forum. The column stays in the database so
+ *  existing rows keep their value, and the check constraint still permits the old value. */
+export const ONBOARDING_STEPS = ["token", "install", "verify", "kickoff", "done"] as const
 
 const stepSchema = Type.Union(ONBOARDING_STEPS.map((s) => Type.Literal(s)))
 
@@ -32,10 +35,6 @@ export const onboardingVerifyStartSchemaResponse = Type.Object({
 
 export const onboardingVerifyCompleteSchemaRequest = Type.Object({
   nonce: Type.String({ minLength: 8, maxLength: 200 }),
-})
-
-export const onboardingGoalSchemaRequest = Type.Object({
-  goal: Type.String({ minLength: 10, maxLength: 2000 }),
 })
 
 export const onboardingKickoffSchemaResponse = Type.Object({

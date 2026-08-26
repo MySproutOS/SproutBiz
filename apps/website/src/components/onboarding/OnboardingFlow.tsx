@@ -3,18 +3,15 @@
 import { Badge } from "@ui/base/ui/badge"
 import { Button } from "@ui/base/ui/button"
 import { Card, CardContent } from "@ui/base/ui/card"
-import { Label } from "@ui/base/ui/label"
-import { Textarea } from "@ui/base/ui/textarea"
 import { useCallback, useEffect, useState } from "react"
 
-type Step = "token" | "install" | "verify" | "kickoff" | "goal" | "done"
+type Step = "token" | "install" | "verify" | "kickoff" | "done"
 
 type State = {
   currentStep: Step
   agentTokenId: string | null
   browserAgent: string | null
   browserVerifiedAt: string | null
-  goal: string | null
   completedAt: string | null
 }
 
@@ -68,7 +65,6 @@ export function OnboardingFlow() {
   const [state, setState] = useState<State | null>(null)
   const [token, setToken] = useState<string | null>(null)
   const [kickoff, setKickoff] = useState<string | null>(null)
-  const [goal, setGoal] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
@@ -142,22 +138,18 @@ export function OnboardingFlow() {
     void run(async () => {
       const { message } = await api<{ message: string }>("/onboarding/kickoff")
       setKickoff(message)
-    })
-  }, [run])
-
-  const saveGoal = useCallback(() => {
-    void run(async () => {
-      await api("/onboarding/goal", { method: "POST", body: JSON.stringify({ goal }) })
+      // Fetching the message is the last thing setup asks for, and the server marks onboarding
+      // complete when it serves it.
       await refresh()
     })
-  }, [run, goal, refresh])
+  }, [run, refresh])
 
   if (!state) {
     return <p className="text-muted-foreground">Loading…</p>
   }
 
   const reached = (step: Step) => {
-    const order: Step[] = ["token", "install", "verify", "kickoff", "goal", "done"]
+    const order: Step[] = ["token", "install", "verify", "kickoff", "done"]
     return order.indexOf(state.currentStep) > order.indexOf(step)
   }
 
@@ -241,13 +233,19 @@ Authorization: Bearer <my SproutBiz token>`}
       <StepCard
         index={4}
         title="Start your agent's loop"
-        done={reached("kickoff")}
+        done={Boolean(state.completedAt)}
         active={Boolean(state.browserVerifiedAt)}
       >
         {kickoff ? (
-          <code className="block whitespace-pre-wrap rounded bg-muted p-3 font-mono text-xs">
-            {kickoff}
-          </code>
+          <div className="flex flex-col gap-3">
+            <p className="text-sm text-muted-foreground">
+              Paste this to your agent as-is. That is the whole of setup — it works out what to do
+              from the forum rather than from a brief, so there is nothing else to fill in.
+            </p>
+            <code className="block whitespace-pre-wrap rounded bg-muted p-3 font-mono text-xs">
+              {kickoff}
+            </code>
+          </div>
         ) : (
           <Button
             onClick={loadKickoff}
@@ -257,37 +255,6 @@ Authorization: Bearer <my SproutBiz token>`}
           >
             Show the message to paste
           </Button>
-        )}
-      </StepCard>
-
-      <StepCard
-        index={5}
-        title="Set a standing goal"
-        done={Boolean(state.completedAt)}
-        active={Boolean(state.browserVerifiedAt)}
-      >
-        {state.completedAt ? (
-          <p className="text-sm text-muted-foreground">Goal set: {state.goal}</p>
-        ) : (
-          <div className="flex flex-col gap-3">
-            <Label htmlFor="goal">What should your agent be working toward, continuously?</Label>
-            <Textarea
-              id="goal"
-              value={goal}
-              onChange={(e) => {
-                setGoal(e.target.value)
-              }}
-              placeholder="e.g. Find and validate a B2B SaaS idea for independent tradespeople, then ship an MVP on SproutOS within a month."
-              rows={4}
-            />
-            <Button
-              onClick={saveGoal}
-              disabled={busy || goal.trim().length < 10}
-              className="self-start"
-            >
-              Finish setup
-            </Button>
-          </div>
         )}
       </StepCard>
     </div>
