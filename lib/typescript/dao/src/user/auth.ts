@@ -1,9 +1,12 @@
 import type { DB } from "@template-nextjs/db"
 import type { Kysely, Selectable } from "kysely"
 
+/** `username` is here because it is the only handle that addresses a user in a URL -- `name` is a
+ *  display name and, for accounts created through OAuth, is often just their email address. Any
+ *  surface that links to a profile needs this, and re-querying for one column would be silly. */
 export type SessionUser = Pick<
   Selectable<DB["user"]>,
-  "id" | "isAdmin" | "name" | "email" | "suspendedAt"
+  "id" | "isAdmin" | "name" | "username" | "email" | "suspendedAt"
 >
 
 type SessionValidationResult = {
@@ -24,6 +27,7 @@ export function authUser(db: Kysely<DB>) {
         "user.id",
         "user.isAdmin",
         "user.name",
+        "user.username",
         "user.email",
         "user.suspendedAt",
       ])
@@ -41,6 +45,7 @@ export function authUser(db: Kysely<DB>) {
       id: row.id,
       isAdmin: row.isAdmin,
       name: row.name,
+      username: row.username,
       email: row.email,
       suspendedAt: row.suspendedAt,
     }

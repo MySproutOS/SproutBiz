@@ -1,4 +1,5 @@
 import { authUser } from "@lib/dao/user/auth"
+import type { SessionUser } from "@lib/dao/user/auth"
 import { sha256 } from "@oslojs/crypto/sha2"
 import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from "@oslojs/encoding"
 import { type DB, db } from "@template-nextjs/db"
@@ -27,7 +28,8 @@ export async function createSession(
   return newSession
 }
 
-export type SessionUser = Pick<Selectable<DB["user"]>, "id" | "isAdmin" | "name" | "email">
+/** The DAO owns this shape; re-declaring it here is how the two drift apart. */
+export type { SessionUser }
 
 export type SessionValidationResult = {
   session: Selectable<DB["session"]>

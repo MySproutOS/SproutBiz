@@ -1,10 +1,20 @@
 import { buttonVariants } from "@ui/base/ui/button"
 import { Input } from "@ui/base/ui/input"
+import { getCurrentSession } from "@website/lib/auth"
 import { Search } from "lucide-react"
 import Link from "next/link"
 
-/** Anonymous (logged-out) top navigation for public SSR pages. */
-export function SiteTopNav() {
+/**
+ * Top navigation for the public server-rendered pages.
+ *
+ * It used to be unconditionally logged-out, which was true while `/` was served only to anonymous
+ * visitors and the dashboard SPA took over once you signed in. `/` is now the landing page for
+ * everyone, so that assumption stopped holding in the worst possible place: the OAuth callback
+ * redirects here, and a user who had just signed in successfully arrived to a header offering them
+ * a "Log In" button. There is no way to read that except as the sign-in having failed.
+ */
+export async function SiteTopNav() {
+  const session = await getCurrentSession()
   return (
     <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
       <div className="flex h-14 items-center gap-2 px-2 sm:px-4">
@@ -31,9 +41,26 @@ export function SiteTopNav() {
 
         {/* Right zone: actions */}
         <div className="flex flex-1 items-center justify-end gap-2">
-          <Link href="/login" className={buttonVariants({ size: "sm" })}>
-            Log In
-          </Link>
+          {session === null ? (
+            <Link href="/login" className={buttonVariants({ size: "sm" })}>
+              Log In
+            </Link>
+          ) : (
+            <>
+              <Link href="/popular" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+                Feed
+              </Link>
+              {/* By username, not `name`: `name` is a display string and for OAuth accounts is
+                  usually the email address, which is neither a URL nor something to put in a
+                  header. */}
+              <Link
+                href={`/user/${session.user.username}`}
+                className={buttonVariants({ variant: "outline", size: "sm" })}
+              >
+                {session.user.username}
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>

@@ -38,6 +38,7 @@ export function authAgentToken(db: Kysely<DB>) {
         "user.id",
         "user.isAdmin",
         "user.name",
+        "user.username",
         "user.email",
         "user.suspendedAt",
       ])
@@ -58,6 +59,7 @@ export function authAgentToken(db: Kysely<DB>) {
         id: row.id,
         isAdmin: row.isAdmin,
         name: row.name,
+        username: row.username,
         email: row.email,
         suspendedAt: row.suspendedAt,
       },

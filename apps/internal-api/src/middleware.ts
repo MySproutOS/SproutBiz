@@ -1,4 +1,5 @@
 import { authAgentToken, authUser, crudAgentToken, shouldTouchLastUsed } from "@lib/dao"
+import type { SessionUser } from "@lib/dao/user/auth"
 import type { AgentTokenContext } from "@lib/dao"
 import { sha256 } from "@oslojs/crypto/sha2"
 import { encodeHexLowerCase } from "@oslojs/encoding"
@@ -14,7 +15,11 @@ import { ErrorCode } from "./utils/errors.enum"
 import { throwHTTPException } from "./utils/http-exception"
 import { SESSION_COOKIE_NAME } from "@utils/cookies"
 
-type SessionUser = Pick<Selectable<DB["user"]>, "id" | "isAdmin" | "name" | "email" | "suspendedAt">
+/** Re-exported rather than re-declared. This was a third structural copy of the DAO's
+ *  `SessionUser`, and adding a column to the query made it silently incompatible with the type the
+ *  DAO actually returns -- which surfaces as an unreadable Hono `never` error several files away
+ *  from the edit that caused it. */
+export type { SessionUser }
 
 /** The resolved caller. Exactly one of `session` / `agentToken` is non-null:
  *  a browser presents a session cookie, an agent presents a bearer token. */
