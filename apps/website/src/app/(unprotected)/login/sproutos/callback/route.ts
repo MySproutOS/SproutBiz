@@ -28,6 +28,20 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   const url = new URL(request.url)
+
+  // The provider reports refusals by redirecting back with ?error=, not by failing the
+  // redirect. Without this the user lands on a bare 400 and the actual reason -- a bad scope,
+  // a withdrawn consent -- is only visible in the URL they cannot read.
+  const providerError = url.searchParams.get("error")
+  if (providerError !== null) {
+    const description = url.searchParams.get("error_description") ?? providerError
+    console.error(`SproutOS sign-in refused: ${providerError}: ${description}`)
+    return new Response(null, {
+      status: 302,
+      headers: { Location: `/login?error=${encodeURIComponent(providerError)}` },
+    })
+  }
+
   const code = url.searchParams.get("code")
   const state = url.searchParams.get("state")
 
