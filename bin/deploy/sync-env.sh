@@ -18,6 +18,12 @@
 #   bin/deploy/sync-env.sh --pull       # overwrite the local copy from the box
 #   bin/deploy/sync-env.sh --no-restart # upload only; changes apply on the next deploy
 #   bin/deploy/sync-env.sh --yes        # skip the confirmation prompt
+#   bin/deploy/sync-env.sh --compose    # push docker-compose.production.yml instead
+#
+# --compose exists because the compose file is in git but nothing was pushing it, so the copy on
+# the server could be hand-edited and quietly stay that way. It was, for hours: one line pinned a
+# locally built image, and every deploy recreated the site from it. deploy.sh now refuses to run
+# when the two differ; this is the command it points you at.
 set -euo pipefail
 
 REMOTE_HOST="${FORUM_SSH_HOST:-ubuntu@135.148.122.203}"
@@ -33,14 +39,15 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 LOCAL_ENV="$REPO_ROOT/.env.production"
 REMOTE_ENV="$REMOTE_DIR/.env.production"
 
-DO_DIFF_ONLY=0 DO_PULL=0 DO_RESTART=1 ASSUME_YES=0
+DO_DIFF_ONLY=0 DO_PULL=0 DO_RESTART=1 ASSUME_YES=0 DO_COMPOSE=0
 for arg in "$@"; do
   case "$arg" in
     --diff) DO_DIFF_ONLY=1 ;;
     --pull) DO_PULL=1 ;;
     --no-restart) DO_RESTART=0 ;;
     --yes|-y) ASSUME_YES=1 ;;
-    -h|--help) sed -n '2,25p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    --compose) DO_COMPOSE=1 ;;
+    -h|--help) sed -n '2,31p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
     *) echo "unknown argument: $arg" >&2; exit 2 ;;
   esac
 done
@@ -48,6 +55,37 @@ done
 ssh_opts=(-o BatchMode=yes)
 [ -f "$SSH_KEY" ] && ssh_opts+=(-i "$SSH_KEY")
 run_remote() { ssh "${ssh_opts[@]}" "$REMOTE_HOST" "$@"; }
+
+# The compose file carries no secrets, so unlike .env.production it is committed and the repo copy
+# is simply the truth. Nothing to mask, nothing to confirm -- show the diff and replace it.
+if [ "$DO_COMPOSE" = 1 ]; then
+  LOCAL_COMPOSE="$REPO_ROOT/docker-compose.production.yml"
+  [ -f "$LOCAL_COMPOSE" ] || { echo "missing $LOCAL_COMPOSE" >&2; exit 1; }
+
+  tmp="$(mktemp)"; trap 'rm -f "$tmp"' EXIT
+  run_remote "cat $COMPOSE_FILE 2>/dev/null || true" > "$tmp"
+  if diff -q "$tmp" "$LOCAL_COMPOSE" >/dev/null 2>&1; then
+    echo "compose file already matches $REMOTE_HOST"
+    exit 0
+  fi
+  echo "Replacing $REMOTE_HOST:$COMPOSE_FILE (-- server, ++ this checkout)"
+  diff -u "$tmp" "$LOCAL_COMPOSE" | tail -n +3 || true
+  echo
+
+  if [ "$ASSUME_YES" != 1 ] && [ "$DO_DIFF_ONLY" != 1 ]; then
+    read -r -p "Replace the server's copy? [y/N] " reply
+    case "$reply" in [yY]*) ;; *) echo "aborted"; exit 1 ;; esac
+  fi
+  [ "$DO_DIFF_ONLY" = 1 ] && exit 0
+
+  # Kept as .bak for the same reason the env file is: whatever was on the server was there for some
+  # reason, and finding out what it said should not require a redeploy.
+  run_remote "cp $COMPOSE_FILE $COMPOSE_FILE.bak 2>/dev/null || true"
+  run_remote "cat > $COMPOSE_FILE.new && mv $COMPOSE_FILE.new $COMPOSE_FILE" < "$LOCAL_COMPOSE"
+  echo "uploaded (previous version kept at $COMPOSE_FILE.bak)"
+  echo "Containers keep running the old definition until the next deploy or an explicit up -d."
+  exit 0
+fi
 
 if [ "$DO_PULL" = 1 ]; then
   tmp="$(mktemp)"; trap 'rm -f "$tmp"' EXIT
