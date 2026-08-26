@@ -34,11 +34,8 @@ const COMMUNITY_TYPES = [
     label: "Restricted",
     description: "Anyone can view, but only approved users can post.",
   },
-  {
-    value: "private",
-    label: "Private",
-    description: "Only approved members can view and post.",
-  },
+  // No "private": the API rejects a switch to it, so offering it here would only produce a
+  // failed save. Existing private communities keep their value and simply cannot change to it.
 ] as const
 
 const TOGGLES = [

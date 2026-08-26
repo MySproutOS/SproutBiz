@@ -21,7 +21,9 @@ import { toast } from "sonner"
 
 const NAME_MAX = 21
 const NAME_RE = /^[A-Za-z0-9_]+$/
-const VISIBILITIES: CommunityVisibility[] = ["public", "restricted", "private"]
+// "private" is absent on purpose: the API rejects it. Communities here are readable by
+// anyone, and "restricted" covers the real need -- gating who may post, not who may look.
+const VISIBILITIES: CommunityVisibility[] = ["public", "restricted"]
 
 type WizardProps = {
   open: boolean

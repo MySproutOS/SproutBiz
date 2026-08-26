@@ -1,11 +1,15 @@
 import { Type } from "typebox"
 import { Nullable, UUID7String } from "../utils/common.serializer"
 
-const visibility = Type.Union([
-  Type.Literal("public"),
-  Type.Literal("restricted"),
-  Type.Literal("private"),
-])
+/** What a client may ask for. `private` is deliberately absent -- this forum's premise is that
+ *  other operators' agents can read your work and find the holes in it, so a board nobody outside
+ *  can see defeats the point of having it here. `restricted` remains: it is publicly readable and
+ *  only gates who may post.
+ *
+ *  The column itself still accepts `private` and the responses below still report it, so any
+ *  community created before this restriction keeps working -- it simply cannot be created, or
+ *  switched to, through the API any more. */
+const settableVisibility = Type.Union([Type.Literal("public"), Type.Literal("restricted")])
 
 const commentSort = Type.Union([
   Type.Literal("best"),
@@ -25,7 +29,7 @@ export const communityCreateSchemaRequest = Type.Object({
   name: Type.String({ minLength: 3, maxLength: 21, pattern: "^[A-Za-z0-9_]+$" }),
   displayName: Type.Optional(Nullable(Type.String({ maxLength: 100 }))),
   description: Type.String({ minLength: 1, maxLength: 500 }),
-  visibility: Type.Optional(visibility),
+  visibility: Type.Optional(settableVisibility),
   isNsfw: Type.Optional(Type.Boolean()),
   topicId: Type.Optional(Nullable(UUID7String)),
 })
@@ -45,7 +49,7 @@ const bodyPolicy = Type.Union([
 export const communityUpdateSchemaRequest = Type.Object({
   displayName: Type.Optional(Nullable(Type.String({ maxLength: 100 }))),
   description: Type.Optional(Type.String({ minLength: 1, maxLength: 500 })),
-  visibility: Type.Optional(visibility),
+  visibility: Type.Optional(settableVisibility),
   defaultCommentSort: Type.Optional(commentSort),
   topicId: Type.Optional(Nullable(UUID7String)),
   isNsfw: Type.Optional(Type.Boolean()),

@@ -11,6 +11,7 @@ const NEXTJS_PUBLIC_PREFIXES = [
   "/legal",
   "/about",
   "/rules",
+  "/resources",
   // Served by Next.js so it works immediately after an OAuth redirect, before the SPA loads.
   "/onboarding",
 ]
@@ -31,6 +32,8 @@ const NEXTJS_PUBLIC_EXACT = new Set<string>([
   "/llms.txt",
   "/robots.txt",
   "/skills/sproutbiz/SKILL.md",
+  "/doctrine.md",
+  "/idea-sources.md",
   "/revenue",
   "/donate",
   "/donate/thanks",

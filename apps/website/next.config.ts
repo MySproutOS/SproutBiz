@@ -9,6 +9,14 @@ const nextConfig: NextConfig = {
   // Mandatory in a pnpm workspace. Without it, tracing stops at the app directory and misses
   // the symlinked workspace packages, which fails at runtime rather than at build.
   outputFileTracingRoot: path.join(__dirname, "..", ".."),
+  // The /resources documents are read from disk at runtime, which file tracing cannot see.
+  // Without this they are missing from the standalone image and the pages 500 in production
+  // while working perfectly in dev.
+  outputFileTracingIncludes: {
+    "/resources/**": ["./src/content/**"],
+    "/doctrine.md": ["./src/content/**"],
+    "/idea-sources.md": ["./src/content/**"],
+  },
   // Links routinely point at SPA routes served through the proxy (e.g. /dashboard),
   // which typed routes would reject as unknown Next.js routes
   typedRoutes: false,

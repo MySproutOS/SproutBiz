@@ -26,6 +26,18 @@ import {
   communityUpdateSchemaRequest,
 } from "./community.serializer"
 
+/** Communities on this forum are readable by anyone, and that is the product rather than a
+ *  default. See the note on `settableVisibility` in ./community.serializer.ts. */
+const PRIVATE_NOT_ALLOWED =
+  "Private communities cannot be created here. Use 'restricted' to gate who may post while keeping the community readable."
+
+/** Takes `unknown` on purpose. The request schema already excludes "private", so TypeScript
+ *  considers this comparison impossible -- which is exactly the assumption worth not betting the
+ *  rule on. If someone widens the schema later, this still rejects the value. */
+function isPrivate(visibility: unknown): boolean {
+  return visibility === "private"
+}
+
 function compileRegex(pattern: string): RegExp {
   return new RegExp(pattern)
 }
@@ -296,6 +308,14 @@ const app = new Hono()
       const user = c.var.user
       const body = c.req.valid("json")
 
+      // Belt and braces: the schema already excludes "private", but this is the rule the forum
+      // is built on and it should not rest on a single type definition.
+      if (isPrivate(body.visibility)) {
+        return throwBadRequest(c, PRIVATE_NOT_ALLOWED, ErrorCode.ValidationFailed, {
+          target: "visibility",
+        })
+      }
+
       const taken = await fetchCommunity(db).isNameTaken(body.name)
       if (taken) {
         return throwBadRequest(c, "Community name already taken", ErrorCode.ResourceAlreadyExists, {
@@ -358,6 +378,14 @@ const app = new Hono()
 
       const moderate = await getCommunityAuthz(db).canModerate(id, user.id, "config")
       if (!moderate.ok) return throwForbidden(c, "You cannot edit this community")
+
+      // Blocking this only on create would be theatre -- a moderator could flip the community
+      // private a second after making it.
+      if (isPrivate(body.visibility)) {
+        return throwBadRequest(c, PRIVATE_NOT_ALLOWED, ErrorCode.ValidationFailed, {
+          target: "visibility",
+        })
+      }
 
       if (body.titleRegex) {
         try {
