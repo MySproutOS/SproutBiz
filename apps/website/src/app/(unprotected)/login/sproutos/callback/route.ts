@@ -1,6 +1,5 @@
 import { completeOAuthLogin } from "@website/lib/oauth-user"
-import { isSproutOSConfigured, oauthSproutOS, sproutosConfig } from "@website/lib/oauth"
-import type { OAuth2Tokens } from "arctic"
+import { isSproutOSConfigured, sproutosConfig } from "@website/lib/oauth"
 import { cookies } from "next/headers"
 
 /**
@@ -20,6 +19,39 @@ type SproutOSProfile = {
 type SproutOSIntrospection = {
   active?: boolean
   sub?: string
+}
+
+/**
+ * Exchanges the authorization code for an access token.
+ *
+ * Done with a direct request rather than through arctic, because arctic sends client
+ * credentials as HTTP Basic auth and SproutOS requires `client_id` in the form body -- its
+ * token endpoint validates the body against a schema, so a Basic-auth-only request is rejected
+ * before the handler ever runs, with a validation error rather than an OAuth one.
+ */
+async function exchangeCodeForToken(code: string, codeVerifier: string): Promise<string> {
+  const response = await fetch(sproutosConfig.tokenUrl!, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json" },
+    body: new URLSearchParams({
+      grant_type: "authorization_code",
+      client_id: sproutosConfig.clientId!,
+      client_secret: sproutosConfig.clientSecret!,
+      code,
+      // Re-sent because the provider re-checks it at redemption: a code obtained through one
+      // registered URI must not be redeemable against another.
+      redirect_uri: `${process.env.NEXT_PUBLIC_HOST_URL}/login/sproutos/callback`,
+      code_verifier: codeVerifier,
+    }),
+  })
+
+  const body = (await response.json()) as { access_token?: string; error_description?: string }
+  if (!response.ok || !body.access_token) {
+    throw new Error(
+      `token endpoint returned ${response.status}: ${body.error_description ?? JSON.stringify(body).slice(0, 200)}`,
+    )
+  }
+  return body.access_token
 }
 
 export async function GET(request: Request): Promise<Response> {
@@ -58,13 +90,9 @@ export async function GET(request: Request): Promise<Response> {
     return new Response(null, { status: 400 })
   }
 
-  let tokens: OAuth2Tokens
+  let accessToken: string
   try {
-    tokens = await oauthSproutOS().validateAuthorizationCode(
-      sproutosConfig.tokenUrl!,
-      code,
-      codeVerifier,
-    )
+    accessToken = await exchangeCodeForToken(code, codeVerifier)
   } catch (error) {
     // Invalid code, bad client credentials, or a redirect_uri that does not match the one the
     // code was issued against. Logged with the reason: a silent 400 in an auth callback is the
@@ -79,7 +107,7 @@ export async function GET(request: Request): Promise<Response> {
   try {
     const [profileResponse, introspectResponse] = await Promise.all([
       fetch(sproutosConfig.userinfoUrl!, {
-        headers: { Authorization: `Bearer ${tokens.accessToken()}` },
+        headers: { Authorization: `Bearer ${accessToken}` },
       }),
       // Introspection authenticates the *client*, not the user, so the credentials go in the
       // body rather than the Authorization header -- that header carries the access token.
@@ -87,7 +115,7 @@ export async function GET(request: Request): Promise<Response> {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({
-          token: tokens.accessToken(),
+          token: accessToken,
           token_type_hint: "access_token",
           client_id: sproutosConfig.clientId!,
           client_secret: sproutosConfig.clientSecret!,
@@ -136,10 +164,10 @@ export async function GET(request: Request): Promise<Response> {
       image: null,
     },
     {
-      scope: tokens.scopes().join(" "),
+      scope: sproutosConfig.scopes.join(" "),
       idToken: null,
-      accessToken: tokens.accessToken(),
-      tokenType: tokens.tokenType(),
+      accessToken,
+      tokenType: "Bearer",
       expiresAt: null,
     },
   )
