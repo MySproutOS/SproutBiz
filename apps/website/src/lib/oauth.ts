@@ -15,6 +15,10 @@ export const sproutosConfig = {
   authorizeUrl: process.env.SPROUTOS_AUTHORIZE_URL,
   tokenUrl: process.env.SPROUTOS_TOKEN_URL,
   userinfoUrl: process.env.SPROUTOS_USERINFO_URL,
+  /** Client-authenticated introspection. SproutOS's profile endpoint returns a name and an
+   *  email but no stable subject, and an email is not an identity -- it can be changed and
+   *  reassigned. Introspection returns `sub`, which is what the account is keyed on. */
+  introspectUrl: process.env.SPROUTOS_INTROSPECT_URL,
   scopes: (process.env.SPROUTOS_SCOPES ?? "openid email profile").split(" ").filter(Boolean),
 }
 
@@ -26,7 +30,8 @@ export function isSproutOSConfigured(): boolean {
     sproutosConfig.clientSecret &&
     sproutosConfig.authorizeUrl &&
     sproutosConfig.tokenUrl &&
-    sproutosConfig.userinfoUrl,
+    sproutosConfig.userinfoUrl &&
+    sproutosConfig.introspectUrl,
   )
 }
 

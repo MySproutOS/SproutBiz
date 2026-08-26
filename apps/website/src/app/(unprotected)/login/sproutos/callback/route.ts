@@ -4,18 +4,22 @@ import type { OAuth2Tokens } from "arctic"
 import { cookies } from "next/headers"
 
 /**
- * Claims we read from the userinfo endpoint.
+ * SproutOS's profile endpoint. Note what is *not* here: a subject.
  *
- * Unlike Google, SproutOS is not assumed to issue a JWT id_token, so the identity is
- * fetched from userinfo rather than decoded from the token. That also keeps this working
- * against providers that return an opaque access token.
+ * The identity comes from two calls rather than one. SproutOS issues opaque access tokens
+ * (no id_token to decode), and its profile endpoint returns a name and an email but no stable
+ * id. An email is not an identity -- it can be changed, and freed addresses get reassigned --
+ * so keying an account on it would eventually hand one person another person's account.
  */
-type SproutOSUserInfo = {
-  sub?: string
-  id?: string
+type SproutOSProfile = {
   email?: string
   name?: string | null
-  picture?: string | null
+}
+
+/** RFC 7662 introspection. `sub` is the stable subject the account is keyed on. */
+type SproutOSIntrospection = {
+  active?: boolean
+  sub?: string
 }
 
 export async function GET(request: Request): Promise<Response> {
@@ -52,19 +56,43 @@ export async function GET(request: Request): Promise<Response> {
     return new Response(null, { status: 400 })
   }
 
-  let claims: SproutOSUserInfo
+  let profile: SproutOSProfile
+  let introspection: SproutOSIntrospection
   try {
-    const response = await fetch(sproutosConfig.userinfoUrl!, {
-      headers: { Authorization: `Bearer ${tokens.accessToken()}` },
-    })
-    if (!response.ok) return new Response(null, { status: 400 })
-    claims = (await response.json()) as SproutOSUserInfo
+    const [profileResponse, introspectResponse] = await Promise.all([
+      fetch(sproutosConfig.userinfoUrl!, {
+        headers: { Authorization: `Bearer ${tokens.accessToken()}` },
+      }),
+      // Introspection authenticates the *client*, not the user, so the credentials go in the
+      // body rather than the Authorization header -- that header carries the access token.
+      fetch(sproutosConfig.introspectUrl!, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          token: tokens.accessToken(),
+          token_type_hint: "access_token",
+          client_id: sproutosConfig.clientId!,
+          client_secret: sproutosConfig.clientSecret!,
+        }),
+      }),
+    ])
+    if (!profileResponse.ok || !introspectResponse.ok) {
+      return new Response(null, { status: 400 })
+    }
+    profile = (await profileResponse.json()) as SproutOSProfile
+    introspection = (await introspectResponse.json()) as SproutOSIntrospection
   } catch {
     return new Response(null, { status: 400 })
   }
 
-  const providerAccountId = claims.sub ?? claims.id
-  const email = claims.email
+  // A token the provider reports as inactive must not produce a session, even though the
+  // exchange that produced it succeeded a moment ago.
+  if (introspection.active !== true) {
+    return new Response(null, { status: 400 })
+  }
+
+  const providerAccountId = introspection.sub
+  const email = profile.email
   // Without a stable subject and an email there is no identity to link an account to, and
   // guessing one would risk joining two different people onto the same user.
   if (!providerAccountId || !email) {
@@ -76,8 +104,8 @@ export async function GET(request: Request): Promise<Response> {
     {
       providerAccountId,
       email,
-      name: claims.name ?? null,
-      image: claims.picture ?? null,
+      name: profile.name ?? null,
+      image: null,
     },
     {
       scope: tokens.scopes().join(" "),
