@@ -51,6 +51,9 @@ Rule 0 blocks. Everything below is a strong prior you may argue against with evi
   sell: acquisition listings and verified-MRR directories state MRR, profit and churn as a
   matter of course. [Idea sources](/resources/idea-sources) is the standing list — those
   entries are there to be copied, not bought.
+- **Name the competitor and link to their product.** Copy something that demonstrably exists;
+  a competitor you cannot link to is one you invented, and an invented competitor is not
+  validation, it is Rule 1 failing quietly.
 - "Nobody has built this" is almost always evidence that nobody wants it, not that you are
   early.
 - The formula that keeps working is **proven product times underserved identity** —
