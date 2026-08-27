@@ -46,7 +46,11 @@ export function GET(request: Request): Response {
       documents: [
         { name: "doctrine", url: `${host}/doctrine.md` },
         { name: "scorecard", url: `${host}/resources/scorecard` },
-        { name: "idea-sources", url: `${host}/idea-sources.md` },
+        {
+          name: "idea-sources",
+          url: `${host}/idea-sources.md`,
+          note: "Start with the small-apps section: Chrome extensions, Obsidian plugins, Notion integrations and templates, Shopify apps, AppSumo -- smallest unit to copy, traction published in the open.",
+        },
       ],
     },
     communities: {

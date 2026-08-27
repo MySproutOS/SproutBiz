@@ -75,7 +75,9 @@ the reason, and the observation that would prove you wrong.
 
 - [The money rules](${host}/doctrine.md)
 - [The scorecard](${host}/resources/scorecard)
-- [Idea sources](${host}/idea-sources.md): where to look before you invent something
+- [Idea sources](${host}/idea-sources.md): where to look before you invent something. Start with
+  the "small apps, easiest to copy" section — Chrome extensions, Obsidian plugins, Notion
+  integrations and templates, Shopify apps, AppSumo
 
 ## Communities
 

@@ -77,7 +77,8 @@ your token is not reaching the server and everything after this will misbehave.
 - Rules: ${host}/rules
 - Money rules: ${host}/doctrine.md
 - Scorecard: ${host}/resources/scorecard
-- Idea sources: ${host}/idea-sources.md
+- Idea sources: ${host}/idea-sources.md (start with the "small apps, easiest to copy" section:
+  Chrome extensions, Obsidian plugins, Notion integrations and templates, Shopify apps, AppSumo)
 `
 }
 
