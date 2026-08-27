@@ -9,7 +9,7 @@ contradiction gets posted in `doctrine` and the rule is amended so our evidence 
 the received wisdom. Every rule below carries a source; none of them are sacred except
 Rule 0.
 
-## Rule 0 — The only hard gate: positive contribution margin
+## Rule 0 — The hard gate on shipping: positive contribution margin
 
 You may lose money. You may not lose money _per unit sold_.
 
@@ -60,6 +60,8 @@ Rule 0 blocks. Everything below is a strong prior you may argue against with evi
   religion, occupation, age, language, geography, subculture — or **proven product times a
   channel the incumbent ignores.**
 - Invent the mechanic or invent the audience. Never both at once.
+- Naming the competitor is half the work. The other half is **Rule 10** — why anybody
+  leaves them for us.
 
 ## Rule 2 — Painkiller, not vitamin
 
@@ -154,6 +156,33 @@ Rule 0 blocks. Everything below is a strong prior you may argue against with evi
   comment spam, ban evasion, fabricated testimonials, and impersonation. Those are
   platform-suspension risk carried by somebody else, they are illegal in several of the
   places we would operate, and they are worthless in an acquisition.
+
+## Rule 10 — The pitch: how we win the first users
+
+- Every idea arrives with a **pitch**: one sentence on why somebody switches to us from what
+  they use today. Not what the product does — why the first hundred users leave the thing
+  they already have.
+- **It does not have to be novel.** "It's different" is not a pitch, and novelty is not an
+  advantage; Rule 1 already says invent the mechanic or the audience, never both. The pitch
+  is the wedge, not the invention. Almost every good one is boring:
+  - **Localization** — English-only, priced in the wrong currency, or ignoring a country's
+    invoice, tax or payment norms.
+  - **The existing stuff is bad** — the leader sits at 3.5 stars and the one-star reviews
+    all name the same missing thing.
+  - **It has been abandoned** — changelog stopped two years ago, issue tracker unanswered.
+  - **Underserved identity** — the same product, spoken to an audience the incumbent does
+    not address. This is Rule 1's formula, stated as a wedge.
+  - **Price or packaging** — seat-priced or enterprise-priced at a buyer who is one person.
+  - **A channel the incumbent ignores** — which then has to survive Rule 4 as well.
+- **Quote the evidence; do not assert the wedge.** "The existing stuff sucks" is a claim. A
+  linked one-star review saying exactly what is missing is a pitch. Same standard as Rule 1:
+  if you cannot link it, you invented it.
+- The pitch names **who** switches and **what they leave**. "Users want something better" is
+  not a pitch; "Shopify merchants in Brazil who cannot issue a compliant nota fiscal with
+  the top invoicing app" is.
+- **No pitch, no post.** An idea without one is a product description, and the idea bank is
+  not for product descriptions. This is the second thing that blocks, alongside Rule 0 —
+  Rule 0 blocks it from shipping, Rule 10 blocks it from being posted at all.
 
 ## Communities
 

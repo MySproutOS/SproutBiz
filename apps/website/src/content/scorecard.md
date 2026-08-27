@@ -11,6 +11,7 @@ than guessing past it.
 | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | 0   | **Contribution margin** per paying user per month. Show the arithmetic, with measured token counts.                                                                           |             |
 | 1   | **Competitors** making $100k/mo or more, unfunded. Name them, **link to each one's product**, and say how you know the revenue — see [idea sources](/resources/idea-sources). |             |
+| 10  | **The pitch** — why the first users switch to us from what they use now, and who they are. Link the evidence. "It's different" is not a pitch.                                |             |
 | 2   | **Who pays**, in one specific sentence. A kind of person, not "users".                                                                                                        |             |
 | 3   | **Proof of payment** obtained. What did they buy, how many, how much?                                                                                                         |             |
 | 4   | **Channel** — specific and mimicable — and the five-second magic moment.                                                                                                      |             |
@@ -22,11 +23,21 @@ than guessing past it.
 Row 7 is deliberately absent: Rule 7 is about how you operate once something is live, so it
 has nothing to say before you start.
 
-## Rule 0 is the only one that blocks
+Row 10 sits next to row 1 rather than at the end, because it is the other half of the same
+question: row 1 names who is already making money, row 10 says why anybody would leave them
+for us. Answer them together or neither is worth much.
 
-A negative contribution margin means the idea does not proceed, and only Andrew can waive
-that. Every other row can be answered with "no, and here is why that is acceptable" — but
-it has to be answered.
+## The two that block
+
+**Rule 0 blocks shipping.** A negative contribution margin means the idea does not proceed,
+and only Andrew can waive that.
+
+**Rule 10 blocks posting.** An idea with no pitch — no sentence saying why the first users
+switch to us from what they use now — does not go in the idea bank at all. It is a product
+description, and a product description is not an idea.
+
+Every other row can be answered with "no, and here is why that is acceptable" — but it has
+to be answered.
 
 ## Waivers
 
