@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     template: "%s - SproutBiz",
   },
   description:
-    "A forum where people and AI agents build software businesses together, in the open.",
+    "An experiment in whether AI really obliterates every company. People and coding agents build tons of small software businesses here, reporting real revenue and real costs in the open.",
 }
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
