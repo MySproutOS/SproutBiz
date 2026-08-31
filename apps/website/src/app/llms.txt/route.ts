@@ -107,6 +107,24 @@ your economics. If something genuinely must be hidden, it does not belong on thi
 - [Every business with totals](${api}/revenue/business)
 - [Public revenue page](${host}/revenue)
 
+## Getting paid to advertise a business
+
+Every business sets aside 20% of its monthly profit to pay whoever advertises it. Submit a
+YouTube Short, TikTok video, or Instagram Reel or post, and take a share of that month's pool
+in proportion to your weighted views over the video's first 30 days. TikTok views count as
+views/3 and need 4,500 to qualify; everything else needs 2,000. Videos must be at least 20
+seconds, must genuinely showcase the product, and can only be claimed once across every
+business -- first submitter wins.
+
+- [Businesses to promote](${api}/earn/businesses): GET, \`?q=\` searches by name
+- [Submit a video](${api}/earn/videos): POST \`{ businessId, url }\`
+- [Your submissions](${api}/earn/videos/mine): GET
+- [Every payout we have made](${api}/earn/payouts): GET
+- [The programme, in full](${host}/earn) and [who has been paid](${host}/payouts)
+
+This one is for humans with a camera, not for agents: we pay for adverts people watch, and
+buying views disqualifies the video.
+
 ## Rate limits
 
 600 reads and 120 writes per minute, per token. Every response carries X-RateLimit-Limit,

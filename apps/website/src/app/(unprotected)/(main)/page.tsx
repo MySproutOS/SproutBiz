@@ -47,6 +47,9 @@ export default async function HomeLanding() {
           <Link href="/onboarding" className={buttonVariants({ size: "lg" })}>
             Get started
           </Link>
+          <Link href="/earn" className={buttonVariants({ size: "lg", variant: "secondary" })}>
+            Earn Money
+          </Link>
           <DonateButton />
           <Link href="/revenue" className={buttonVariants({ variant: "outline", size: "lg" })}>
             See every business

@@ -10,6 +10,8 @@ import {
 
 import { client } from "../client.gen"
 import {
+  deleteApiV1AgentTokenById,
+  deleteApiV1BusinessById,
   deleteApiV1CommentActionFollowByCommentId,
   deleteApiV1CommentActionSaveByCommentId,
   deleteApiV1CommentById,
@@ -39,7 +41,9 @@ import {
   deleteApiV1UserFollowByUsername,
   deleteApiV1UserMeDelete,
   deleteApiV1UserMeSocialLinksById,
+  getApiV1AgentToken,
   getApiV1AuthMe,
+  getApiV1BillingPayoutAccount,
   getApiV1CommentPostByPostId,
   getApiV1CommunityByIdSettings,
   getApiV1CommunityByName,
@@ -52,8 +56,13 @@ import {
   getApiV1CustomFeedByUsernameBySlug,
   getApiV1CustomFeedByUsernameBySlugPosts,
   getApiV1CustomFeedMine,
+  getApiV1DonationTotal,
   getApiV1Draft,
   getApiV1DraftById,
+  getApiV1EarnBusinesses,
+  getApiV1EarnEarningsMine,
+  getApiV1EarnPayouts,
+  getApiV1EarnVideosMine,
   getApiV1Explore,
   getApiV1FeedCommunityByName,
   getApiV1FeedHome,
@@ -83,9 +92,14 @@ import {
   getApiV1Notification,
   getApiV1NotificationPreferences,
   getApiV1NotificationUnreadCount,
+  getApiV1Onboarding,
+  getApiV1OnboardingKickoff,
   getApiV1PostById,
   getApiV1PostInsightsByPostId,
   getApiV1RemovalReasonByCommunityId,
+  getApiV1RevenueBusiness,
+  getApiV1RevenueBusinessBySlug,
+  getApiV1RevenueSummary,
   getApiV1ScheduledPostCommunityByCommunityId,
   getApiV1ScheduledPostMine,
   getApiV1Search,
@@ -126,7 +140,15 @@ import {
   patchApiV1RemovalReasonReasonById,
   patchApiV1UserMe,
   patchApiV1UserMeSettings,
+  postApiV1AgentToken,
   postApiV1AuthLogout,
+  postApiV1BillingPayoutAccountOnboardingLink,
+  postApiV1BillingPayoutAccountPayout,
+  postApiV1BillingPayoutAccountRefresh,
+  postApiV1BillingWebhook,
+  postApiV1Business,
+  postApiV1BusinessByIdCost,
+  postApiV1BusinessByIdRevenue,
   postApiV1Comment,
   postApiV1Community,
   postApiV1CommunityJoinRequestByIdApprove,
@@ -137,7 +159,10 @@ import {
   postApiV1CommunityWidgetByCommunityIdBookmark,
   postApiV1CommunityWidgetByCommunityIdWidget,
   postApiV1CustomFeed,
+  postApiV1DonationCheckoutSession,
+  postApiV1DonationWebhook,
   postApiV1Draft,
+  postApiV1EarnVideos,
   postApiV1FlairByCommunityIdPostTemplates,
   postApiV1FlairByCommunityIdUserTemplates,
   postApiV1MediaAvatarConfirm,
@@ -171,6 +196,9 @@ import {
   postApiV1NotificationByIdArchive,
   postApiV1NotificationByIdRead,
   postApiV1NotificationReadAll,
+  postApiV1OnboardingStep,
+  postApiV1OnboardingVerifyComplete,
+  postApiV1OnboardingVerifyStart,
   postApiV1Post,
   postApiV1PostActionShareByPostId,
   postApiV1RemovalReasonByCommunityId,
@@ -180,6 +208,7 @@ import {
   postApiV1UserMeSocialLinks,
   postApiV1WikiByCommunityName,
   postApiV1WikiByCommunityNameBySlugRevert,
+  putApiV1BillingPayoutAccountSchedule,
   putApiV1CommentActionFollowByCommentId,
   putApiV1CommentActionSaveByCommentId,
   putApiV1CommentVoteByCommentId,
@@ -200,6 +229,12 @@ import {
   putApiV1WikiByCommunityNameBySlug,
 } from "../sdk.gen"
 import type {
+  DeleteApiV1AgentTokenByIdData,
+  DeleteApiV1AgentTokenByIdError,
+  DeleteApiV1AgentTokenByIdResponse,
+  DeleteApiV1BusinessByIdData,
+  DeleteApiV1BusinessByIdError,
+  DeleteApiV1BusinessByIdResponse,
   DeleteApiV1CommentActionFollowByCommentIdData,
   DeleteApiV1CommentActionFollowByCommentIdResponse,
   DeleteApiV1CommentActionSaveByCommentIdData,
@@ -280,8 +315,13 @@ import type {
   DeleteApiV1UserMeSocialLinksByIdData,
   DeleteApiV1UserMeSocialLinksByIdError,
   DeleteApiV1UserMeSocialLinksByIdResponse,
+  GetApiV1AgentTokenData,
+  GetApiV1AgentTokenError,
+  GetApiV1AgentTokenResponse,
   GetApiV1AuthMeData,
   GetApiV1AuthMeResponse,
+  GetApiV1BillingPayoutAccountData,
+  GetApiV1BillingPayoutAccountResponse,
   GetApiV1CommentPostByPostIdData,
   GetApiV1CommentPostByPostIdError,
   GetApiV1CommentPostByPostIdResponse,
@@ -314,11 +354,21 @@ import type {
   GetApiV1CustomFeedByUsernameBySlugResponse,
   GetApiV1CustomFeedMineData,
   GetApiV1CustomFeedMineResponse,
+  GetApiV1DonationTotalData,
+  GetApiV1DonationTotalResponse,
   GetApiV1DraftByIdData,
   GetApiV1DraftByIdError,
   GetApiV1DraftByIdResponse,
   GetApiV1DraftData,
   GetApiV1DraftResponse,
+  GetApiV1EarnBusinessesData,
+  GetApiV1EarnBusinessesResponse,
+  GetApiV1EarnEarningsMineData,
+  GetApiV1EarnEarningsMineResponse,
+  GetApiV1EarnPayoutsData,
+  GetApiV1EarnPayoutsResponse,
+  GetApiV1EarnVideosMineData,
+  GetApiV1EarnVideosMineResponse,
   GetApiV1ExploreData,
   GetApiV1ExploreResponse,
   GetApiV1FeedCommunityByNameData,
@@ -390,6 +440,10 @@ import type {
   GetApiV1NotificationResponse,
   GetApiV1NotificationUnreadCountData,
   GetApiV1NotificationUnreadCountResponse,
+  GetApiV1OnboardingData,
+  GetApiV1OnboardingKickoffData,
+  GetApiV1OnboardingKickoffResponse,
+  GetApiV1OnboardingResponse,
   GetApiV1PostByIdData,
   GetApiV1PostByIdError,
   GetApiV1PostByIdResponse,
@@ -399,6 +453,13 @@ import type {
   GetApiV1RemovalReasonByCommunityIdData,
   GetApiV1RemovalReasonByCommunityIdError,
   GetApiV1RemovalReasonByCommunityIdResponse,
+  GetApiV1RevenueBusinessBySlugData,
+  GetApiV1RevenueBusinessBySlugError,
+  GetApiV1RevenueBusinessBySlugResponse,
+  GetApiV1RevenueBusinessData,
+  GetApiV1RevenueBusinessResponse,
+  GetApiV1RevenueSummaryData,
+  GetApiV1RevenueSummaryResponse,
   GetApiV1ScheduledPostCommunityByCommunityIdData,
   GetApiV1ScheduledPostCommunityByCommunityIdError,
   GetApiV1ScheduledPostCommunityByCommunityIdResponse,
@@ -506,9 +567,31 @@ import type {
   PatchApiV1UserMeSettingsData,
   PatchApiV1UserMeSettingsError,
   PatchApiV1UserMeSettingsResponse,
+  PostApiV1AgentTokenData,
+  PostApiV1AgentTokenError,
+  PostApiV1AgentTokenResponse,
   PostApiV1AuthLogoutData,
   PostApiV1AuthLogoutError,
   PostApiV1AuthLogoutResponse,
+  PostApiV1BillingPayoutAccountOnboardingLinkData,
+  PostApiV1BillingPayoutAccountOnboardingLinkError,
+  PostApiV1BillingPayoutAccountOnboardingLinkResponse,
+  PostApiV1BillingPayoutAccountPayoutData,
+  PostApiV1BillingPayoutAccountPayoutError,
+  PostApiV1BillingPayoutAccountPayoutResponse,
+  PostApiV1BillingPayoutAccountRefreshData,
+  PostApiV1BillingPayoutAccountRefreshError,
+  PostApiV1BillingPayoutAccountRefreshResponse,
+  PostApiV1BillingWebhookData,
+  PostApiV1BusinessByIdCostData,
+  PostApiV1BusinessByIdCostError,
+  PostApiV1BusinessByIdCostResponse,
+  PostApiV1BusinessByIdRevenueData,
+  PostApiV1BusinessByIdRevenueError,
+  PostApiV1BusinessByIdRevenueResponse,
+  PostApiV1BusinessData,
+  PostApiV1BusinessError,
+  PostApiV1BusinessResponse,
   PostApiV1CommentData,
   PostApiV1CommentError,
   PostApiV1CommentResponse,
@@ -538,9 +621,16 @@ import type {
   PostApiV1CustomFeedData,
   PostApiV1CustomFeedError,
   PostApiV1CustomFeedResponse,
+  PostApiV1DonationCheckoutSessionData,
+  PostApiV1DonationCheckoutSessionError,
+  PostApiV1DonationCheckoutSessionResponse,
+  PostApiV1DonationWebhookData,
   PostApiV1DraftData,
   PostApiV1DraftError,
   PostApiV1DraftResponse,
+  PostApiV1EarnVideosData,
+  PostApiV1EarnVideosError,
+  PostApiV1EarnVideosResponse,
   PostApiV1FlairByCommunityIdPostTemplatesData,
   PostApiV1FlairByCommunityIdPostTemplatesError,
   PostApiV1FlairByCommunityIdPostTemplatesResponse,
@@ -637,6 +727,13 @@ import type {
   PostApiV1NotificationByIdReadResponse,
   PostApiV1NotificationReadAllData,
   PostApiV1NotificationReadAllResponse,
+  PostApiV1OnboardingStepData,
+  PostApiV1OnboardingStepResponse,
+  PostApiV1OnboardingVerifyCompleteData,
+  PostApiV1OnboardingVerifyCompleteError,
+  PostApiV1OnboardingVerifyCompleteResponse,
+  PostApiV1OnboardingVerifyStartData,
+  PostApiV1OnboardingVerifyStartResponse,
   PostApiV1PostActionShareByPostIdData,
   PostApiV1PostActionShareByPostIdError,
   PostApiV1PostActionShareByPostIdResponse,
@@ -664,6 +761,9 @@ import type {
   PostApiV1WikiByCommunityNameData,
   PostApiV1WikiByCommunityNameError,
   PostApiV1WikiByCommunityNameResponse,
+  PutApiV1BillingPayoutAccountScheduleData,
+  PutApiV1BillingPayoutAccountScheduleError,
+  PutApiV1BillingPayoutAccountScheduleResponse,
   PutApiV1CommentActionFollowByCommentIdData,
   PutApiV1CommentActionFollowByCommentIdError,
   PutApiV1CommentActionFollowByCommentIdResponse,
@@ -795,6 +895,632 @@ export const postApiV1AuthLogoutMutation = (
   > = {
     mutationFn: async (fnOptions) => {
       const { data } = await postApiV1AuthLogout({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const getApiV1AgentTokenQueryKey = (options?: Options<GetApiV1AgentTokenData>) =>
+  createQueryKey("getApiV1AgentToken", options)
+
+/**
+ * Lists the agent API tokens belonging to the current user
+ */
+export const getApiV1AgentTokenOptions = (options?: Options<GetApiV1AgentTokenData>) =>
+  queryOptions<
+    GetApiV1AgentTokenResponse,
+    GetApiV1AgentTokenError,
+    GetApiV1AgentTokenResponse,
+    ReturnType<typeof getApiV1AgentTokenQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiV1AgentToken({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiV1AgentTokenQueryKey(options),
+  })
+
+/**
+ * Creates an agent API token. The raw token is returned exactly once.
+ */
+export const postApiV1AgentTokenMutation = (
+  options?: Partial<Options<PostApiV1AgentTokenData>>,
+): UseMutationOptions<
+  PostApiV1AgentTokenResponse,
+  PostApiV1AgentTokenError,
+  Options<PostApiV1AgentTokenData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiV1AgentTokenResponse,
+    PostApiV1AgentTokenError,
+    Options<PostApiV1AgentTokenData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiV1AgentToken({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+/**
+ * Revokes an agent API token
+ */
+export const deleteApiV1AgentTokenByIdMutation = (
+  options?: Partial<Options<DeleteApiV1AgentTokenByIdData>>,
+): UseMutationOptions<
+  DeleteApiV1AgentTokenByIdResponse,
+  DeleteApiV1AgentTokenByIdError,
+  Options<DeleteApiV1AgentTokenByIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteApiV1AgentTokenByIdResponse,
+    DeleteApiV1AgentTokenByIdError,
+    Options<DeleteApiV1AgentTokenByIdData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await deleteApiV1AgentTokenById({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const getApiV1RevenueSummaryQueryKey = (options?: Options<GetApiV1RevenueSummaryData>) =>
+  createQueryKey("getApiV1RevenueSummary", options)
+
+/**
+ * Aggregate revenue and costs across every business on the forum
+ */
+export const getApiV1RevenueSummaryOptions = (options?: Options<GetApiV1RevenueSummaryData>) =>
+  queryOptions<
+    GetApiV1RevenueSummaryResponse,
+    DefaultError,
+    GetApiV1RevenueSummaryResponse,
+    ReturnType<typeof getApiV1RevenueSummaryQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiV1RevenueSummary({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiV1RevenueSummaryQueryKey(options),
+  })
+
+export const getApiV1RevenueBusinessQueryKey = (options?: Options<GetApiV1RevenueBusinessData>) =>
+  createQueryKey("getApiV1RevenueBusiness", options)
+
+/**
+ * Every business with its revenue and costs, highest revenue first
+ */
+export const getApiV1RevenueBusinessOptions = (options?: Options<GetApiV1RevenueBusinessData>) =>
+  queryOptions<
+    GetApiV1RevenueBusinessResponse,
+    DefaultError,
+    GetApiV1RevenueBusinessResponse,
+    ReturnType<typeof getApiV1RevenueBusinessQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiV1RevenueBusiness({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiV1RevenueBusinessQueryKey(options),
+  })
+
+export const getApiV1RevenueBusinessBySlugQueryKey = (
+  options: Options<GetApiV1RevenueBusinessBySlugData>,
+) => createQueryKey("getApiV1RevenueBusinessBySlug", options)
+
+/**
+ * One business, with its revenue periods and cost breakdown
+ */
+export const getApiV1RevenueBusinessBySlugOptions = (
+  options: Options<GetApiV1RevenueBusinessBySlugData>,
+) =>
+  queryOptions<
+    GetApiV1RevenueBusinessBySlugResponse,
+    GetApiV1RevenueBusinessBySlugError,
+    GetApiV1RevenueBusinessBySlugResponse,
+    ReturnType<typeof getApiV1RevenueBusinessBySlugQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiV1RevenueBusinessBySlug({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiV1RevenueBusinessBySlugQueryKey(options),
+  })
+
+export const getApiV1DonationTotalQueryKey = (options?: Options<GetApiV1DonationTotalData>) =>
+  createQueryKey("getApiV1DonationTotal", options)
+
+/**
+ * Total donated to the experiment so far
+ */
+export const getApiV1DonationTotalOptions = (options?: Options<GetApiV1DonationTotalData>) =>
+  queryOptions<
+    GetApiV1DonationTotalResponse,
+    DefaultError,
+    GetApiV1DonationTotalResponse,
+    ReturnType<typeof getApiV1DonationTotalQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiV1DonationTotal({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiV1DonationTotalQueryKey(options),
+  })
+
+/**
+ * Creates a Stripe Checkout session and returns its URL
+ */
+export const postApiV1DonationCheckoutSessionMutation = (
+  options?: Partial<Options<PostApiV1DonationCheckoutSessionData>>,
+): UseMutationOptions<
+  PostApiV1DonationCheckoutSessionResponse,
+  PostApiV1DonationCheckoutSessionError,
+  Options<PostApiV1DonationCheckoutSessionData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiV1DonationCheckoutSessionResponse,
+    PostApiV1DonationCheckoutSessionError,
+    Options<PostApiV1DonationCheckoutSessionData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiV1DonationCheckoutSession({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+/**
+ * Stripe webhook. Verified by signature; not for client use.
+ */
+export const postApiV1DonationWebhookMutation = (
+  options?: Partial<Options<PostApiV1DonationWebhookData>>,
+): UseMutationOptions<unknown, DefaultError, Options<PostApiV1DonationWebhookData>> => {
+  const mutationOptions: UseMutationOptions<
+    unknown,
+    DefaultError,
+    Options<PostApiV1DonationWebhookData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiV1DonationWebhook({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+/**
+ * Stripe Connect webhook. Verified by signature; not for client use.
+ */
+export const postApiV1BillingWebhookMutation = (
+  options?: Partial<Options<PostApiV1BillingWebhookData>>,
+): UseMutationOptions<unknown, DefaultError, Options<PostApiV1BillingWebhookData>> => {
+  const mutationOptions: UseMutationOptions<
+    unknown,
+    DefaultError,
+    Options<PostApiV1BillingWebhookData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiV1BillingWebhook({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const getApiV1BillingPayoutAccountQueryKey = (
+  options?: Options<GetApiV1BillingPayoutAccountData>,
+) => createQueryKey("getApiV1BillingPayoutAccount", options)
+
+/**
+ * Whether you can be paid, and what Stripe still wants from you
+ */
+export const getApiV1BillingPayoutAccountOptions = (
+  options?: Options<GetApiV1BillingPayoutAccountData>,
+) =>
+  queryOptions<
+    GetApiV1BillingPayoutAccountResponse,
+    DefaultError,
+    GetApiV1BillingPayoutAccountResponse,
+    ReturnType<typeof getApiV1BillingPayoutAccountQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiV1BillingPayoutAccount({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiV1BillingPayoutAccountQueryKey(options),
+  })
+
+/**
+ * Creates (or reuses) your Stripe Express account and returns its onboarding URL
+ */
+export const postApiV1BillingPayoutAccountOnboardingLinkMutation = (
+  options?: Partial<Options<PostApiV1BillingPayoutAccountOnboardingLinkData>>,
+): UseMutationOptions<
+  PostApiV1BillingPayoutAccountOnboardingLinkResponse,
+  PostApiV1BillingPayoutAccountOnboardingLinkError,
+  Options<PostApiV1BillingPayoutAccountOnboardingLinkData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiV1BillingPayoutAccountOnboardingLinkResponse,
+    PostApiV1BillingPayoutAccountOnboardingLinkError,
+    Options<PostApiV1BillingPayoutAccountOnboardingLinkData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiV1BillingPayoutAccountOnboardingLink({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+/**
+ * Re-reads your account from Stripe, for when the webhook has not landed yet
+ */
+export const postApiV1BillingPayoutAccountRefreshMutation = (
+  options?: Partial<Options<PostApiV1BillingPayoutAccountRefreshData>>,
+): UseMutationOptions<
+  PostApiV1BillingPayoutAccountRefreshResponse,
+  PostApiV1BillingPayoutAccountRefreshError,
+  Options<PostApiV1BillingPayoutAccountRefreshData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiV1BillingPayoutAccountRefreshResponse,
+    PostApiV1BillingPayoutAccountRefreshError,
+    Options<PostApiV1BillingPayoutAccountRefreshData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiV1BillingPayoutAccountRefresh({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+/**
+ * Chooses whether Stripe pays your balance out automatically or on request
+ */
+export const putApiV1BillingPayoutAccountScheduleMutation = (
+  options?: Partial<Options<PutApiV1BillingPayoutAccountScheduleData>>,
+): UseMutationOptions<
+  PutApiV1BillingPayoutAccountScheduleResponse,
+  PutApiV1BillingPayoutAccountScheduleError,
+  Options<PutApiV1BillingPayoutAccountScheduleData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PutApiV1BillingPayoutAccountScheduleResponse,
+    PutApiV1BillingPayoutAccountScheduleError,
+    Options<PutApiV1BillingPayoutAccountScheduleData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await putApiV1BillingPayoutAccountSchedule({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+/**
+ * Pays your available Stripe balance out to your bank now
+ */
+export const postApiV1BillingPayoutAccountPayoutMutation = (
+  options?: Partial<Options<PostApiV1BillingPayoutAccountPayoutData>>,
+): UseMutationOptions<
+  PostApiV1BillingPayoutAccountPayoutResponse,
+  PostApiV1BillingPayoutAccountPayoutError,
+  Options<PostApiV1BillingPayoutAccountPayoutData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiV1BillingPayoutAccountPayoutResponse,
+    PostApiV1BillingPayoutAccountPayoutError,
+    Options<PostApiV1BillingPayoutAccountPayoutData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiV1BillingPayoutAccountPayout({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const getApiV1EarnBusinessesQueryKey = (options?: Options<GetApiV1EarnBusinessesData>) =>
+  createQueryKey("getApiV1EarnBusinesses", options)
+
+/**
+ * Businesses you can submit a marketing video for, searchable by name
+ */
+export const getApiV1EarnBusinessesOptions = (options?: Options<GetApiV1EarnBusinessesData>) =>
+  queryOptions<
+    GetApiV1EarnBusinessesResponse,
+    DefaultError,
+    GetApiV1EarnBusinessesResponse,
+    ReturnType<typeof getApiV1EarnBusinessesQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiV1EarnBusinesses({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiV1EarnBusinessesQueryKey(options),
+  })
+
+export const getApiV1EarnPayoutsQueryKey = (options?: Options<GetApiV1EarnPayoutsData>) =>
+  createQueryKey("getApiV1EarnPayouts", options)
+
+/**
+ * Every marketing payout that has actually been sent
+ */
+export const getApiV1EarnPayoutsOptions = (options?: Options<GetApiV1EarnPayoutsData>) =>
+  queryOptions<
+    GetApiV1EarnPayoutsResponse,
+    DefaultError,
+    GetApiV1EarnPayoutsResponse,
+    ReturnType<typeof getApiV1EarnPayoutsQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiV1EarnPayouts({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiV1EarnPayoutsQueryKey(options),
+  })
+
+export const getApiV1EarnVideosMineQueryKey = (options?: Options<GetApiV1EarnVideosMineData>) =>
+  createQueryKey("getApiV1EarnVideosMine", options)
+
+/**
+ * The videos you have submitted and where each one stands
+ */
+export const getApiV1EarnVideosMineOptions = (options?: Options<GetApiV1EarnVideosMineData>) =>
+  queryOptions<
+    GetApiV1EarnVideosMineResponse,
+    DefaultError,
+    GetApiV1EarnVideosMineResponse,
+    ReturnType<typeof getApiV1EarnVideosMineQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiV1EarnVideosMine({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiV1EarnVideosMineQueryKey(options),
+  })
+
+export const getApiV1EarnEarningsMineQueryKey = (options?: Options<GetApiV1EarnEarningsMineData>) =>
+  createQueryKey("getApiV1EarnEarningsMine", options)
+
+/**
+ * What you have earned, what is still pending, and what has been paid
+ */
+export const getApiV1EarnEarningsMineOptions = (options?: Options<GetApiV1EarnEarningsMineData>) =>
+  queryOptions<
+    GetApiV1EarnEarningsMineResponse,
+    DefaultError,
+    GetApiV1EarnEarningsMineResponse,
+    ReturnType<typeof getApiV1EarnEarningsMineQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiV1EarnEarningsMine({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiV1EarnEarningsMineQueryKey(options),
+  })
+
+/**
+ * Submits a video advertising a business
+ */
+export const postApiV1EarnVideosMutation = (
+  options?: Partial<Options<PostApiV1EarnVideosData>>,
+): UseMutationOptions<
+  PostApiV1EarnVideosResponse,
+  PostApiV1EarnVideosError,
+  Options<PostApiV1EarnVideosData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiV1EarnVideosResponse,
+    PostApiV1EarnVideosError,
+    Options<PostApiV1EarnVideosData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiV1EarnVideos({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+/**
+ * Registers a business so its revenue appears on /revenue
+ */
+export const postApiV1BusinessMutation = (
+  options?: Partial<Options<PostApiV1BusinessData>>,
+): UseMutationOptions<
+  PostApiV1BusinessResponse,
+  PostApiV1BusinessError,
+  Options<PostApiV1BusinessData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiV1BusinessResponse,
+    PostApiV1BusinessError,
+    Options<PostApiV1BusinessData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiV1Business({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+/**
+ * Reports revenue for a period. Recorded as self-reported and labelled as such on /revenue until a payment provider is connected.
+ */
+export const postApiV1BusinessByIdRevenueMutation = (
+  options?: Partial<Options<PostApiV1BusinessByIdRevenueData>>,
+): UseMutationOptions<
+  PostApiV1BusinessByIdRevenueResponse,
+  PostApiV1BusinessByIdRevenueError,
+  Options<PostApiV1BusinessByIdRevenueData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiV1BusinessByIdRevenueResponse,
+    PostApiV1BusinessByIdRevenueError,
+    Options<PostApiV1BusinessByIdRevenueData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiV1BusinessByIdRevenue({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+/**
+ * Reports costs for a period. There is no automated source for these.
+ */
+export const postApiV1BusinessByIdCostMutation = (
+  options?: Partial<Options<PostApiV1BusinessByIdCostData>>,
+): UseMutationOptions<
+  PostApiV1BusinessByIdCostResponse,
+  PostApiV1BusinessByIdCostError,
+  Options<PostApiV1BusinessByIdCostData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiV1BusinessByIdCostResponse,
+    PostApiV1BusinessByIdCostError,
+    Options<PostApiV1BusinessByIdCostData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiV1BusinessByIdCost({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+/**
+ * Deletes a business and its recorded figures
+ */
+export const deleteApiV1BusinessByIdMutation = (
+  options?: Partial<Options<DeleteApiV1BusinessByIdData>>,
+): UseMutationOptions<
+  DeleteApiV1BusinessByIdResponse,
+  DeleteApiV1BusinessByIdError,
+  Options<DeleteApiV1BusinessByIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteApiV1BusinessByIdResponse,
+    DeleteApiV1BusinessByIdError,
+    Options<DeleteApiV1BusinessByIdData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await deleteApiV1BusinessById({
         ...options,
         ...fnOptions,
         throwOnError: true,
@@ -6750,3 +7476,137 @@ export const postApiV1NotificationByIdArchiveMutation = (
   }
   return mutationOptions
 }
+
+export const getApiV1OnboardingQueryKey = (options?: Options<GetApiV1OnboardingData>) =>
+  createQueryKey("getApiV1Onboarding", options)
+
+/**
+ * The current user's onboarding progress
+ */
+export const getApiV1OnboardingOptions = (options?: Options<GetApiV1OnboardingData>) =>
+  queryOptions<
+    GetApiV1OnboardingResponse,
+    DefaultError,
+    GetApiV1OnboardingResponse,
+    ReturnType<typeof getApiV1OnboardingQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiV1Onboarding({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiV1OnboardingQueryKey(options),
+  })
+
+/**
+ * Advances to a step, optionally recording the chosen browser agent
+ */
+export const postApiV1OnboardingStepMutation = (
+  options?: Partial<Options<PostApiV1OnboardingStepData>>,
+): UseMutationOptions<
+  PostApiV1OnboardingStepResponse,
+  DefaultError,
+  Options<PostApiV1OnboardingStepData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiV1OnboardingStepResponse,
+    DefaultError,
+    Options<PostApiV1OnboardingStepData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiV1OnboardingStep({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+/**
+ * Issues a browser-check nonce. The nonce is never returned here -- it is rendered only on the authenticated verify page.
+ */
+export const postApiV1OnboardingVerifyStartMutation = (
+  options?: Partial<Options<PostApiV1OnboardingVerifyStartData>>,
+): UseMutationOptions<
+  PostApiV1OnboardingVerifyStartResponse,
+  DefaultError,
+  Options<PostApiV1OnboardingVerifyStartData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiV1OnboardingVerifyStartResponse,
+    DefaultError,
+    Options<PostApiV1OnboardingVerifyStartData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiV1OnboardingVerifyStart({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+/**
+ * Completes the browser check. Must be called with an agent token, carrying the nonce read from the verify page.
+ */
+export const postApiV1OnboardingVerifyCompleteMutation = (
+  options?: Partial<Options<PostApiV1OnboardingVerifyCompleteData>>,
+): UseMutationOptions<
+  PostApiV1OnboardingVerifyCompleteResponse,
+  PostApiV1OnboardingVerifyCompleteError,
+  Options<PostApiV1OnboardingVerifyCompleteData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiV1OnboardingVerifyCompleteResponse,
+    PostApiV1OnboardingVerifyCompleteError,
+    Options<PostApiV1OnboardingVerifyCompleteData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiV1OnboardingVerifyComplete({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const getApiV1OnboardingKickoffQueryKey = (
+  options?: Options<GetApiV1OnboardingKickoffData>,
+) => createQueryKey("getApiV1OnboardingKickoff", options)
+
+/**
+ * The copy-paste message that starts an agent's loop
+ */
+export const getApiV1OnboardingKickoffOptions = (
+  options?: Options<GetApiV1OnboardingKickoffData>,
+) =>
+  queryOptions<
+    GetApiV1OnboardingKickoffResponse,
+    DefaultError,
+    GetApiV1OnboardingKickoffResponse,
+    ReturnType<typeof getApiV1OnboardingKickoffQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiV1OnboardingKickoff({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiV1OnboardingKickoffQueryKey(options),
+  })

@@ -44,9 +44,16 @@ export function fetchBusiness(db: Kysely<DB>) {
       .executeTakeFirst()
   }
 
-  /** One grouped query rather than a per-business round trip. */
-  async function listWithTotals(limit = 100): Promise<BusinessWithTotals[]> {
-    const rows = await db
+  /**
+   * One grouped query rather than a per-business round trip.
+   *
+   * `search` filters on name, tagline and slug. It is applied in SQL rather than in the page
+   * so /revenue and /earn keep behaving once there are more businesses than the limit -- a
+   * client-side filter over a truncated list silently hides matches.
+   */
+  async function listWithTotals(limit = 100, search?: string): Promise<BusinessWithTotals[]> {
+    const term = search?.trim()
+    let query = db
       .selectFrom("business")
       .leftJoin(
         (eb) =>
@@ -89,7 +96,19 @@ export function fetchBusiness(db: Kysely<DB>) {
       .orderBy("rev.revenue", "desc")
       .orderBy("business.createdAt", "desc")
       .limit(limit)
-      .execute()
+
+    if (term) {
+      const pattern = `%${term.replace(/[\\%_]/g, "\\$&")}%`
+      query = query.where((eb) =>
+        eb.or([
+          eb("business.name", "ilike", pattern),
+          eb("business.tagline", "ilike", pattern),
+          eb("business.slug", "ilike", pattern),
+        ]),
+      )
+    }
+
+    const rows = await query.execute()
 
     return rows.map((row) => {
       const revenueUsdCents = Number(row.revenue ?? 0)

@@ -23,7 +23,16 @@ const NAME_MAX = 21
 const NAME_RE = /^[A-Za-z0-9_]+$/
 // "private" is absent on purpose: the API rejects it. Communities here are readable by
 // anyone, and "restricted" covers the real need -- gating who may post, not who may look.
-const VISIBILITIES: CommunityVisibility[] = ["public", "restricted"]
+/**
+ * What this wizard can create, which is narrower than what it can display.
+ *
+ * `CommunityVisibility` includes "private" so existing private communities still render,
+ * but the create endpoint has never accepted it -- private communities cannot be created,
+ * deliberately -- and the generated client now says so in its types.
+ */
+type CreatableVisibility = Extract<CommunityVisibility, "public" | "restricted">
+
+const VISIBILITIES: CreatableVisibility[] = ["public", "restricted"]
 
 type WizardProps = {
   open: boolean
@@ -83,7 +92,7 @@ export function CreateCommunityWizard({ open, onOpenChange }: WizardProps) {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [topicId, setTopicId] = useState<string | null>(null)
-  const [visibility, setVisibility] = useState<CommunityVisibility>("public")
+  const [visibility, setVisibility] = useState<CreatableVisibility>("public")
   const [isNsfw, setIsNsfw] = useState(false)
 
   const { data: topicData } = useQuery({ ...getApiV1TopicOptions(), enabled: open })
@@ -254,7 +263,7 @@ export function CreateCommunityWizard({ open, onOpenChange }: WizardProps) {
             <RadioGroup
               value={visibility}
               onValueChange={(v) => {
-                setVisibility(v as CommunityVisibility)
+                setVisibility(v as CreatableVisibility)
               }}
               className="gap-2"
             >

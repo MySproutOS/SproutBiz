@@ -253,3 +253,423 @@ export type GetApiAdminStatsResponses = {
 }
 
 export type GetApiAdminStatsResponse = GetApiAdminStatsResponses[keyof GetApiAdminStatsResponses]
+
+export type GetApiAdminMarketingVideosData = {
+  body?: never
+  path?: never
+  query?: {
+    status?: "pending" | "approved" | "rejected" | "measured" | "paid"
+  }
+  url: "/api/admin/marketing/videos"
+}
+
+export type GetApiAdminMarketingVideosResponses = {
+  /**
+   * Videos
+   */
+  200: {
+    data: Array<{
+      id: string
+      businessId: string
+      businessName: string
+      businessSlug: string
+      submitterUserId: string
+      submitterUsername: string
+      platform: string
+      platformLabel: string
+      url: string
+      status: string
+      rejectionReason: string | null
+      durationSeconds: number | null
+      postedAt: string | null
+      measureAt: string | null
+      viewCount: number | null
+      weightedViews: number | null
+      minViews: number
+      meetsMinimum: boolean
+      submittedAt: string
+    }>
+  }
+}
+
+export type GetApiAdminMarketingVideosResponse =
+  GetApiAdminMarketingVideosResponses[keyof GetApiAdminMarketingVideosResponses]
+
+export type PostApiAdminMarketingVideosByIdApproveData = {
+  body?: {
+    postedAt: Date
+    durationSeconds: number
+  }
+  path: {
+    id: string
+  }
+  query?: never
+  url: "/api/admin/marketing/videos/{id}/approve"
+}
+
+export type PostApiAdminMarketingVideosByIdApproveErrors = {
+  /**
+   * Too short, or already reviewed
+   */
+  400: ErrorResponseT
+}
+
+export type PostApiAdminMarketingVideosByIdApproveError =
+  PostApiAdminMarketingVideosByIdApproveErrors[keyof PostApiAdminMarketingVideosByIdApproveErrors]
+
+export type PostApiAdminMarketingVideosByIdApproveResponses = {
+  /**
+   * Approved
+   */
+  200: {
+    data: {
+      id: string
+      businessId: string
+      businessName: string
+      businessSlug: string
+      submitterUserId: string
+      submitterUsername: string
+      platform: string
+      platformLabel: string
+      url: string
+      status: string
+      rejectionReason: string | null
+      durationSeconds: number | null
+      postedAt: string | null
+      measureAt: string | null
+      viewCount: number | null
+      weightedViews: number | null
+      minViews: number
+      meetsMinimum: boolean
+      submittedAt: string
+    }
+  }
+}
+
+export type PostApiAdminMarketingVideosByIdApproveResponse =
+  PostApiAdminMarketingVideosByIdApproveResponses[keyof PostApiAdminMarketingVideosByIdApproveResponses]
+
+export type PostApiAdminMarketingVideosByIdRejectData = {
+  body?: {
+    reason: string
+  }
+  path: {
+    id: string
+  }
+  query?: never
+  url: "/api/admin/marketing/videos/{id}/reject"
+}
+
+export type PostApiAdminMarketingVideosByIdRejectResponses = {
+  /**
+   * Rejected
+   */
+  200: {
+    data: {
+      id: string
+      businessId: string
+      businessName: string
+      businessSlug: string
+      submitterUserId: string
+      submitterUsername: string
+      platform: string
+      platformLabel: string
+      url: string
+      status: string
+      rejectionReason: string | null
+      durationSeconds: number | null
+      postedAt: string | null
+      measureAt: string | null
+      viewCount: number | null
+      weightedViews: number | null
+      minViews: number
+      meetsMinimum: boolean
+      submittedAt: string
+    }
+  }
+}
+
+export type PostApiAdminMarketingVideosByIdRejectResponse =
+  PostApiAdminMarketingVideosByIdRejectResponses[keyof PostApiAdminMarketingVideosByIdRejectResponses]
+
+export type PostApiAdminMarketingVideosByIdViewsData = {
+  body?: {
+    viewCount: number
+  }
+  path: {
+    id: string
+  }
+  query?: never
+  url: "/api/admin/marketing/videos/{id}/views"
+}
+
+export type PostApiAdminMarketingVideosByIdViewsErrors = {
+  /**
+   * Not an approved video, or an unknown platform
+   */
+  400: ErrorResponseT
+}
+
+export type PostApiAdminMarketingVideosByIdViewsError =
+  PostApiAdminMarketingVideosByIdViewsErrors[keyof PostApiAdminMarketingVideosByIdViewsErrors]
+
+export type PostApiAdminMarketingVideosByIdViewsResponses = {
+  /**
+   * Recorded
+   */
+  200: {
+    data: {
+      id: string
+      businessId: string
+      businessName: string
+      businessSlug: string
+      submitterUserId: string
+      submitterUsername: string
+      platform: string
+      platformLabel: string
+      url: string
+      status: string
+      rejectionReason: string | null
+      durationSeconds: number | null
+      postedAt: string | null
+      measureAt: string | null
+      viewCount: number | null
+      weightedViews: number | null
+      minViews: number
+      meetsMinimum: boolean
+      submittedAt: string
+    }
+  }
+}
+
+export type PostApiAdminMarketingVideosByIdViewsResponse =
+  PostApiAdminMarketingVideosByIdViewsResponses[keyof PostApiAdminMarketingVideosByIdViewsResponses]
+
+export type GetApiAdminMarketingPoolsData = {
+  body?: never
+  path?: never
+  query: {
+    month: string
+  }
+  url: "/api/admin/marketing/pools"
+}
+
+export type GetApiAdminMarketingPoolsResponses = {
+  /**
+   * Pools
+   */
+  200: {
+    data: Array<{
+      businessId: string
+      businessName: string
+      businessSlug: string
+      month: string
+      poolId: string | null
+      revenueUsdCents: number
+      costUsdCents: number
+      netUsdCents: number
+      suggestedUsdCents: number
+      poolUsdCents: number
+      notes: string | null
+      status: string
+      eligibleVideoCount: number
+      totalWeightedViews: number
+    }>
+  }
+}
+
+export type GetApiAdminMarketingPoolsResponse =
+  GetApiAdminMarketingPoolsResponses[keyof GetApiAdminMarketingPoolsResponses]
+
+export type PutApiAdminMarketingPoolsData = {
+  body?: {
+    businessId: string
+    month: string
+    poolUsdCents: number
+    notes?: string | null
+  }
+  path?: never
+  query?: never
+  url: "/api/admin/marketing/pools"
+}
+
+export type PutApiAdminMarketingPoolsErrors = {
+  /**
+   * The pool has already been paid
+   */
+  400: ErrorResponseT
+}
+
+export type PutApiAdminMarketingPoolsError =
+  PutApiAdminMarketingPoolsErrors[keyof PutApiAdminMarketingPoolsErrors]
+
+export type PutApiAdminMarketingPoolsResponses = {
+  /**
+   * Pool saved
+   */
+  200: {
+    poolId: string
+    poolUsdCents: number
+    status: string
+    data: Array<{
+      id: string
+      videoId: string
+      username: string
+      platform: string
+      url: string
+      viewCount: number | null
+      weightedViews: number
+      shareBp: number
+      grossUsdCents: number
+      feeUsdCents: number
+      netUsdCents: number
+      status: string
+      failureReason: string | null
+      paidAt: string | null
+      payable: boolean
+    }>
+  }
+}
+
+export type PutApiAdminMarketingPoolsResponse =
+  PutApiAdminMarketingPoolsResponses[keyof PutApiAdminMarketingPoolsResponses]
+
+export type PostApiAdminMarketingPoolsByIdCalculateData = {
+  body?: never
+  path: {
+    id: string
+  }
+  query?: never
+  url: "/api/admin/marketing/pools/{id}/calculate"
+}
+
+export type PostApiAdminMarketingPoolsByIdCalculateErrors = {
+  /**
+   * The pool has already been paid
+   */
+  400: ErrorResponseT
+}
+
+export type PostApiAdminMarketingPoolsByIdCalculateError =
+  PostApiAdminMarketingPoolsByIdCalculateErrors[keyof PostApiAdminMarketingPoolsByIdCalculateErrors]
+
+export type PostApiAdminMarketingPoolsByIdCalculateResponses = {
+  /**
+   * Calculated
+   */
+  200: {
+    poolId: string
+    poolUsdCents: number
+    status: string
+    data: Array<{
+      id: string
+      videoId: string
+      username: string
+      platform: string
+      url: string
+      viewCount: number | null
+      weightedViews: number
+      shareBp: number
+      grossUsdCents: number
+      feeUsdCents: number
+      netUsdCents: number
+      status: string
+      failureReason: string | null
+      paidAt: string | null
+      payable: boolean
+    }>
+  }
+}
+
+export type PostApiAdminMarketingPoolsByIdCalculateResponse =
+  PostApiAdminMarketingPoolsByIdCalculateResponses[keyof PostApiAdminMarketingPoolsByIdCalculateResponses]
+
+export type GetApiAdminMarketingPoolsByIdPayoutsData = {
+  body?: never
+  path: {
+    id: string
+  }
+  query?: never
+  url: "/api/admin/marketing/pools/{id}/payouts"
+}
+
+export type GetApiAdminMarketingPoolsByIdPayoutsResponses = {
+  /**
+   * Payouts
+   */
+  200: {
+    poolId: string
+    poolUsdCents: number
+    status: string
+    data: Array<{
+      id: string
+      videoId: string
+      username: string
+      platform: string
+      url: string
+      viewCount: number | null
+      weightedViews: number
+      shareBp: number
+      grossUsdCents: number
+      feeUsdCents: number
+      netUsdCents: number
+      status: string
+      failureReason: string | null
+      paidAt: string | null
+      payable: boolean
+    }>
+  }
+}
+
+export type GetApiAdminMarketingPoolsByIdPayoutsResponse =
+  GetApiAdminMarketingPoolsByIdPayoutsResponses[keyof GetApiAdminMarketingPoolsByIdPayoutsResponses]
+
+export type PostApiAdminMarketingPoolsByIdPayData = {
+  body?: never
+  path: {
+    id: string
+  }
+  query?: never
+  url: "/api/admin/marketing/pools/{id}/pay"
+}
+
+export type PostApiAdminMarketingPoolsByIdPayErrors = {
+  /**
+   * Payouts are not configured on this deployment
+   */
+  503: ErrorResponseT
+}
+
+export type PostApiAdminMarketingPoolsByIdPayError =
+  PostApiAdminMarketingPoolsByIdPayErrors[keyof PostApiAdminMarketingPoolsByIdPayErrors]
+
+export type PostApiAdminMarketingPoolsByIdPayResponses = {
+  /**
+   * Payouts attempted
+   */
+  200: {
+    poolId: string
+    poolUsdCents: number
+    status: string
+    data: Array<{
+      id: string
+      videoId: string
+      username: string
+      platform: string
+      url: string
+      viewCount: number | null
+      weightedViews: number
+      shareBp: number
+      grossUsdCents: number
+      feeUsdCents: number
+      netUsdCents: number
+      status: string
+      failureReason: string | null
+      paidAt: string | null
+      payable: boolean
+    }>
+  }
+}
+
+export type PostApiAdminMarketingPoolsByIdPayResponse =
+  PostApiAdminMarketingPoolsByIdPayResponses[keyof PostApiAdminMarketingPoolsByIdPayResponses]

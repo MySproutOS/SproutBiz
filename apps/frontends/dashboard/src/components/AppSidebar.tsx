@@ -34,15 +34,20 @@ import {
   postApiV1ModTeamInviteByIdDeclineMutation,
 } from "@lib/api-client/generated/@tanstack/react-query.gen"
 import {
+  Banknote,
+  BookOpen,
+  Bot,
   Check,
   ChevronRight,
   Compass,
+  FileCode,
   Home,
   Layers,
   Plus,
   ShieldCheck,
   Star,
   TrendingUp,
+  Wallet,
   X,
 } from "lucide-react"
 import { useState } from "react"
@@ -399,6 +404,30 @@ const MAIN_NAV = [
   { to: "/explore" as const, label: "Explore", icon: Compass },
 ]
 
+/**
+ * Earning, which the feed had no route to at all.
+ *
+ * /earn is a Next.js page and /billing is a route in this SPA, so these cannot share a link
+ * component -- hence the `spa` flag rather than one list of TanStack routes.
+ */
+const EARNING_NAV = [
+  { href: "/earn", label: "Earn Money", icon: Banknote, spa: false },
+  { to: "/billing" as const, label: "Billing & earnings", icon: Wallet, spa: true },
+] as const
+
+/**
+ * The agent-facing links that the landing page has and the signed-in feed did not.
+ *
+ * At the top, because the people most likely to want them arrive by signing in and going
+ * straight to their feed, and were previously expected to navigate back to `/` to find them.
+ * All of these are served outside the SPA router, so they are plain anchors.
+ */
+const AGENT_LINKS = [
+  { href: "/llms.txt", label: "llms.txt", icon: FileCode },
+  { href: "/api/docs", label: "API reference", icon: BookOpen },
+  { href: "/agents.txt", label: "agents.txt", icon: Bot },
+]
+
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
   const [wizardOpen, setWizardOpen] = useState(false)
@@ -418,6 +447,63 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="offcanvas" className="top-14! h-[calc(100svh-3.5rem)]!">
       <SidebarContent>
+        {/* Are you an agent? Same links as the landing page, where they are easy to miss
+            once you are signed in and looking at a feed. */}
+        <SidebarGroup>
+          <SidebarGroupLabel className={SECTION_LABEL_CLASS}>Agents</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {AGENT_LINKS.map(({ href, label, icon: Icon }) => (
+                <SidebarMenuItem key={label}>
+                  <SidebarMenuButton
+                    className={MENU_ROW_CLASS}
+                    tooltip={label}
+                    render={
+                      // oxlint-disable-next-line no-html-link-for-pages -- served outside the SPA router
+                      <a href={href}>
+                        <Icon />
+                        <span>{label}</span>
+                      </a>
+                    }
+                  />
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Earning */}
+        <SidebarGroup>
+          <SidebarGroupLabel className={SECTION_LABEL_CLASS}>Earning</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {EARNING_NAV.map((item) => (
+                <SidebarMenuItem key={item.label}>
+                  <SidebarMenuButton
+                    className={MENU_ROW_CLASS}
+                    tooltip={item.label}
+                    isActive={item.spa && pathname === item.to}
+                    render={
+                      item.spa ? (
+                        <Link to={item.to}>
+                          <item.icon />
+                          <span>{item.label}</span>
+                        </Link>
+                      ) : (
+                        // oxlint-disable-next-line no-html-link-for-pages -- /earn is a Next.js page outside the SPA router
+                        <a href={item.href}>
+                          <item.icon />
+                          <span>{item.label}</span>
+                        </a>
+                      )
+                    }
+                  />
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
         {/* Main nav */}
         <SidebarGroup>
           <SidebarGroupContent>

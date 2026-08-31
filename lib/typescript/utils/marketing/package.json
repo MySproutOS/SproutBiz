@@ -1,0 +1,23 @@
+{
+  "name": "@utils/marketing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Rules for the Earn Money creator program: URL parsing, view weighting, payout splits",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "exports": [
+    {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  ],
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "catalog:"
+  },
+  "config": {}
+}

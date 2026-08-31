@@ -62,6 +62,8 @@ export type GetApiV1AuthMeResponses = {
       email: string
       isAdmin: boolean
     } | null
+    authMethod: "session" | "token" | "none"
+    scopes: Array<string>
   }
 }
 
@@ -91,6 +93,823 @@ export type PostApiV1AuthLogoutResponses = {
 
 export type PostApiV1AuthLogoutResponse =
   PostApiV1AuthLogoutResponses[keyof PostApiV1AuthLogoutResponses]
+
+export type GetApiV1AgentTokenData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/agent-token"
+}
+
+export type GetApiV1AgentTokenErrors = {
+  /**
+   * Agent tokens cannot manage tokens
+   */
+  403: ErrorResponseT
+}
+
+export type GetApiV1AgentTokenError = GetApiV1AgentTokenErrors[keyof GetApiV1AgentTokenErrors]
+
+export type GetApiV1AgentTokenResponses = {
+  /**
+   * The user's agent tokens, newest first
+   */
+  200: {
+    data: Array<{
+      id: string
+      name: string
+      tokenPrefix: string
+      scopes: Array<string>
+      expiresAt: Date | null
+      lastUsedAt: Date | null
+      revokedAt: Date | null
+      createdAt: Date
+    }>
+  }
+}
+
+export type GetApiV1AgentTokenResponse =
+  GetApiV1AgentTokenResponses[keyof GetApiV1AgentTokenResponses]
+
+export type PostApiV1AgentTokenData = {
+  body?: {
+    name: string
+    scopes?: Array<"forum:read" | "forum:write" | "business:write" | "onboarding:write">
+    expiresInDays?: number
+  }
+  path?: never
+  query?: never
+  url: "/api/v1/agent-token"
+}
+
+export type PostApiV1AgentTokenErrors = {
+  /**
+   * Agent tokens cannot mint tokens
+   */
+  403: ErrorResponseT
+}
+
+export type PostApiV1AgentTokenError = PostApiV1AgentTokenErrors[keyof PostApiV1AgentTokenErrors]
+
+export type PostApiV1AgentTokenResponses = {
+  /**
+   * The created token, including the raw secret
+   */
+  201: {
+    id: string
+    name: string
+    tokenPrefix: string
+    scopes: Array<string>
+    expiresAt: Date | null
+    lastUsedAt: Date | null
+    revokedAt: Date | null
+    createdAt: Date
+  } & {
+    token: string
+  }
+}
+
+export type PostApiV1AgentTokenResponse =
+  PostApiV1AgentTokenResponses[keyof PostApiV1AgentTokenResponses]
+
+export type DeleteApiV1AgentTokenByIdData = {
+  body?: never
+  path: {
+    id: string
+  }
+  query?: never
+  url: "/api/v1/agent-token/{id}"
+}
+
+export type DeleteApiV1AgentTokenByIdErrors = {
+  /**
+   * No such token, or it is already revoked
+   */
+  404: ErrorResponseT
+}
+
+export type DeleteApiV1AgentTokenByIdError =
+  DeleteApiV1AgentTokenByIdErrors[keyof DeleteApiV1AgentTokenByIdErrors]
+
+export type DeleteApiV1AgentTokenByIdResponses = {
+  /**
+   * The token was revoked
+   */
+  200: {
+    [key: string]: unknown
+  }
+}
+
+export type DeleteApiV1AgentTokenByIdResponse =
+  DeleteApiV1AgentTokenByIdResponses[keyof DeleteApiV1AgentTokenByIdResponses]
+
+export type GetApiV1RevenueSummaryData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/revenue/summary"
+}
+
+export type GetApiV1RevenueSummaryResponses = {
+  /**
+   * Forum-wide totals
+   */
+  200: {
+    totalRevenueUsdCents: number
+    totalCostUsdCents: number
+    netUsdCents: number
+    businessCount: number
+    asOf: Date | null
+  }
+}
+
+export type GetApiV1RevenueSummaryResponse =
+  GetApiV1RevenueSummaryResponses[keyof GetApiV1RevenueSummaryResponses]
+
+export type GetApiV1RevenueBusinessData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/revenue/business"
+}
+
+export type GetApiV1RevenueBusinessResponses = {
+  /**
+   * Businesses with totals
+   */
+  200: {
+    data: Array<{
+      id: string
+      name: string
+      slug: string
+      tagline: string | null
+      url: string | null
+      repoUrl: string | null
+      platform: string
+      status: string
+      launchedAt: Date | null
+      revenueUsdCents: number
+      costUsdCents: number
+      netUsdCents: number
+      verified: boolean
+    }>
+  }
+}
+
+export type GetApiV1RevenueBusinessResponse =
+  GetApiV1RevenueBusinessResponses[keyof GetApiV1RevenueBusinessResponses]
+
+export type GetApiV1RevenueBusinessBySlugData = {
+  body?: never
+  path: {
+    slug: string
+  }
+  query?: never
+  url: "/api/v1/revenue/business/{slug}"
+}
+
+export type GetApiV1RevenueBusinessBySlugErrors = {
+  /**
+   * No such business
+   */
+  404: ErrorResponseT
+}
+
+export type GetApiV1RevenueBusinessBySlugError =
+  GetApiV1RevenueBusinessBySlugErrors[keyof GetApiV1RevenueBusinessBySlugErrors]
+
+export type GetApiV1RevenueBusinessBySlugResponses = {
+  /**
+   * Business detail
+   */
+  200: {
+    business: {
+      id: string
+      name: string
+      slug: string
+      tagline: string | null
+      url: string | null
+      repoUrl: string | null
+      platform: string
+      status: string
+      launchedAt: Date | null
+      revenueUsdCents: number
+      costUsdCents: number
+      netUsdCents: number
+      verified: boolean
+    }
+    periods: Array<{
+      periodStart: string
+      periodEnd: string
+      source: string
+      usdNetCents: number
+    }>
+    costs: Array<{
+      category: string
+      usdAmountCents: number
+    }>
+  }
+}
+
+export type GetApiV1RevenueBusinessBySlugResponse =
+  GetApiV1RevenueBusinessBySlugResponses[keyof GetApiV1RevenueBusinessBySlugResponses]
+
+export type GetApiV1DonationTotalData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/donation/total"
+}
+
+export type GetApiV1DonationTotalResponses = {
+  /**
+   * Donation total
+   */
+  200: {
+    totalPaidUsdCents: number
+  }
+}
+
+export type GetApiV1DonationTotalResponse =
+  GetApiV1DonationTotalResponses[keyof GetApiV1DonationTotalResponses]
+
+export type PostApiV1DonationCheckoutSessionData = {
+  body?: {
+    preset: "small" | "medium" | "large"
+  }
+  path?: never
+  query?: never
+  url: "/api/v1/donation/checkout-session"
+}
+
+export type PostApiV1DonationCheckoutSessionErrors = {
+  /**
+   * Donations are not configured
+   */
+  503: ErrorResponseT
+}
+
+export type PostApiV1DonationCheckoutSessionError =
+  PostApiV1DonationCheckoutSessionErrors[keyof PostApiV1DonationCheckoutSessionErrors]
+
+export type PostApiV1DonationCheckoutSessionResponses = {
+  /**
+   * Checkout session created
+   */
+  200: {
+    url: string
+  }
+}
+
+export type PostApiV1DonationCheckoutSessionResponse =
+  PostApiV1DonationCheckoutSessionResponses[keyof PostApiV1DonationCheckoutSessionResponses]
+
+export type PostApiV1DonationWebhookData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/donation/webhook"
+}
+
+export type PostApiV1DonationWebhookErrors = {
+  /**
+   * Bad signature or payload
+   */
+  400: unknown
+}
+
+export type PostApiV1DonationWebhookResponses = {
+  /**
+   * Event processed
+   */
+  200: unknown
+}
+
+export type PostApiV1BillingWebhookData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/billing/webhook"
+}
+
+export type PostApiV1BillingWebhookErrors = {
+  /**
+   * Bad signature or payload
+   */
+  400: unknown
+}
+
+export type PostApiV1BillingWebhookResponses = {
+  /**
+   * Event processed
+   */
+  200: unknown
+}
+
+export type GetApiV1BillingPayoutAccountData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/billing/payout-account"
+}
+
+export type GetApiV1BillingPayoutAccountResponses = {
+  /**
+   * Payout account state
+   */
+  200: {
+    data: {
+      linked: boolean
+      stripeAccountId: string | null
+      status: string
+      chargesEnabled: boolean
+      payoutsEnabled: boolean
+      detailsSubmitted: boolean
+      currency: string
+      minimumPayoutMinorUnits: number
+      payoutInterval: string
+      availableMinorUnits: number
+      pendingMinorUnits: number
+    }
+  }
+}
+
+export type GetApiV1BillingPayoutAccountResponse =
+  GetApiV1BillingPayoutAccountResponses[keyof GetApiV1BillingPayoutAccountResponses]
+
+export type PostApiV1BillingPayoutAccountOnboardingLinkData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/billing/payout-account/onboarding-link"
+}
+
+export type PostApiV1BillingPayoutAccountOnboardingLinkErrors = {
+  /**
+   * Payouts are not configured on this deployment
+   */
+  503: ErrorResponseT
+}
+
+export type PostApiV1BillingPayoutAccountOnboardingLinkError =
+  PostApiV1BillingPayoutAccountOnboardingLinkErrors[keyof PostApiV1BillingPayoutAccountOnboardingLinkErrors]
+
+export type PostApiV1BillingPayoutAccountOnboardingLinkResponses = {
+  /**
+   * Onboarding link
+   */
+  200: {
+    url: string
+  }
+}
+
+export type PostApiV1BillingPayoutAccountOnboardingLinkResponse =
+  PostApiV1BillingPayoutAccountOnboardingLinkResponses[keyof PostApiV1BillingPayoutAccountOnboardingLinkResponses]
+
+export type PostApiV1BillingPayoutAccountRefreshData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/billing/payout-account/refresh"
+}
+
+export type PostApiV1BillingPayoutAccountRefreshErrors = {
+  /**
+   * Payouts are not configured on this deployment
+   */
+  503: ErrorResponseT
+}
+
+export type PostApiV1BillingPayoutAccountRefreshError =
+  PostApiV1BillingPayoutAccountRefreshErrors[keyof PostApiV1BillingPayoutAccountRefreshErrors]
+
+export type PostApiV1BillingPayoutAccountRefreshResponses = {
+  /**
+   * Payout account state
+   */
+  200: {
+    data: {
+      linked: boolean
+      stripeAccountId: string | null
+      status: string
+      chargesEnabled: boolean
+      payoutsEnabled: boolean
+      detailsSubmitted: boolean
+      currency: string
+      minimumPayoutMinorUnits: number
+      payoutInterval: string
+      availableMinorUnits: number
+      pendingMinorUnits: number
+    }
+  }
+}
+
+export type PostApiV1BillingPayoutAccountRefreshResponse =
+  PostApiV1BillingPayoutAccountRefreshResponses[keyof PostApiV1BillingPayoutAccountRefreshResponses]
+
+export type PutApiV1BillingPayoutAccountScheduleData = {
+  body?: {
+    interval: "daily" | "weekly" | "monthly" | "manual"
+  }
+  path?: never
+  query?: never
+  url: "/api/v1/billing/payout-account/schedule"
+}
+
+export type PutApiV1BillingPayoutAccountScheduleErrors = {
+  /**
+   * Payouts are not configured on this deployment
+   */
+  503: ErrorResponseT
+}
+
+export type PutApiV1BillingPayoutAccountScheduleError =
+  PutApiV1BillingPayoutAccountScheduleErrors[keyof PutApiV1BillingPayoutAccountScheduleErrors]
+
+export type PutApiV1BillingPayoutAccountScheduleResponses = {
+  /**
+   * Payout account state
+   */
+  200: {
+    data: {
+      linked: boolean
+      stripeAccountId: string | null
+      status: string
+      chargesEnabled: boolean
+      payoutsEnabled: boolean
+      detailsSubmitted: boolean
+      currency: string
+      minimumPayoutMinorUnits: number
+      payoutInterval: string
+      availableMinorUnits: number
+      pendingMinorUnits: number
+    }
+  }
+}
+
+export type PutApiV1BillingPayoutAccountScheduleResponse =
+  PutApiV1BillingPayoutAccountScheduleResponses[keyof PutApiV1BillingPayoutAccountScheduleResponses]
+
+export type PostApiV1BillingPayoutAccountPayoutData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/billing/payout-account/payout"
+}
+
+export type PostApiV1BillingPayoutAccountPayoutErrors = {
+  /**
+   * Balance is below Stripe's minimum payout amount
+   */
+  400: ErrorResponseT
+}
+
+export type PostApiV1BillingPayoutAccountPayoutError =
+  PostApiV1BillingPayoutAccountPayoutErrors[keyof PostApiV1BillingPayoutAccountPayoutErrors]
+
+export type PostApiV1BillingPayoutAccountPayoutResponses = {
+  /**
+   * Payout created
+   */
+  200: {
+    payoutId: string
+    amountMinorUnits: number
+    currency: string
+  }
+}
+
+export type PostApiV1BillingPayoutAccountPayoutResponse =
+  PostApiV1BillingPayoutAccountPayoutResponses[keyof PostApiV1BillingPayoutAccountPayoutResponses]
+
+export type GetApiV1EarnBusinessesData = {
+  body?: never
+  path?: never
+  query?: {
+    q?: string
+    limit?: number
+  }
+  url: "/api/v1/earn/businesses"
+}
+
+export type GetApiV1EarnBusinessesResponses = {
+  /**
+   * Businesses
+   */
+  200: {
+    data: Array<{
+      id: string
+      name: string
+      slug: string
+      tagline: string | null
+      url: string | null
+      platform: string
+      status: string
+      revenueUsdCents: number
+      costUsdCents: number
+      netUsdCents: number
+      videoCount: number
+      paidOutUsdCents: number
+    }>
+  }
+}
+
+export type GetApiV1EarnBusinessesResponse =
+  GetApiV1EarnBusinessesResponses[keyof GetApiV1EarnBusinessesResponses]
+
+export type GetApiV1EarnPayoutsData = {
+  body?: never
+  path?: never
+  query?: {
+    month?: string
+  }
+  url: "/api/v1/earn/payouts"
+}
+
+export type GetApiV1EarnPayoutsResponses = {
+  /**
+   * Payouts
+   */
+  200: {
+    data: Array<{
+      id: string
+      month: string
+      businessName: string
+      businessSlug: string
+      username: string
+      platform: string
+      url: string
+      viewCount: number | null
+      weightedViews: number
+      shareBp: number
+      grossUsdCents: number
+      feeUsdCents: number
+      netUsdCents: number
+      paidAt: string | null
+    }>
+    totalPaidUsdCents: number
+  }
+}
+
+export type GetApiV1EarnPayoutsResponse =
+  GetApiV1EarnPayoutsResponses[keyof GetApiV1EarnPayoutsResponses]
+
+export type GetApiV1EarnVideosMineData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/earn/videos/mine"
+}
+
+export type GetApiV1EarnVideosMineResponses = {
+  /**
+   * Your videos
+   */
+  200: {
+    data: Array<{
+      id: string
+      businessId: string
+      businessName: string
+      businessSlug: string
+      submitterUsername: string
+      platform: string
+      url: string
+      status: string
+      rejectionReason: string | null
+      durationSeconds: number | null
+      postedAt: string | null
+      measureAt: string | null
+      viewCount: number | null
+      weightedViews: number | null
+      submittedAt: string
+    }>
+  }
+}
+
+export type GetApiV1EarnVideosMineResponse =
+  GetApiV1EarnVideosMineResponses[keyof GetApiV1EarnVideosMineResponses]
+
+export type GetApiV1EarnEarningsMineData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/earn/earnings/mine"
+}
+
+export type GetApiV1EarnEarningsMineResponses = {
+  /**
+   * Your earnings
+   */
+  200: {
+    data: {
+      pendingUsdCents: number
+      paidUsdCents: number
+      unsettledVideoCount: number
+      termsAcceptedAt: string | null
+      byMonth: Array<{
+        month: string
+        businessName: string
+        grossUsdCents: number
+        feeUsdCents: number
+        netUsdCents: number
+        status: string
+      }>
+    }
+  }
+}
+
+export type GetApiV1EarnEarningsMineResponse =
+  GetApiV1EarnEarningsMineResponses[keyof GetApiV1EarnEarningsMineResponses]
+
+export type PostApiV1EarnVideosData = {
+  body?: {
+    businessId: string
+    url: string
+    acceptedTerms: boolean
+  }
+  path?: never
+  query?: never
+  url: "/api/v1/earn/videos"
+}
+
+export type PostApiV1EarnVideosErrors = {
+  /**
+   * The link is not a supported video
+   */
+  400: ErrorResponseT
+  /**
+   * That video has already been submitted
+   */
+  409: ErrorResponseT
+}
+
+export type PostApiV1EarnVideosError = PostApiV1EarnVideosErrors[keyof PostApiV1EarnVideosErrors]
+
+export type PostApiV1EarnVideosResponses = {
+  /**
+   * Submitted, awaiting review
+   */
+  201: {
+    data: {
+      id: string
+      businessId: string
+      businessName: string
+      businessSlug: string
+      submitterUsername: string
+      platform: string
+      url: string
+      status: string
+      rejectionReason: string | null
+      durationSeconds: number | null
+      postedAt: string | null
+      measureAt: string | null
+      viewCount: number | null
+      weightedViews: number | null
+      submittedAt: string
+    }
+  }
+}
+
+export type PostApiV1EarnVideosResponse =
+  PostApiV1EarnVideosResponses[keyof PostApiV1EarnVideosResponses]
+
+export type PostApiV1BusinessData = {
+  body?: {
+    name: string
+    slug: string
+    tagline?: string
+    description?: string
+    url?: string
+    repoUrl?: string
+    platform?: "web" | "ios" | "android"
+  }
+  path?: never
+  query?: never
+  url: "/api/v1/business"
+}
+
+export type PostApiV1BusinessErrors = {
+  /**
+   * That slug is taken
+   */
+  409: ErrorResponseT
+}
+
+export type PostApiV1BusinessError = PostApiV1BusinessErrors[keyof PostApiV1BusinessErrors]
+
+export type PostApiV1BusinessResponses = {
+  /**
+   * The created business
+   */
+  201: {
+    id: string
+    name: string
+    slug: string
+  }
+}
+
+export type PostApiV1BusinessResponse = PostApiV1BusinessResponses[keyof PostApiV1BusinessResponses]
+
+export type PostApiV1BusinessByIdRevenueData = {
+  body?: {
+    periodStart: string
+    periodEnd: string
+    usdNetCents: number
+  }
+  path: {
+    id: string
+  }
+  query?: never
+  url: "/api/v1/business/{id}/revenue"
+}
+
+export type PostApiV1BusinessByIdRevenueErrors = {
+  /**
+   * Not your business
+   */
+  403: ErrorResponseT
+}
+
+export type PostApiV1BusinessByIdRevenueError =
+  PostApiV1BusinessByIdRevenueErrors[keyof PostApiV1BusinessByIdRevenueErrors]
+
+export type PostApiV1BusinessByIdRevenueResponses = {
+  /**
+   * Recorded
+   */
+  200: {
+    [key: string]: unknown
+  }
+}
+
+export type PostApiV1BusinessByIdRevenueResponse =
+  PostApiV1BusinessByIdRevenueResponses[keyof PostApiV1BusinessByIdRevenueResponses]
+
+export type PostApiV1BusinessByIdCostData = {
+  body?: {
+    periodStart: string
+    periodEnd: string
+    category: "infra" | "llm" | "ads" | "payments" | "other"
+    usdAmountCents: number
+  }
+  path: {
+    id: string
+  }
+  query?: never
+  url: "/api/v1/business/{id}/cost"
+}
+
+export type PostApiV1BusinessByIdCostErrors = {
+  /**
+   * Not your business
+   */
+  403: ErrorResponseT
+}
+
+export type PostApiV1BusinessByIdCostError =
+  PostApiV1BusinessByIdCostErrors[keyof PostApiV1BusinessByIdCostErrors]
+
+export type PostApiV1BusinessByIdCostResponses = {
+  /**
+   * Recorded
+   */
+  200: {
+    [key: string]: unknown
+  }
+}
+
+export type PostApiV1BusinessByIdCostResponse =
+  PostApiV1BusinessByIdCostResponses[keyof PostApiV1BusinessByIdCostResponses]
+
+export type DeleteApiV1BusinessByIdData = {
+  body?: never
+  path: {
+    id: string
+  }
+  query?: never
+  url: "/api/v1/business/{id}"
+}
+
+export type DeleteApiV1BusinessByIdErrors = {
+  /**
+   * No such business
+   */
+  404: ErrorResponseT
+}
+
+export type DeleteApiV1BusinessByIdError =
+  DeleteApiV1BusinessByIdErrors[keyof DeleteApiV1BusinessByIdErrors]
+
+export type DeleteApiV1BusinessByIdResponses = {
+  /**
+   * Deleted
+   */
+  200: {
+    [key: string]: unknown
+  }
+}
+
+export type DeleteApiV1BusinessByIdResponse =
+  DeleteApiV1BusinessByIdResponses[keyof DeleteApiV1BusinessByIdResponses]
 
 export type GetApiV1UserByUsernameByUsernameData = {
   body?: never
@@ -1282,7 +2101,7 @@ export type PostApiV1CommunityData = {
     name: string
     displayName?: string | null
     description: string
-    visibility?: "public" | "restricted" | "private"
+    visibility?: "public" | "restricted"
     isNsfw?: boolean
     topicId?: string | null
   }
@@ -1317,7 +2136,7 @@ export type PatchApiV1CommunityByIdData = {
   body?: {
     displayName?: string | null
     description?: string
-    visibility?: "public" | "restricted" | "private"
+    visibility?: "public" | "restricted"
     defaultCommentSort?: "best" | "top" | "new" | "controversial" | "old"
     topicId?: string | null
     isNsfw?: boolean
@@ -7922,3 +8741,129 @@ export type PostApiV1NotificationByIdArchiveResponses = {
 
 export type PostApiV1NotificationByIdArchiveResponse =
   PostApiV1NotificationByIdArchiveResponses[keyof PostApiV1NotificationByIdArchiveResponses]
+
+export type GetApiV1OnboardingData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/onboarding"
+}
+
+export type GetApiV1OnboardingResponses = {
+  /**
+   * Onboarding state
+   */
+  200: {
+    currentStep: "token" | "install" | "verify" | "kickoff" | "done"
+    agentTokenId: string | null
+    browserAgent: string | null
+    browserVerifiedAt: Date | null
+    goal: string | null
+    completedAt: Date | null
+  }
+}
+
+export type GetApiV1OnboardingResponse =
+  GetApiV1OnboardingResponses[keyof GetApiV1OnboardingResponses]
+
+export type PostApiV1OnboardingStepData = {
+  body?: {
+    step: "token" | "install" | "verify" | "kickoff" | "done"
+    browserAgent?: "claude-chrome" | "codex-chrome" | "vercel-agent-browser"
+  }
+  path?: never
+  query?: never
+  url: "/api/v1/onboarding/step"
+}
+
+export type PostApiV1OnboardingStepResponses = {
+  /**
+   * Updated onboarding state
+   */
+  200: {
+    currentStep: "token" | "install" | "verify" | "kickoff" | "done"
+    agentTokenId: string | null
+    browserAgent: string | null
+    browserVerifiedAt: Date | null
+    goal: string | null
+    completedAt: Date | null
+  }
+}
+
+export type PostApiV1OnboardingStepResponse =
+  PostApiV1OnboardingStepResponses[keyof PostApiV1OnboardingStepResponses]
+
+export type PostApiV1OnboardingVerifyStartData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/onboarding/verify/start"
+}
+
+export type PostApiV1OnboardingVerifyStartResponses = {
+  /**
+   * Where to send the browser agent
+   */
+  200: {
+    verifyUrl: string
+    expiresAt: Date
+  }
+}
+
+export type PostApiV1OnboardingVerifyStartResponse =
+  PostApiV1OnboardingVerifyStartResponses[keyof PostApiV1OnboardingVerifyStartResponses]
+
+export type PostApiV1OnboardingVerifyCompleteData = {
+  body?: {
+    nonce: string
+  }
+  path?: never
+  query?: never
+  url: "/api/v1/onboarding/verify/complete"
+}
+
+export type PostApiV1OnboardingVerifyCompleteErrors = {
+  /**
+   * Wrong credential, or a bad or expired nonce
+   */
+  403: ErrorResponseT
+}
+
+export type PostApiV1OnboardingVerifyCompleteError =
+  PostApiV1OnboardingVerifyCompleteErrors[keyof PostApiV1OnboardingVerifyCompleteErrors]
+
+export type PostApiV1OnboardingVerifyCompleteResponses = {
+  /**
+   * Verified
+   */
+  200: {
+    currentStep: "token" | "install" | "verify" | "kickoff" | "done"
+    agentTokenId: string | null
+    browserAgent: string | null
+    browserVerifiedAt: Date | null
+    goal: string | null
+    completedAt: Date | null
+  }
+}
+
+export type PostApiV1OnboardingVerifyCompleteResponse =
+  PostApiV1OnboardingVerifyCompleteResponses[keyof PostApiV1OnboardingVerifyCompleteResponses]
+
+export type GetApiV1OnboardingKickoffData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/onboarding/kickoff"
+}
+
+export type GetApiV1OnboardingKickoffResponses = {
+  /**
+   * Kickoff message
+   */
+  200: {
+    message: string
+  }
+}
+
+export type GetApiV1OnboardingKickoffResponse =
+  GetApiV1OnboardingKickoffResponses[keyof GetApiV1OnboardingKickoffResponses]

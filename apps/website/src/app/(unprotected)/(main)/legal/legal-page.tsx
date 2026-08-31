@@ -44,9 +44,19 @@ export function LegalPage({ title, children }: { title: string; children: ReactN
   )
 }
 
-export function Section({ title, children }: { title: string; children: ReactNode }): ReactNode {
+export function Section({
+  title,
+  id,
+  children,
+}: {
+  title: string
+  /** Anchor target, for sections we link people straight to from elsewhere in the app. */
+  id?: string
+  children: ReactNode
+}): ReactNode {
   return (
-    <section className="flex flex-col gap-3">
+    // scroll-mt clears the sticky header when arriving via the anchor.
+    <section id={id} className="flex scroll-mt-20 flex-col gap-3">
       <h2 className="text-xl font-semibold">{title}</h2>
       {children}
     </section>

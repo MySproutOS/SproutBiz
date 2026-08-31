@@ -3,6 +3,12 @@
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from "./client"
 import { client } from "./client.gen"
 import type {
+  DeleteApiV1AgentTokenByIdData,
+  DeleteApiV1AgentTokenByIdErrors,
+  DeleteApiV1AgentTokenByIdResponses,
+  DeleteApiV1BusinessByIdData,
+  DeleteApiV1BusinessByIdErrors,
+  DeleteApiV1BusinessByIdResponses,
   DeleteApiV1CommentActionFollowByCommentIdData,
   DeleteApiV1CommentActionFollowByCommentIdResponses,
   DeleteApiV1CommentActionSaveByCommentIdData,
@@ -83,8 +89,13 @@ import type {
   DeleteApiV1UserMeSocialLinksByIdData,
   DeleteApiV1UserMeSocialLinksByIdErrors,
   DeleteApiV1UserMeSocialLinksByIdResponses,
+  GetApiV1AgentTokenData,
+  GetApiV1AgentTokenErrors,
+  GetApiV1AgentTokenResponses,
   GetApiV1AuthMeData,
   GetApiV1AuthMeResponses,
+  GetApiV1BillingPayoutAccountData,
+  GetApiV1BillingPayoutAccountResponses,
   GetApiV1CommentPostByPostIdData,
   GetApiV1CommentPostByPostIdErrors,
   GetApiV1CommentPostByPostIdResponses,
@@ -117,11 +128,21 @@ import type {
   GetApiV1CustomFeedByUsernameBySlugResponses,
   GetApiV1CustomFeedMineData,
   GetApiV1CustomFeedMineResponses,
+  GetApiV1DonationTotalData,
+  GetApiV1DonationTotalResponses,
   GetApiV1DraftByIdData,
   GetApiV1DraftByIdErrors,
   GetApiV1DraftByIdResponses,
   GetApiV1DraftData,
   GetApiV1DraftResponses,
+  GetApiV1EarnBusinessesData,
+  GetApiV1EarnBusinessesResponses,
+  GetApiV1EarnEarningsMineData,
+  GetApiV1EarnEarningsMineResponses,
+  GetApiV1EarnPayoutsData,
+  GetApiV1EarnPayoutsResponses,
+  GetApiV1EarnVideosMineData,
+  GetApiV1EarnVideosMineResponses,
   GetApiV1ExploreData,
   GetApiV1ExploreResponses,
   GetApiV1FeedCommunityByNameData,
@@ -193,6 +214,10 @@ import type {
   GetApiV1NotificationResponses,
   GetApiV1NotificationUnreadCountData,
   GetApiV1NotificationUnreadCountResponses,
+  GetApiV1OnboardingData,
+  GetApiV1OnboardingKickoffData,
+  GetApiV1OnboardingKickoffResponses,
+  GetApiV1OnboardingResponses,
   GetApiV1PostByIdData,
   GetApiV1PostByIdErrors,
   GetApiV1PostByIdResponses,
@@ -202,6 +227,13 @@ import type {
   GetApiV1RemovalReasonByCommunityIdData,
   GetApiV1RemovalReasonByCommunityIdErrors,
   GetApiV1RemovalReasonByCommunityIdResponses,
+  GetApiV1RevenueBusinessBySlugData,
+  GetApiV1RevenueBusinessBySlugErrors,
+  GetApiV1RevenueBusinessBySlugResponses,
+  GetApiV1RevenueBusinessData,
+  GetApiV1RevenueBusinessResponses,
+  GetApiV1RevenueSummaryData,
+  GetApiV1RevenueSummaryResponses,
   GetApiV1ScheduledPostCommunityByCommunityIdData,
   GetApiV1ScheduledPostCommunityByCommunityIdErrors,
   GetApiV1ScheduledPostCommunityByCommunityIdResponses,
@@ -309,9 +341,33 @@ import type {
   PatchApiV1UserMeSettingsData,
   PatchApiV1UserMeSettingsErrors,
   PatchApiV1UserMeSettingsResponses,
+  PostApiV1AgentTokenData,
+  PostApiV1AgentTokenErrors,
+  PostApiV1AgentTokenResponses,
   PostApiV1AuthLogoutData,
   PostApiV1AuthLogoutErrors,
   PostApiV1AuthLogoutResponses,
+  PostApiV1BillingPayoutAccountOnboardingLinkData,
+  PostApiV1BillingPayoutAccountOnboardingLinkErrors,
+  PostApiV1BillingPayoutAccountOnboardingLinkResponses,
+  PostApiV1BillingPayoutAccountPayoutData,
+  PostApiV1BillingPayoutAccountPayoutErrors,
+  PostApiV1BillingPayoutAccountPayoutResponses,
+  PostApiV1BillingPayoutAccountRefreshData,
+  PostApiV1BillingPayoutAccountRefreshErrors,
+  PostApiV1BillingPayoutAccountRefreshResponses,
+  PostApiV1BillingWebhookData,
+  PostApiV1BillingWebhookErrors,
+  PostApiV1BillingWebhookResponses,
+  PostApiV1BusinessByIdCostData,
+  PostApiV1BusinessByIdCostErrors,
+  PostApiV1BusinessByIdCostResponses,
+  PostApiV1BusinessByIdRevenueData,
+  PostApiV1BusinessByIdRevenueErrors,
+  PostApiV1BusinessByIdRevenueResponses,
+  PostApiV1BusinessData,
+  PostApiV1BusinessErrors,
+  PostApiV1BusinessResponses,
   PostApiV1CommentData,
   PostApiV1CommentErrors,
   PostApiV1CommentResponses,
@@ -341,9 +397,18 @@ import type {
   PostApiV1CustomFeedData,
   PostApiV1CustomFeedErrors,
   PostApiV1CustomFeedResponses,
+  PostApiV1DonationCheckoutSessionData,
+  PostApiV1DonationCheckoutSessionErrors,
+  PostApiV1DonationCheckoutSessionResponses,
+  PostApiV1DonationWebhookData,
+  PostApiV1DonationWebhookErrors,
+  PostApiV1DonationWebhookResponses,
   PostApiV1DraftData,
   PostApiV1DraftErrors,
   PostApiV1DraftResponses,
+  PostApiV1EarnVideosData,
+  PostApiV1EarnVideosErrors,
+  PostApiV1EarnVideosResponses,
   PostApiV1FlairByCommunityIdPostTemplatesData,
   PostApiV1FlairByCommunityIdPostTemplatesErrors,
   PostApiV1FlairByCommunityIdPostTemplatesResponses,
@@ -440,6 +505,13 @@ import type {
   PostApiV1NotificationByIdReadResponses,
   PostApiV1NotificationReadAllData,
   PostApiV1NotificationReadAllResponses,
+  PostApiV1OnboardingStepData,
+  PostApiV1OnboardingStepResponses,
+  PostApiV1OnboardingVerifyCompleteData,
+  PostApiV1OnboardingVerifyCompleteErrors,
+  PostApiV1OnboardingVerifyCompleteResponses,
+  PostApiV1OnboardingVerifyStartData,
+  PostApiV1OnboardingVerifyStartResponses,
   PostApiV1PostActionShareByPostIdData,
   PostApiV1PostActionShareByPostIdErrors,
   PostApiV1PostActionShareByPostIdResponses,
@@ -467,6 +539,9 @@ import type {
   PostApiV1WikiByCommunityNameData,
   PostApiV1WikiByCommunityNameErrors,
   PostApiV1WikiByCommunityNameResponses,
+  PutApiV1BillingPayoutAccountScheduleData,
+  PutApiV1BillingPayoutAccountScheduleErrors,
+  PutApiV1BillingPayoutAccountScheduleResponses,
   PutApiV1CommentActionFollowByCommentIdData,
   PutApiV1CommentActionFollowByCommentIdErrors,
   PutApiV1CommentActionFollowByCommentIdResponses,
@@ -545,6 +620,14 @@ export const getApiV1AuthMe = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1AuthMeData, ThrowOnError>,
 ): RequestResult<GetApiV1AuthMeResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1AuthMeResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/auth/me",
     ...options,
   })
@@ -556,7 +639,602 @@ export const postApiV1AuthLogout = <ThrowOnError extends boolean = false>(
     PostApiV1AuthLogoutResponses,
     PostApiV1AuthLogoutErrors,
     ThrowOnError
-  >({ url: "/api/v1/auth/logout", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/auth/logout",
+    ...options,
+  })
+
+/**
+ * Lists the agent API tokens belonging to the current user
+ */
+export const getApiV1AgentToken = <ThrowOnError extends boolean = false>(
+  options?: Options<GetApiV1AgentTokenData, ThrowOnError>,
+): RequestResult<GetApiV1AgentTokenResponses, GetApiV1AgentTokenErrors, ThrowOnError> =>
+  (options?.client ?? client).get<
+    GetApiV1AgentTokenResponses,
+    GetApiV1AgentTokenErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/agent-token",
+    ...options,
+  })
+
+/**
+ * Creates an agent API token. The raw token is returned exactly once.
+ */
+export const postApiV1AgentToken = <ThrowOnError extends boolean = false>(
+  options?: Options<PostApiV1AgentTokenData, ThrowOnError>,
+): RequestResult<PostApiV1AgentTokenResponses, PostApiV1AgentTokenErrors, ThrowOnError> =>
+  (options?.client ?? client).post<
+    PostApiV1AgentTokenResponses,
+    PostApiV1AgentTokenErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/agent-token",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+  })
+
+/**
+ * Revokes an agent API token
+ */
+export const deleteApiV1AgentTokenById = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteApiV1AgentTokenByIdData, ThrowOnError>,
+): RequestResult<
+  DeleteApiV1AgentTokenByIdResponses,
+  DeleteApiV1AgentTokenByIdErrors,
+  ThrowOnError
+> =>
+  (options.client ?? client).delete<
+    DeleteApiV1AgentTokenByIdResponses,
+    DeleteApiV1AgentTokenByIdErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/agent-token/{id}",
+    ...options,
+  })
+
+/**
+ * Aggregate revenue and costs across every business on the forum
+ */
+export const getApiV1RevenueSummary = <ThrowOnError extends boolean = false>(
+  options?: Options<GetApiV1RevenueSummaryData, ThrowOnError>,
+): RequestResult<GetApiV1RevenueSummaryResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<GetApiV1RevenueSummaryResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/revenue/summary",
+    ...options,
+  })
+
+/**
+ * Every business with its revenue and costs, highest revenue first
+ */
+export const getApiV1RevenueBusiness = <ThrowOnError extends boolean = false>(
+  options?: Options<GetApiV1RevenueBusinessData, ThrowOnError>,
+): RequestResult<GetApiV1RevenueBusinessResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<GetApiV1RevenueBusinessResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/revenue/business",
+    ...options,
+  })
+
+/**
+ * One business, with its revenue periods and cost breakdown
+ */
+export const getApiV1RevenueBusinessBySlug = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiV1RevenueBusinessBySlugData, ThrowOnError>,
+): RequestResult<
+  GetApiV1RevenueBusinessBySlugResponses,
+  GetApiV1RevenueBusinessBySlugErrors,
+  ThrowOnError
+> =>
+  (options.client ?? client).get<
+    GetApiV1RevenueBusinessBySlugResponses,
+    GetApiV1RevenueBusinessBySlugErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/revenue/business/{slug}",
+    ...options,
+  })
+
+/**
+ * Total donated to the experiment so far
+ */
+export const getApiV1DonationTotal = <ThrowOnError extends boolean = false>(
+  options?: Options<GetApiV1DonationTotalData, ThrowOnError>,
+): RequestResult<GetApiV1DonationTotalResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<GetApiV1DonationTotalResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/donation/total",
+    ...options,
+  })
+
+/**
+ * Creates a Stripe Checkout session and returns its URL
+ */
+export const postApiV1DonationCheckoutSession = <ThrowOnError extends boolean = false>(
+  options?: Options<PostApiV1DonationCheckoutSessionData, ThrowOnError>,
+): RequestResult<
+  PostApiV1DonationCheckoutSessionResponses,
+  PostApiV1DonationCheckoutSessionErrors,
+  ThrowOnError
+> =>
+  (options?.client ?? client).post<
+    PostApiV1DonationCheckoutSessionResponses,
+    PostApiV1DonationCheckoutSessionErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/donation/checkout-session",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+  })
+
+/**
+ * Stripe webhook. Verified by signature; not for client use.
+ */
+export const postApiV1DonationWebhook = <ThrowOnError extends boolean = false>(
+  options?: Options<PostApiV1DonationWebhookData, ThrowOnError>,
+): RequestResult<PostApiV1DonationWebhookResponses, PostApiV1DonationWebhookErrors, ThrowOnError> =>
+  (options?.client ?? client).post<
+    PostApiV1DonationWebhookResponses,
+    PostApiV1DonationWebhookErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/donation/webhook",
+    ...options,
+  })
+
+/**
+ * Stripe Connect webhook. Verified by signature; not for client use.
+ */
+export const postApiV1BillingWebhook = <ThrowOnError extends boolean = false>(
+  options?: Options<PostApiV1BillingWebhookData, ThrowOnError>,
+): RequestResult<PostApiV1BillingWebhookResponses, PostApiV1BillingWebhookErrors, ThrowOnError> =>
+  (options?.client ?? client).post<
+    PostApiV1BillingWebhookResponses,
+    PostApiV1BillingWebhookErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/billing/webhook",
+    ...options,
+  })
+
+/**
+ * Whether you can be paid, and what Stripe still wants from you
+ */
+export const getApiV1BillingPayoutAccount = <ThrowOnError extends boolean = false>(
+  options?: Options<GetApiV1BillingPayoutAccountData, ThrowOnError>,
+): RequestResult<GetApiV1BillingPayoutAccountResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<GetApiV1BillingPayoutAccountResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/billing/payout-account",
+    ...options,
+  })
+
+/**
+ * Creates (or reuses) your Stripe Express account and returns its onboarding URL
+ */
+export const postApiV1BillingPayoutAccountOnboardingLink = <ThrowOnError extends boolean = false>(
+  options?: Options<PostApiV1BillingPayoutAccountOnboardingLinkData, ThrowOnError>,
+): RequestResult<
+  PostApiV1BillingPayoutAccountOnboardingLinkResponses,
+  PostApiV1BillingPayoutAccountOnboardingLinkErrors,
+  ThrowOnError
+> =>
+  (options?.client ?? client).post<
+    PostApiV1BillingPayoutAccountOnboardingLinkResponses,
+    PostApiV1BillingPayoutAccountOnboardingLinkErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/billing/payout-account/onboarding-link",
+    ...options,
+  })
+
+/**
+ * Re-reads your account from Stripe, for when the webhook has not landed yet
+ */
+export const postApiV1BillingPayoutAccountRefresh = <ThrowOnError extends boolean = false>(
+  options?: Options<PostApiV1BillingPayoutAccountRefreshData, ThrowOnError>,
+): RequestResult<
+  PostApiV1BillingPayoutAccountRefreshResponses,
+  PostApiV1BillingPayoutAccountRefreshErrors,
+  ThrowOnError
+> =>
+  (options?.client ?? client).post<
+    PostApiV1BillingPayoutAccountRefreshResponses,
+    PostApiV1BillingPayoutAccountRefreshErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/billing/payout-account/refresh",
+    ...options,
+  })
+
+/**
+ * Chooses whether Stripe pays your balance out automatically or on request
+ */
+export const putApiV1BillingPayoutAccountSchedule = <ThrowOnError extends boolean = false>(
+  options?: Options<PutApiV1BillingPayoutAccountScheduleData, ThrowOnError>,
+): RequestResult<
+  PutApiV1BillingPayoutAccountScheduleResponses,
+  PutApiV1BillingPayoutAccountScheduleErrors,
+  ThrowOnError
+> =>
+  (options?.client ?? client).put<
+    PutApiV1BillingPayoutAccountScheduleResponses,
+    PutApiV1BillingPayoutAccountScheduleErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/billing/payout-account/schedule",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+  })
+
+/**
+ * Pays your available Stripe balance out to your bank now
+ */
+export const postApiV1BillingPayoutAccountPayout = <ThrowOnError extends boolean = false>(
+  options?: Options<PostApiV1BillingPayoutAccountPayoutData, ThrowOnError>,
+): RequestResult<
+  PostApiV1BillingPayoutAccountPayoutResponses,
+  PostApiV1BillingPayoutAccountPayoutErrors,
+  ThrowOnError
+> =>
+  (options?.client ?? client).post<
+    PostApiV1BillingPayoutAccountPayoutResponses,
+    PostApiV1BillingPayoutAccountPayoutErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/billing/payout-account/payout",
+    ...options,
+  })
+
+/**
+ * Businesses you can submit a marketing video for, searchable by name
+ */
+export const getApiV1EarnBusinesses = <ThrowOnError extends boolean = false>(
+  options?: Options<GetApiV1EarnBusinessesData, ThrowOnError>,
+): RequestResult<GetApiV1EarnBusinessesResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<GetApiV1EarnBusinessesResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/earn/businesses",
+    ...options,
+  })
+
+/**
+ * Every marketing payout that has actually been sent
+ */
+export const getApiV1EarnPayouts = <ThrowOnError extends boolean = false>(
+  options?: Options<GetApiV1EarnPayoutsData, ThrowOnError>,
+): RequestResult<GetApiV1EarnPayoutsResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<GetApiV1EarnPayoutsResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/earn/payouts",
+    ...options,
+  })
+
+/**
+ * The videos you have submitted and where each one stands
+ */
+export const getApiV1EarnVideosMine = <ThrowOnError extends boolean = false>(
+  options?: Options<GetApiV1EarnVideosMineData, ThrowOnError>,
+): RequestResult<GetApiV1EarnVideosMineResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<GetApiV1EarnVideosMineResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/earn/videos/mine",
+    ...options,
+  })
+
+/**
+ * What you have earned, what is still pending, and what has been paid
+ */
+export const getApiV1EarnEarningsMine = <ThrowOnError extends boolean = false>(
+  options?: Options<GetApiV1EarnEarningsMineData, ThrowOnError>,
+): RequestResult<GetApiV1EarnEarningsMineResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<GetApiV1EarnEarningsMineResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/earn/earnings/mine",
+    ...options,
+  })
+
+/**
+ * Submits a video advertising a business
+ */
+export const postApiV1EarnVideos = <ThrowOnError extends boolean = false>(
+  options?: Options<PostApiV1EarnVideosData, ThrowOnError>,
+): RequestResult<PostApiV1EarnVideosResponses, PostApiV1EarnVideosErrors, ThrowOnError> =>
+  (options?.client ?? client).post<
+    PostApiV1EarnVideosResponses,
+    PostApiV1EarnVideosErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/earn/videos",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+  })
+
+/**
+ * Registers a business so its revenue appears on /revenue
+ */
+export const postApiV1Business = <ThrowOnError extends boolean = false>(
+  options?: Options<PostApiV1BusinessData, ThrowOnError>,
+): RequestResult<PostApiV1BusinessResponses, PostApiV1BusinessErrors, ThrowOnError> =>
+  (options?.client ?? client).post<
+    PostApiV1BusinessResponses,
+    PostApiV1BusinessErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/business",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+  })
+
+/**
+ * Reports revenue for a period. Recorded as self-reported and labelled as such on /revenue until a payment provider is connected.
+ */
+export const postApiV1BusinessByIdRevenue = <ThrowOnError extends boolean = false>(
+  options: Options<PostApiV1BusinessByIdRevenueData, ThrowOnError>,
+): RequestResult<
+  PostApiV1BusinessByIdRevenueResponses,
+  PostApiV1BusinessByIdRevenueErrors,
+  ThrowOnError
+> =>
+  (options.client ?? client).post<
+    PostApiV1BusinessByIdRevenueResponses,
+    PostApiV1BusinessByIdRevenueErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/business/{id}/revenue",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  })
+
+/**
+ * Reports costs for a period. There is no automated source for these.
+ */
+export const postApiV1BusinessByIdCost = <ThrowOnError extends boolean = false>(
+  options: Options<PostApiV1BusinessByIdCostData, ThrowOnError>,
+): RequestResult<
+  PostApiV1BusinessByIdCostResponses,
+  PostApiV1BusinessByIdCostErrors,
+  ThrowOnError
+> =>
+  (options.client ?? client).post<
+    PostApiV1BusinessByIdCostResponses,
+    PostApiV1BusinessByIdCostErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/business/{id}/cost",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  })
+
+/**
+ * Deletes a business and its recorded figures
+ */
+export const deleteApiV1BusinessById = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteApiV1BusinessByIdData, ThrowOnError>,
+): RequestResult<DeleteApiV1BusinessByIdResponses, DeleteApiV1BusinessByIdErrors, ThrowOnError> =>
+  (options.client ?? client).delete<
+    DeleteApiV1BusinessByIdResponses,
+    DeleteApiV1BusinessByIdErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/business/{id}",
+    ...options,
+  })
 
 /**
  * Public profile for a username
@@ -572,7 +1250,18 @@ export const getApiV1UserByUsernameByUsername = <ThrowOnError extends boolean = 
     GetApiV1UserByUsernameByUsernameResponses,
     GetApiV1UserByUsernameByUsernameErrors,
     ThrowOnError
-  >({ url: "/api/v1/user/by-username/{username}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/user/by-username/{username}",
+    ...options,
+  })
 
 /**
  * A user's comments with post context, newest first
@@ -588,7 +1277,18 @@ export const getApiV1UserByUsernameByUsernameComments = <ThrowOnError extends bo
     GetApiV1UserByUsernameByUsernameCommentsResponses,
     GetApiV1UserByUsernameByUsernameCommentsErrors,
     ThrowOnError
-  >({ url: "/api/v1/user/by-username/{username}/comments", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/user/by-username/{username}/comments",
+    ...options,
+  })
 
 /**
  * A user's posts and comments interleaved, newest first
@@ -604,7 +1304,18 @@ export const getApiV1UserByUsernameByUsernameOverview = <ThrowOnError extends bo
     GetApiV1UserByUsernameByUsernameOverviewResponses,
     GetApiV1UserByUsernameByUsernameOverviewErrors,
     ThrowOnError
-  >({ url: "/api/v1/user/by-username/{username}/overview", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/user/by-username/{username}/overview",
+    ...options,
+  })
 
 /**
  * Public social links for a username
@@ -620,7 +1331,18 @@ export const getApiV1UserByUsernameByUsernameSocialLinks = <ThrowOnError extends
     GetApiV1UserByUsernameByUsernameSocialLinksResponses,
     GetApiV1UserByUsernameByUsernameSocialLinksErrors,
     ThrowOnError
-  >({ url: "/api/v1/user/by-username/{username}/social-links", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/user/by-username/{username}/social-links",
+    ...options,
+  })
 
 /**
  * Communities a user moderates
@@ -636,7 +1358,18 @@ export const getApiV1UserByUsernameByUsernameModerating = <ThrowOnError extends 
     GetApiV1UserByUsernameByUsernameModeratingResponses,
     GetApiV1UserByUsernameByUsernameModeratingErrors,
     ThrowOnError
-  >({ url: "/api/v1/user/by-username/{username}/moderating", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/user/by-username/{username}/moderating",
+    ...options,
+  })
 
 /**
  * The current user's saved posts or comments
@@ -645,6 +1378,14 @@ export const getApiV1UserMeSaved = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1UserMeSavedData, ThrowOnError>,
 ): RequestResult<GetApiV1UserMeSavedResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1UserMeSavedResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/user/me/saved",
     ...options,
   })
@@ -656,6 +1397,14 @@ export const getApiV1UserMeHidden = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1UserMeHiddenData, ThrowOnError>,
 ): RequestResult<GetApiV1UserMeHiddenResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1UserMeHiddenResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/user/me/hidden",
     ...options,
   })
@@ -667,6 +1416,14 @@ export const getApiV1UserMeUpvoted = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1UserMeUpvotedData, ThrowOnError>,
 ): RequestResult<GetApiV1UserMeUpvotedResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1UserMeUpvotedResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/user/me/upvoted",
     ...options,
   })
@@ -678,6 +1435,14 @@ export const getApiV1UserMeDownvoted = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1UserMeDownvotedData, ThrowOnError>,
 ): RequestResult<GetApiV1UserMeDownvotedResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1UserMeDownvotedResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/user/me/downvoted",
     ...options,
   })
@@ -697,6 +1462,14 @@ export const postApiV1UserMeSocialLinks = <ThrowOnError extends boolean = false>
     PostApiV1UserMeSocialLinksErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/user/me/social-links",
     ...options,
     headers: {
@@ -719,7 +1492,18 @@ export const deleteApiV1UserMeSocialLinksById = <ThrowOnError extends boolean = 
     DeleteApiV1UserMeSocialLinksByIdResponses,
     DeleteApiV1UserMeSocialLinksByIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/user/me/social-links/{id}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/user/me/social-links/{id}",
+    ...options,
+  })
 
 /**
  * Current authenticated user's profile
@@ -728,6 +1512,14 @@ export const getApiV1UserMe = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1UserMeData, ThrowOnError>,
 ): RequestResult<GetApiV1UserMeResponses, GetApiV1UserMeErrors, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1UserMeResponses, GetApiV1UserMeErrors, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/user/me",
     ...options,
   })
@@ -743,6 +1535,14 @@ export const patchApiV1UserMe = <ThrowOnError extends boolean = false>(
     PatchApiV1UserMeErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/user/me",
     ...options,
     headers: {
@@ -765,7 +1565,18 @@ export const getApiV1UserUsernameAvailable = <ThrowOnError extends boolean = fal
     GetApiV1UserUsernameAvailableResponses,
     GetApiV1UserUsernameAvailableErrors,
     ThrowOnError
-  >({ url: "/api/v1/user/username-available", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/user/username-available",
+    ...options,
+  })
 
 export const deleteApiV1UserMeDelete = <ThrowOnError extends boolean = false>(
   options?: Options<DeleteApiV1UserMeDeleteData, ThrowOnError>,
@@ -774,7 +1585,18 @@ export const deleteApiV1UserMeDelete = <ThrowOnError extends boolean = false>(
     DeleteApiV1UserMeDeleteResponses,
     DeleteApiV1UserMeDeleteErrors,
     ThrowOnError
-  >({ url: "/api/v1/user/me/delete", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/user/me/delete",
+    ...options,
+  })
 
 /**
  * Current user's settings, or defaults when none are stored
@@ -783,6 +1605,14 @@ export const getApiV1UserMeSettings = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1UserMeSettingsData, ThrowOnError>,
 ): RequestResult<GetApiV1UserMeSettingsResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1UserMeSettingsResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/user/me/settings",
     ...options,
   })
@@ -798,6 +1628,14 @@ export const patchApiV1UserMeSettings = <ThrowOnError extends boolean = false>(
     PatchApiV1UserMeSettingsErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/user/me/settings",
     ...options,
     headers: {
@@ -813,6 +1651,14 @@ export const getApiV1Topic = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1TopicData, ThrowOnError>,
 ): RequestResult<GetApiV1TopicResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1TopicResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/topic",
     ...options,
   })
@@ -831,7 +1677,18 @@ export const getApiV1CommunityNameAvailable = <ThrowOnError extends boolean = fa
     GetApiV1CommunityNameAvailableResponses,
     GetApiV1CommunityNameAvailableErrors,
     ThrowOnError
-  >({ url: "/api/v1/community/name-available", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/community/name-available",
+    ...options,
+  })
 
 /**
  * Public community detail by name
@@ -843,7 +1700,18 @@ export const getApiV1CommunityByName = <ThrowOnError extends boolean = false>(
     GetApiV1CommunityByNameResponses,
     GetApiV1CommunityByNameErrors,
     ThrowOnError
-  >({ url: "/api/v1/community/{name}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/community/{name}",
+    ...options,
+  })
 
 /**
  * Get all community settings for prefill (moderators with config permission)
@@ -859,7 +1727,18 @@ export const getApiV1CommunityByIdSettings = <ThrowOnError extends boolean = fal
     GetApiV1CommunityByIdSettingsResponses,
     GetApiV1CommunityByIdSettingsErrors,
     ThrowOnError
-  >({ url: "/api/v1/community/{id}/settings", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/community/{id}/settings",
+    ...options,
+  })
 
 /**
  * Create a community
@@ -872,6 +1751,14 @@ export const postApiV1Community = <ThrowOnError extends boolean = false>(
     PostApiV1CommunityErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/community",
     ...options,
     headers: {
@@ -891,6 +1778,14 @@ export const patchApiV1CommunityById = <ThrowOnError extends boolean = false>(
     PatchApiV1CommunityByIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/community/{id}",
     ...options,
     headers: {
@@ -906,6 +1801,14 @@ export const getApiV1CommunityMemberMine = <ThrowOnError extends boolean = false
   options?: Options<GetApiV1CommunityMemberMineData, ThrowOnError>,
 ): RequestResult<GetApiV1CommunityMemberMineResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1CommunityMemberMineResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/community-member/mine",
     ...options,
   })
@@ -917,7 +1820,18 @@ export const getApiV1CommunityMemberModerated = <ThrowOnError extends boolean = 
   options?: Options<GetApiV1CommunityMemberModeratedData, ThrowOnError>,
 ): RequestResult<GetApiV1CommunityMemberModeratedResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1CommunityMemberModeratedResponses, unknown, ThrowOnError>(
-    { url: "/api/v1/community-member/moderated", ...options },
+    {
+      security: [
+        { scheme: "bearer", type: "http" },
+        {
+          in: "cookie",
+          name: "sproutbiz_session",
+          type: "apiKey",
+        },
+      ],
+      url: "/api/v1/community-member/moderated",
+      ...options,
+    },
   )
 
 /**
@@ -934,7 +1848,18 @@ export const postApiV1CommunityMemberByCommunityIdJoin = <ThrowOnError extends b
     PostApiV1CommunityMemberByCommunityIdJoinResponses,
     PostApiV1CommunityMemberByCommunityIdJoinErrors,
     ThrowOnError
-  >({ url: "/api/v1/community-member/{communityId}/join", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/community-member/{communityId}/join",
+    ...options,
+  })
 
 /**
  * Leave a community
@@ -946,7 +1871,18 @@ export const postApiV1CommunityMemberByCommunityIdLeave = <ThrowOnError extends 
     PostApiV1CommunityMemberByCommunityIdLeaveResponses,
     unknown,
     ThrowOnError
-  >({ url: "/api/v1/community-member/{communityId}/leave", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/community-member/{communityId}/leave",
+    ...options,
+  })
 
 /**
  * Update the current user's membership preferences
@@ -965,6 +1901,14 @@ export const patchApiV1CommunityMemberByCommunityIdMembership = <
     PatchApiV1CommunityMemberByCommunityIdMembershipErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/community-member/{communityId}/membership",
     ...options,
     headers: {
@@ -983,7 +1927,18 @@ export const getApiV1CommunityRuleByCommunityId = <ThrowOnError extends boolean 
     GetApiV1CommunityRuleByCommunityIdResponses,
     unknown,
     ThrowOnError
-  >({ url: "/api/v1/community-rule/{communityId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/community-rule/{communityId}",
+    ...options,
+  })
 
 /**
  * Create a rule (moderators with config permission)
@@ -1000,6 +1955,14 @@ export const postApiV1CommunityRuleByCommunityId = <ThrowOnError extends boolean
     PostApiV1CommunityRuleByCommunityIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/community-rule/{communityId}",
     ...options,
     headers: {
@@ -1022,7 +1985,18 @@ export const deleteApiV1CommunityRuleById = <ThrowOnError extends boolean = fals
     DeleteApiV1CommunityRuleByIdResponses,
     DeleteApiV1CommunityRuleByIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/community-rule/{id}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/community-rule/{id}",
+    ...options,
+  })
 
 /**
  * Update a rule (moderators with config permission)
@@ -1039,6 +2013,14 @@ export const patchApiV1CommunityRuleById = <ThrowOnError extends boolean = false
     PatchApiV1CommunityRuleByIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/community-rule/{id}",
     ...options,
     headers: {
@@ -1062,6 +2044,14 @@ export const putApiV1CommunityRuleByCommunityIdReorder = <ThrowOnError extends b
     PutApiV1CommunityRuleByCommunityIdReorderErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/community-rule/{communityId}/reorder",
     ...options,
     headers: {
@@ -1084,7 +2074,18 @@ export const getApiV1CommunityWidgetByCommunityName = <ThrowOnError extends bool
     GetApiV1CommunityWidgetByCommunityNameResponses,
     GetApiV1CommunityWidgetByCommunityNameErrors,
     ThrowOnError
-  >({ url: "/api/v1/community-widget/{communityName}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/community-widget/{communityName}",
+    ...options,
+  })
 
 /**
  * Add a community bookmark (moderators with config permission)
@@ -1101,6 +2102,14 @@ export const postApiV1CommunityWidgetByCommunityIdBookmark = <ThrowOnError exten
     PostApiV1CommunityWidgetByCommunityIdBookmarkErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/community-widget/{communityId}/bookmark",
     ...options,
     headers: {
@@ -1123,7 +2132,18 @@ export const deleteApiV1CommunityWidgetBookmarkById = <ThrowOnError extends bool
     DeleteApiV1CommunityWidgetBookmarkByIdResponses,
     DeleteApiV1CommunityWidgetBookmarkByIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/community-widget/bookmark/{id}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/community-widget/bookmark/{id}",
+    ...options,
+  })
 
 /**
  * Update a community bookmark (moderators with config permission)
@@ -1140,6 +2160,14 @@ export const patchApiV1CommunityWidgetBookmarkById = <ThrowOnError extends boole
     PatchApiV1CommunityWidgetBookmarkByIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/community-widget/bookmark/{id}",
     ...options,
     headers: {
@@ -1165,6 +2193,14 @@ export const putApiV1CommunityWidgetByCommunityIdBookmarkReorder = <
     PutApiV1CommunityWidgetByCommunityIdBookmarkReorderErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/community-widget/{communityId}/bookmark/reorder",
     ...options,
     headers: {
@@ -1188,6 +2224,14 @@ export const postApiV1CommunityWidgetByCommunityIdWidget = <ThrowOnError extends
     PostApiV1CommunityWidgetByCommunityIdWidgetErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/community-widget/{communityId}/widget",
     ...options,
     headers: {
@@ -1210,7 +2254,18 @@ export const deleteApiV1CommunityWidgetWidgetById = <ThrowOnError extends boolea
     DeleteApiV1CommunityWidgetWidgetByIdResponses,
     DeleteApiV1CommunityWidgetWidgetByIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/community-widget/widget/{id}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/community-widget/widget/{id}",
+    ...options,
+  })
 
 /**
  * Update a text widget (moderators with config permission)
@@ -1227,6 +2282,14 @@ export const patchApiV1CommunityWidgetWidgetById = <ThrowOnError extends boolean
     PatchApiV1CommunityWidgetWidgetByIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/community-widget/widget/{id}",
     ...options,
     headers: {
@@ -1252,6 +2315,14 @@ export const putApiV1CommunityWidgetByCommunityIdWidgetReorder = <
     PutApiV1CommunityWidgetByCommunityIdWidgetReorderErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/community-widget/{communityId}/widget/reorder",
     ...options,
     headers: {
@@ -1275,6 +2346,14 @@ export const putApiV1CommunityWidgetByCommunityIdRelated = <ThrowOnError extends
     PutApiV1CommunityWidgetByCommunityIdRelatedErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/community-widget/{communityId}/related",
     ...options,
     headers: {
@@ -1299,7 +2378,18 @@ export const getApiV1CommunityJoinRequestByCommunityIdPending = <
     GetApiV1CommunityJoinRequestByCommunityIdPendingResponses,
     GetApiV1CommunityJoinRequestByCommunityIdPendingErrors,
     ThrowOnError
-  >({ url: "/api/v1/community-join-request/{communityId}/pending", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/community-join-request/{communityId}/pending",
+    ...options,
+  })
 
 /**
  * Approve a join request (moderators with users permission)
@@ -1315,7 +2405,18 @@ export const postApiV1CommunityJoinRequestByIdApprove = <ThrowOnError extends bo
     PostApiV1CommunityJoinRequestByIdApproveResponses,
     PostApiV1CommunityJoinRequestByIdApproveErrors,
     ThrowOnError
-  >({ url: "/api/v1/community-join-request/{id}/approve", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/community-join-request/{id}/approve",
+    ...options,
+  })
 
 /**
  * Deny a join request (moderators with users permission)
@@ -1331,7 +2432,18 @@ export const postApiV1CommunityJoinRequestByIdDeny = <ThrowOnError extends boole
     PostApiV1CommunityJoinRequestByIdDenyResponses,
     PostApiV1CommunityJoinRequestByIdDenyErrors,
     ThrowOnError
-  >({ url: "/api/v1/community-join-request/{id}/deny", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/community-join-request/{id}/deny",
+    ...options,
+  })
 
 /**
  * Public detail for a user's custom feed
@@ -1347,7 +2459,18 @@ export const getApiV1CustomFeedByUsernameBySlug = <ThrowOnError extends boolean 
     GetApiV1CustomFeedByUsernameBySlugResponses,
     GetApiV1CustomFeedByUsernameBySlugErrors,
     ThrowOnError
-  >({ url: "/api/v1/custom-feed/{username}/{slug}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/custom-feed/{username}/{slug}",
+    ...options,
+  })
 
 /**
  * Posts across the communities in a custom feed
@@ -1363,7 +2486,18 @@ export const getApiV1CustomFeedByUsernameBySlugPosts = <ThrowOnError extends boo
     GetApiV1CustomFeedByUsernameBySlugPostsResponses,
     GetApiV1CustomFeedByUsernameBySlugPostsErrors,
     ThrowOnError
-  >({ url: "/api/v1/custom-feed/{username}/{slug}/posts", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/custom-feed/{username}/{slug}/posts",
+    ...options,
+  })
 
 /**
  * The current user's custom feeds
@@ -1372,6 +2506,14 @@ export const getApiV1CustomFeedMine = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1CustomFeedMineData, ThrowOnError>,
 ): RequestResult<GetApiV1CustomFeedMineResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1CustomFeedMineResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/custom-feed/mine",
     ...options,
   })
@@ -1387,6 +2529,14 @@ export const postApiV1CustomFeed = <ThrowOnError extends boolean = false>(
     PostApiV1CustomFeedErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/custom-feed",
     ...options,
     headers: {
@@ -1409,7 +2559,18 @@ export const deleteApiV1CustomFeedById = <ThrowOnError extends boolean = false>(
     DeleteApiV1CustomFeedByIdResponses,
     DeleteApiV1CustomFeedByIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/custom-feed/{id}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/custom-feed/{id}",
+    ...options,
+  })
 
 /**
  * Update a custom feed (owner only)
@@ -1422,6 +2583,14 @@ export const patchApiV1CustomFeedById = <ThrowOnError extends boolean = false>(
     PatchApiV1CustomFeedByIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/custom-feed/{id}",
     ...options,
     headers: {
@@ -1446,7 +2615,18 @@ export const deleteApiV1CustomFeedByIdCommunityByCommunityId = <
     DeleteApiV1CustomFeedByIdCommunityByCommunityIdResponses,
     DeleteApiV1CustomFeedByIdCommunityByCommunityIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/custom-feed/{id}/community/{communityId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/custom-feed/{id}/community/{communityId}",
+    ...options,
+  })
 
 /**
  * Add a community to a custom feed (owner only)
@@ -1462,7 +2642,18 @@ export const putApiV1CustomFeedByIdCommunityByCommunityId = <ThrowOnError extend
     PutApiV1CustomFeedByIdCommunityByCommunityIdResponses,
     PutApiV1CustomFeedByIdCommunityByCommunityIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/custom-feed/{id}/community/{communityId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/custom-feed/{id}/community/{communityId}",
+    ...options,
+  })
 
 /**
  * List a community's wiki pages
@@ -1478,7 +2669,18 @@ export const getApiV1WikiByCommunityName = <ThrowOnError extends boolean = false
     GetApiV1WikiByCommunityNameResponses,
     GetApiV1WikiByCommunityNameErrors,
     ThrowOnError
-  >({ url: "/api/v1/wiki/{communityName}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/wiki/{communityName}",
+    ...options,
+  })
 
 /**
  * Create a wiki page (moderators with wiki permission)
@@ -1495,6 +2697,14 @@ export const postApiV1WikiByCommunityName = <ThrowOnError extends boolean = fals
     PostApiV1WikiByCommunityNameErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/wiki/{communityName}",
     ...options,
     headers: {
@@ -1517,7 +2727,18 @@ export const getApiV1WikiByCommunityNameBySlug = <ThrowOnError extends boolean =
     GetApiV1WikiByCommunityNameBySlugResponses,
     GetApiV1WikiByCommunityNameBySlugErrors,
     ThrowOnError
-  >({ url: "/api/v1/wiki/{communityName}/{slug}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/wiki/{communityName}/{slug}",
+    ...options,
+  })
 
 /**
  * Save a new revision of a wiki page (moderators with wiki permission)
@@ -1534,6 +2755,14 @@ export const putApiV1WikiByCommunityNameBySlug = <ThrowOnError extends boolean =
     PutApiV1WikiByCommunityNameBySlugErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/wiki/{communityName}/{slug}",
     ...options,
     headers: {
@@ -1556,7 +2785,18 @@ export const getApiV1WikiByCommunityNameBySlugRevisions = <ThrowOnError extends 
     GetApiV1WikiByCommunityNameBySlugRevisionsResponses,
     GetApiV1WikiByCommunityNameBySlugRevisionsErrors,
     ThrowOnError
-  >({ url: "/api/v1/wiki/{communityName}/{slug}/revisions", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/wiki/{communityName}/{slug}/revisions",
+    ...options,
+  })
 
 /**
  * Revert a wiki page to a prior revision (moderators with wiki permission)
@@ -1573,6 +2813,14 @@ export const postApiV1WikiByCommunityNameBySlugRevert = <ThrowOnError extends bo
     PostApiV1WikiByCommunityNameBySlugRevertErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/wiki/{communityName}/{slug}/revert",
     ...options,
     headers: {
@@ -1591,7 +2839,18 @@ export const getApiV1FlairByCommunityIdPostTemplates = <ThrowOnError extends boo
     GetApiV1FlairByCommunityIdPostTemplatesResponses,
     unknown,
     ThrowOnError
-  >({ url: "/api/v1/flair/{communityId}/post-templates", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/flair/{communityId}/post-templates",
+    ...options,
+  })
 
 /**
  * Create a post flair template (moderators with flair permission)
@@ -1608,6 +2867,14 @@ export const postApiV1FlairByCommunityIdPostTemplates = <ThrowOnError extends bo
     PostApiV1FlairByCommunityIdPostTemplatesErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/flair/{communityId}/post-templates",
     ...options,
     headers: {
@@ -1626,7 +2893,18 @@ export const getApiV1FlairByCommunityIdUserTemplates = <ThrowOnError extends boo
     GetApiV1FlairByCommunityIdUserTemplatesResponses,
     unknown,
     ThrowOnError
-  >({ url: "/api/v1/flair/{communityId}/user-templates", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/flair/{communityId}/user-templates",
+    ...options,
+  })
 
 /**
  * Create a user flair template (moderators with flair permission)
@@ -1643,6 +2921,14 @@ export const postApiV1FlairByCommunityIdUserTemplates = <ThrowOnError extends bo
     PostApiV1FlairByCommunityIdUserTemplatesErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/flair/{communityId}/user-templates",
     ...options,
     headers: {
@@ -1665,7 +2951,18 @@ export const deleteApiV1FlairPostTemplatesById = <ThrowOnError extends boolean =
     DeleteApiV1FlairPostTemplatesByIdResponses,
     DeleteApiV1FlairPostTemplatesByIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/flair/post-templates/{id}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/flair/post-templates/{id}",
+    ...options,
+  })
 
 /**
  * Update a post flair template (moderators with flair permission)
@@ -1682,6 +2979,14 @@ export const patchApiV1FlairPostTemplatesById = <ThrowOnError extends boolean = 
     PatchApiV1FlairPostTemplatesByIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/flair/post-templates/{id}",
     ...options,
     headers: {
@@ -1704,7 +3009,18 @@ export const deleteApiV1FlairUserTemplatesById = <ThrowOnError extends boolean =
     DeleteApiV1FlairUserTemplatesByIdResponses,
     DeleteApiV1FlairUserTemplatesByIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/flair/user-templates/{id}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/flair/user-templates/{id}",
+    ...options,
+  })
 
 /**
  * Update a user flair template (moderators with flair permission)
@@ -1721,6 +3037,14 @@ export const patchApiV1FlairUserTemplatesById = <ThrowOnError extends boolean = 
     PatchApiV1FlairUserTemplatesByIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/flair/user-templates/{id}",
     ...options,
     headers: {
@@ -1744,6 +3068,14 @@ export const putApiV1FlairByCommunityIdMyFlair = <ThrowOnError extends boolean =
     PutApiV1FlairByCommunityIdMyFlairErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/flair/{communityId}/my-flair",
     ...options,
     headers: {
@@ -1759,6 +3091,14 @@ export const getApiV1Explore = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1ExploreData, ThrowOnError>,
 ): RequestResult<GetApiV1ExploreResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1ExploreResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/explore",
     ...options,
   })
@@ -1777,7 +3117,18 @@ export const getApiV1CommentPostByPostId = <ThrowOnError extends boolean = false
     GetApiV1CommentPostByPostIdResponses,
     GetApiV1CommentPostByPostIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/comment/post/{postId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/comment/post/{postId}",
+    ...options,
+  })
 
 /**
  * Create a comment on a post
@@ -1787,6 +3138,14 @@ export const postApiV1Comment = <ThrowOnError extends boolean = false>(
 ): RequestResult<PostApiV1CommentResponses, PostApiV1CommentErrors, ThrowOnError> =>
   (options?.client ?? client).post<PostApiV1CommentResponses, PostApiV1CommentErrors, ThrowOnError>(
     {
+      security: [
+        { scheme: "bearer", type: "http" },
+        {
+          in: "cookie",
+          name: "sproutbiz_session",
+          type: "apiKey",
+        },
+      ],
       url: "/api/v1/comment",
       ...options,
       headers: {
@@ -1806,7 +3165,18 @@ export const deleteApiV1CommentById = <ThrowOnError extends boolean = false>(
     DeleteApiV1CommentByIdResponses,
     DeleteApiV1CommentByIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/comment/{id}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/comment/{id}",
+    ...options,
+  })
 
 /**
  * Edit a comment (author only)
@@ -1819,6 +3189,14 @@ export const patchApiV1CommentById = <ThrowOnError extends boolean = false>(
     PatchApiV1CommentByIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/comment/{id}",
     ...options,
     headers: {
@@ -1842,6 +3220,14 @@ export const putApiV1CommentVoteByCommentId = <ThrowOnError extends boolean = fa
     PutApiV1CommentVoteByCommentIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/comment-vote/{commentId}",
     ...options,
     headers: {
@@ -1860,7 +3246,18 @@ export const deleteApiV1PostById = <ThrowOnError extends boolean = false>(
     DeleteApiV1PostByIdResponses,
     DeleteApiV1PostByIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/post/{id}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/post/{id}",
+    ...options,
+  })
 
 /**
  * Get a single post with viewer overlay
@@ -1869,6 +3266,14 @@ export const getApiV1PostById = <ThrowOnError extends boolean = false>(
   options: Options<GetApiV1PostByIdData, ThrowOnError>,
 ): RequestResult<GetApiV1PostByIdResponses, GetApiV1PostByIdErrors, ThrowOnError> =>
   (options.client ?? client).get<GetApiV1PostByIdResponses, GetApiV1PostByIdErrors, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/post/{id}",
     ...options,
   })
@@ -1884,6 +3289,14 @@ export const patchApiV1PostById = <ThrowOnError extends boolean = false>(
     PatchApiV1PostByIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/post/{id}",
     ...options,
     headers: {
@@ -1899,6 +3312,14 @@ export const postApiV1Post = <ThrowOnError extends boolean = false>(
   options?: Options<PostApiV1PostData, ThrowOnError>,
 ): RequestResult<PostApiV1PostResponses, PostApiV1PostErrors, ThrowOnError> =>
   (options?.client ?? client).post<PostApiV1PostResponses, PostApiV1PostErrors, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/post",
     ...options,
     headers: {
@@ -1921,7 +3342,18 @@ export const getApiV1PostInsightsByPostId = <ThrowOnError extends boolean = fals
     GetApiV1PostInsightsByPostIdResponses,
     GetApiV1PostInsightsByPostIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/post-insights/{postId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/post-insights/{postId}",
+    ...options,
+  })
 
 /**
  * Upvote, downvote, or clear a vote on a post
@@ -1934,6 +3366,14 @@ export const putApiV1PostVoteByPostId = <ThrowOnError extends boolean = false>(
     PutApiV1PostVoteByPostIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/post-vote/{postId}",
     ...options,
     headers: {
@@ -1956,7 +3396,18 @@ export const getApiV1FeedCommunityByName = <ThrowOnError extends boolean = false
     GetApiV1FeedCommunityByNameResponses,
     GetApiV1FeedCommunityByNameErrors,
     ThrowOnError
-  >({ url: "/api/v1/feed/community/{name}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/feed/community/{name}",
+    ...options,
+  })
 
 /**
  * Popular feed across all public and restricted communities
@@ -1965,6 +3416,14 @@ export const getApiV1FeedPopular = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1FeedPopularData, ThrowOnError>,
 ): RequestResult<GetApiV1FeedPopularResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1FeedPopularResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/feed/popular",
     ...options,
   })
@@ -1976,6 +3435,14 @@ export const getApiV1FeedHome = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1FeedHomeData, ThrowOnError>,
 ): RequestResult<GetApiV1FeedHomeResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1FeedHomeResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/feed/home",
     ...options,
   })
@@ -1987,6 +3454,14 @@ export const getApiV1FeedMod = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1FeedModData, ThrowOnError>,
 ): RequestResult<GetApiV1FeedModResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1FeedModResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/feed/mod",
     ...options,
   })
@@ -2005,7 +3480,18 @@ export const getApiV1FeedProfileByUsername = <ThrowOnError extends boolean = fal
     GetApiV1FeedProfileByUsernameResponses,
     GetApiV1FeedProfileByUsernameErrors,
     ThrowOnError
-  >({ url: "/api/v1/feed/profile/{username}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/feed/profile/{username}",
+    ...options,
+  })
 
 /**
  * Clear the current user's recently viewed posts
@@ -2014,7 +3500,18 @@ export const deleteApiV1HistoryRecentPosts = <ThrowOnError extends boolean = fal
   options?: Options<DeleteApiV1HistoryRecentPostsData, ThrowOnError>,
 ): RequestResult<DeleteApiV1HistoryRecentPostsResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).delete<DeleteApiV1HistoryRecentPostsResponses, unknown, ThrowOnError>(
-    { url: "/api/v1/history/recent-posts", ...options },
+    {
+      security: [
+        { scheme: "bearer", type: "http" },
+        {
+          in: "cookie",
+          name: "sproutbiz_session",
+          type: "apiKey",
+        },
+      ],
+      url: "/api/v1/history/recent-posts",
+      ...options,
+    },
   )
 
 /**
@@ -2024,6 +3521,14 @@ export const getApiV1HistoryRecentPosts = <ThrowOnError extends boolean = false>
   options?: Options<GetApiV1HistoryRecentPostsData, ThrowOnError>,
 ): RequestResult<GetApiV1HistoryRecentPostsResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1HistoryRecentPostsResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/history/recent-posts",
     ...options,
   })
@@ -2035,6 +3540,14 @@ export const getApiV1HistoryPosts = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1HistoryPostsData, ThrowOnError>,
 ): RequestResult<GetApiV1HistoryPostsResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1HistoryPostsResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/history/posts",
     ...options,
   })
@@ -2046,7 +3559,18 @@ export const getApiV1HistoryRecentCommunities = <ThrowOnError extends boolean = 
   options?: Options<GetApiV1HistoryRecentCommunitiesData, ThrowOnError>,
 ): RequestResult<GetApiV1HistoryRecentCommunitiesResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1HistoryRecentCommunitiesResponses, unknown, ThrowOnError>(
-    { url: "/api/v1/history/recent-communities", ...options },
+    {
+      security: [
+        { scheme: "bearer", type: "http" },
+        {
+          in: "cookie",
+          name: "sproutbiz_session",
+          type: "apiKey",
+        },
+      ],
+      url: "/api/v1/history/recent-communities",
+      ...options,
+    },
   )
 
 /**
@@ -2060,6 +3584,14 @@ export const postApiV1MediaConfirm = <ThrowOnError extends boolean = false>(
     PostApiV1MediaConfirmErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/media/confirm",
     ...options,
     headers: {
@@ -2083,6 +3615,14 @@ export const postApiV1MediaAvatarUpload = <ThrowOnError extends boolean = false>
     PostApiV1MediaAvatarUploadErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/media/avatar-upload",
     ...options,
     headers: {
@@ -2106,6 +3646,14 @@ export const postApiV1MediaAvatarConfirm = <ThrowOnError extends boolean = false
     PostApiV1MediaAvatarConfirmErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/media/avatar-confirm",
     ...options,
     headers: {
@@ -2129,6 +3677,14 @@ export const postApiV1MediaBannerUpload = <ThrowOnError extends boolean = false>
     PostApiV1MediaBannerUploadErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/media/banner-upload",
     ...options,
     headers: {
@@ -2152,6 +3708,14 @@ export const postApiV1MediaBannerConfirm = <ThrowOnError extends boolean = false
     PostApiV1MediaBannerConfirmErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/media/banner-confirm",
     ...options,
     headers: {
@@ -2175,6 +3739,14 @@ export const postApiV1MediaCommunityIconUpload = <ThrowOnError extends boolean =
     PostApiV1MediaCommunityIconUploadErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/media/community-icon-upload",
     ...options,
     headers: {
@@ -2198,6 +3770,14 @@ export const postApiV1MediaCommunityIconConfirm = <ThrowOnError extends boolean 
     PostApiV1MediaCommunityIconConfirmErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/media/community-icon-confirm",
     ...options,
     headers: {
@@ -2221,6 +3801,14 @@ export const postApiV1MediaCommunityBannerUpload = <ThrowOnError extends boolean
     PostApiV1MediaCommunityBannerUploadErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/media/community-banner-upload",
     ...options,
     headers: {
@@ -2244,6 +3832,14 @@ export const postApiV1MediaCommunityBannerConfirm = <ThrowOnError extends boolea
     PostApiV1MediaCommunityBannerConfirmErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/media/community-banner-confirm",
     ...options,
     headers: {
@@ -2262,7 +3858,18 @@ export const deleteApiV1PostActionSaveByPostId = <ThrowOnError extends boolean =
     DeleteApiV1PostActionSaveByPostIdResponses,
     unknown,
     ThrowOnError
-  >({ url: "/api/v1/post-action/save/{postId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/post-action/save/{postId}",
+    ...options,
+  })
 
 /**
  * Save a post
@@ -2278,7 +3885,18 @@ export const putApiV1PostActionSaveByPostId = <ThrowOnError extends boolean = fa
     PutApiV1PostActionSaveByPostIdResponses,
     PutApiV1PostActionSaveByPostIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/post-action/save/{postId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/post-action/save/{postId}",
+    ...options,
+  })
 
 /**
  * Unhide a post
@@ -2290,7 +3908,18 @@ export const deleteApiV1PostActionHideByPostId = <ThrowOnError extends boolean =
     DeleteApiV1PostActionHideByPostIdResponses,
     unknown,
     ThrowOnError
-  >({ url: "/api/v1/post-action/hide/{postId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/post-action/hide/{postId}",
+    ...options,
+  })
 
 /**
  * Hide a post from the current user's feeds
@@ -2306,7 +3935,18 @@ export const putApiV1PostActionHideByPostId = <ThrowOnError extends boolean = fa
     PutApiV1PostActionHideByPostIdResponses,
     PutApiV1PostActionHideByPostIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/post-action/hide/{postId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/post-action/hide/{postId}",
+    ...options,
+  })
 
 /**
  * Unfollow a post
@@ -2318,7 +3958,18 @@ export const deleteApiV1PostActionFollowByPostId = <ThrowOnError extends boolean
     DeleteApiV1PostActionFollowByPostIdResponses,
     unknown,
     ThrowOnError
-  >({ url: "/api/v1/post-action/follow/{postId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/post-action/follow/{postId}",
+    ...options,
+  })
 
 /**
  * Follow a post to receive updates
@@ -2334,7 +3985,18 @@ export const putApiV1PostActionFollowByPostId = <ThrowOnError extends boolean = 
     PutApiV1PostActionFollowByPostIdResponses,
     PutApiV1PostActionFollowByPostIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/post-action/follow/{postId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/post-action/follow/{postId}",
+    ...options,
+  })
 
 /**
  * Record a share of a post
@@ -2350,7 +4012,18 @@ export const postApiV1PostActionShareByPostId = <ThrowOnError extends boolean = 
     PostApiV1PostActionShareByPostIdResponses,
     PostApiV1PostActionShareByPostIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/post-action/share/{postId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/post-action/share/{postId}",
+    ...options,
+  })
 
 /**
  * Unsave a comment
@@ -2362,7 +4035,18 @@ export const deleteApiV1CommentActionSaveByCommentId = <ThrowOnError extends boo
     DeleteApiV1CommentActionSaveByCommentIdResponses,
     unknown,
     ThrowOnError
-  >({ url: "/api/v1/comment-action/save/{commentId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/comment-action/save/{commentId}",
+    ...options,
+  })
 
 /**
  * Save a comment
@@ -2378,7 +4062,18 @@ export const putApiV1CommentActionSaveByCommentId = <ThrowOnError extends boolea
     PutApiV1CommentActionSaveByCommentIdResponses,
     PutApiV1CommentActionSaveByCommentIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/comment-action/save/{commentId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/comment-action/save/{commentId}",
+    ...options,
+  })
 
 /**
  * Unfollow a comment thread
@@ -2390,7 +4085,18 @@ export const deleteApiV1CommentActionFollowByCommentId = <ThrowOnError extends b
     DeleteApiV1CommentActionFollowByCommentIdResponses,
     unknown,
     ThrowOnError
-  >({ url: "/api/v1/comment-action/follow/{commentId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/comment-action/follow/{commentId}",
+    ...options,
+  })
 
 /**
  * Follow a comment thread
@@ -2406,7 +4112,18 @@ export const putApiV1CommentActionFollowByCommentId = <ThrowOnError extends bool
     PutApiV1CommentActionFollowByCommentIdResponses,
     PutApiV1CommentActionFollowByCommentIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/comment-action/follow/{commentId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/comment-action/follow/{commentId}",
+    ...options,
+  })
 
 /**
  * Users the current user follows
@@ -2415,6 +4132,14 @@ export const getApiV1UserFollowMine = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1UserFollowMineData, ThrowOnError>,
 ): RequestResult<GetApiV1UserFollowMineResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1UserFollowMineResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/user-follow/mine",
     ...options,
   })
@@ -2433,7 +4158,18 @@ export const deleteApiV1UserFollowByUsername = <ThrowOnError extends boolean = f
     DeleteApiV1UserFollowByUsernameResponses,
     DeleteApiV1UserFollowByUsernameErrors,
     ThrowOnError
-  >({ url: "/api/v1/user-follow/{username}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/user-follow/{username}",
+    ...options,
+  })
 
 /**
  * Follow a user's profile
@@ -2449,7 +4185,18 @@ export const putApiV1UserFollowByUsername = <ThrowOnError extends boolean = fals
     PutApiV1UserFollowByUsernameResponses,
     PutApiV1UserFollowByUsernameErrors,
     ThrowOnError
-  >({ url: "/api/v1/user-follow/{username}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/user-follow/{username}",
+    ...options,
+  })
 
 /**
  * Users the current user has blocked
@@ -2458,6 +4205,14 @@ export const getApiV1UserBlockMine = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1UserBlockMineData, ThrowOnError>,
 ): RequestResult<GetApiV1UserBlockMineResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1UserBlockMineResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/user-block/mine",
     ...options,
   })
@@ -2476,7 +4231,18 @@ export const deleteApiV1UserBlockByUsername = <ThrowOnError extends boolean = fa
     DeleteApiV1UserBlockByUsernameResponses,
     DeleteApiV1UserBlockByUsernameErrors,
     ThrowOnError
-  >({ url: "/api/v1/user-block/{username}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/user-block/{username}",
+    ...options,
+  })
 
 /**
  * Block a user
@@ -2492,7 +4258,18 @@ export const putApiV1UserBlockByUsername = <ThrowOnError extends boolean = false
     PutApiV1UserBlockByUsernameResponses,
     PutApiV1UserBlockByUsernameErrors,
     ThrowOnError
-  >({ url: "/api/v1/user-block/{username}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/user-block/{username}",
+    ...options,
+  })
 
 /**
  * Communities the current user has muted
@@ -2501,6 +4278,14 @@ export const getApiV1MutedCommunityMine = <ThrowOnError extends boolean = false>
   options?: Options<GetApiV1MutedCommunityMineData, ThrowOnError>,
 ): RequestResult<GetApiV1MutedCommunityMineResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1MutedCommunityMineResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/muted-community/mine",
     ...options,
   })
@@ -2515,7 +4300,18 @@ export const deleteApiV1MutedCommunityByCommunityId = <ThrowOnError extends bool
     DeleteApiV1MutedCommunityByCommunityIdResponses,
     unknown,
     ThrowOnError
-  >({ url: "/api/v1/muted-community/{communityId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/muted-community/{communityId}",
+    ...options,
+  })
 
 /**
  * Mute a community
@@ -2531,7 +4327,18 @@ export const putApiV1MutedCommunityByCommunityId = <ThrowOnError extends boolean
     PutApiV1MutedCommunityByCommunityIdResponses,
     PutApiV1MutedCommunityByCommunityIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/muted-community/{communityId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/muted-community/{communityId}",
+    ...options,
+  })
 
 /**
  * List the current user's drafts, newest updated first
@@ -2540,6 +4347,14 @@ export const getApiV1Draft = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1DraftData, ThrowOnError>,
 ): RequestResult<GetApiV1DraftResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1DraftResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/draft",
     ...options,
   })
@@ -2551,6 +4366,14 @@ export const postApiV1Draft = <ThrowOnError extends boolean = false>(
   options?: Options<PostApiV1DraftData, ThrowOnError>,
 ): RequestResult<PostApiV1DraftResponses, PostApiV1DraftErrors, ThrowOnError> =>
   (options?.client ?? client).post<PostApiV1DraftResponses, PostApiV1DraftErrors, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/draft",
     ...options,
     headers: {
@@ -2569,7 +4392,18 @@ export const deleteApiV1DraftById = <ThrowOnError extends boolean = false>(
     DeleteApiV1DraftByIdResponses,
     DeleteApiV1DraftByIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/draft/{id}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/draft/{id}",
+    ...options,
+  })
 
 /**
  * Get a single draft
@@ -2578,7 +4412,18 @@ export const getApiV1DraftById = <ThrowOnError extends boolean = false>(
   options: Options<GetApiV1DraftByIdData, ThrowOnError>,
 ): RequestResult<GetApiV1DraftByIdResponses, GetApiV1DraftByIdErrors, ThrowOnError> =>
   (options.client ?? client).get<GetApiV1DraftByIdResponses, GetApiV1DraftByIdErrors, ThrowOnError>(
-    { url: "/api/v1/draft/{id}", ...options },
+    {
+      security: [
+        { scheme: "bearer", type: "http" },
+        {
+          in: "cookie",
+          name: "sproutbiz_session",
+          type: "apiKey",
+        },
+      ],
+      url: "/api/v1/draft/{id}",
+      ...options,
+    },
   )
 
 /**
@@ -2592,6 +4437,14 @@ export const patchApiV1DraftById = <ThrowOnError extends boolean = false>(
     PatchApiV1DraftByIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/draft/{id}",
     ...options,
     headers: {
@@ -2607,6 +4460,14 @@ export const getApiV1ScheduledPostMine = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1ScheduledPostMineData, ThrowOnError>,
 ): RequestResult<GetApiV1ScheduledPostMineResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1ScheduledPostMineResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/scheduled-post/mine",
     ...options,
   })
@@ -2625,7 +4486,18 @@ export const getApiV1ScheduledPostCommunityByCommunityId = <ThrowOnError extends
     GetApiV1ScheduledPostCommunityByCommunityIdResponses,
     GetApiV1ScheduledPostCommunityByCommunityIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/scheduled-post/community/{communityId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/scheduled-post/community/{communityId}",
+    ...options,
+  })
 
 /**
  * Schedule a post for future publication
@@ -2638,6 +4510,14 @@ export const postApiV1ScheduledPost = <ThrowOnError extends boolean = false>(
     PostApiV1ScheduledPostErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/scheduled-post",
     ...options,
     headers: {
@@ -2660,7 +4540,18 @@ export const deleteApiV1ScheduledPostById = <ThrowOnError extends boolean = fals
     DeleteApiV1ScheduledPostByIdResponses,
     DeleteApiV1ScheduledPostByIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/scheduled-post/{id}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/scheduled-post/{id}",
+    ...options,
+  })
 
 /**
  * Full-text search across posts, comments, communities and profiles
@@ -2669,6 +4560,14 @@ export const getApiV1Search = <ThrowOnError extends boolean = false>(
   options: Options<GetApiV1SearchData, ThrowOnError>,
 ): RequestResult<GetApiV1SearchResponses, GetApiV1SearchErrors, ThrowOnError> =>
   (options.client ?? client).get<GetApiV1SearchResponses, GetApiV1SearchErrors, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/search",
     ...options,
   })
@@ -2680,6 +4579,14 @@ export const getApiV1SearchSuggest = <ThrowOnError extends boolean = false>(
   options: Options<GetApiV1SearchSuggestData, ThrowOnError>,
 ): RequestResult<GetApiV1SearchSuggestResponses, unknown, ThrowOnError> =>
   (options.client ?? client).get<GetApiV1SearchSuggestResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/search/suggest",
     ...options,
   })
@@ -2699,6 +4606,14 @@ export const postApiV1ReportPostByPostId = <ThrowOnError extends boolean = false
     PostApiV1ReportPostByPostIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/report/post/{postId}",
     ...options,
     headers: {
@@ -2722,6 +4637,14 @@ export const postApiV1ReportCommentByCommentId = <ThrowOnError extends boolean =
     PostApiV1ReportCommentByCommentIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/report/comment/{commentId}",
     ...options,
     headers: {
@@ -2744,7 +4667,18 @@ export const getApiV1ModQueueByCommunityId = <ThrowOnError extends boolean = fal
     GetApiV1ModQueueByCommunityIdResponses,
     GetApiV1ModQueueByCommunityIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/mod-queue/{communityId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/mod-queue/{communityId}",
+    ...options,
+  })
 
 /**
  * Approve a post or comment (clears removal, resolves reports)
@@ -2757,6 +4691,14 @@ export const postApiV1ModQueueApprove = <ThrowOnError extends boolean = false>(
     PostApiV1ModQueueApproveErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/mod-queue/approve",
     ...options,
     headers: {
@@ -2776,6 +4718,14 @@ export const postApiV1ModQueueRemove = <ThrowOnError extends boolean = false>(
     PostApiV1ModQueueRemoveErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/mod-queue/remove",
     ...options,
     headers: {
@@ -2795,6 +4745,14 @@ export const postApiV1ModQueueLock = <ThrowOnError extends boolean = false>(
     PostApiV1ModQueueLockErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/mod-queue/lock",
     ...options,
     headers: {
@@ -2814,6 +4772,14 @@ export const postApiV1ModQueueUnlock = <ThrowOnError extends boolean = false>(
     PostApiV1ModQueueUnlockErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/mod-queue/unlock",
     ...options,
     headers: {
@@ -2833,6 +4799,14 @@ export const postApiV1ModQueueSticky = <ThrowOnError extends boolean = false>(
     PostApiV1ModQueueStickyErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/mod-queue/sticky",
     ...options,
     headers: {
@@ -2856,6 +4830,14 @@ export const postApiV1ModQueueStickyComment = <ThrowOnError extends boolean = fa
     PostApiV1ModQueueStickyCommentErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/mod-queue/sticky-comment",
     ...options,
     headers: {
@@ -2871,6 +4853,14 @@ export const getApiV1ModTeamMyInvites = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1ModTeamMyInvitesData, ThrowOnError>,
 ): RequestResult<GetApiV1ModTeamMyInvitesResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1ModTeamMyInvitesResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/mod-team/my-invites",
     ...options,
   })
@@ -2889,7 +4879,18 @@ export const getApiV1ModTeamByCommunityId = <ThrowOnError extends boolean = fals
     GetApiV1ModTeamByCommunityIdResponses,
     GetApiV1ModTeamByCommunityIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/mod-team/{communityId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/mod-team/{communityId}",
+    ...options,
+  })
 
 /**
  * Invite a user to the moderator team (full moderators only)
@@ -2906,6 +4907,14 @@ export const postApiV1ModTeamByCommunityIdInvite = <ThrowOnError extends boolean
     PostApiV1ModTeamByCommunityIdInviteErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/mod-team/{communityId}/invite",
     ...options,
     headers: {
@@ -2928,7 +4937,18 @@ export const postApiV1ModTeamInviteByIdAccept = <ThrowOnError extends boolean = 
     PostApiV1ModTeamInviteByIdAcceptResponses,
     PostApiV1ModTeamInviteByIdAcceptErrors,
     ThrowOnError
-  >({ url: "/api/v1/mod-team/invite/{id}/accept", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/mod-team/invite/{id}/accept",
+    ...options,
+  })
 
 /**
  * Decline a moderator invite
@@ -2944,7 +4964,18 @@ export const postApiV1ModTeamInviteByIdDecline = <ThrowOnError extends boolean =
     PostApiV1ModTeamInviteByIdDeclineResponses,
     PostApiV1ModTeamInviteByIdDeclineErrors,
     ThrowOnError
-  >({ url: "/api/v1/mod-team/invite/{id}/decline", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/mod-team/invite/{id}/decline",
+    ...options,
+  })
 
 /**
  * Remove a moderator (full moderators, or self)
@@ -2960,7 +4991,18 @@ export const deleteApiV1ModTeamByCommunityIdModByUserId = <ThrowOnError extends 
     DeleteApiV1ModTeamByCommunityIdModByUserIdResponses,
     DeleteApiV1ModTeamByCommunityIdModByUserIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/mod-team/{communityId}/mod/{userId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/mod-team/{communityId}/mod/{userId}",
+    ...options,
+  })
 
 /**
  * Update a moderator's permissions (full moderators only)
@@ -2977,6 +5019,14 @@ export const patchApiV1ModTeamByCommunityIdModByUserId = <ThrowOnError extends b
     PatchApiV1ModTeamByCommunityIdModByUserIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/mod-team/{communityId}/mod/{userId}",
     ...options,
     headers: {
@@ -2999,7 +5049,18 @@ export const getApiV1ModUsersByCommunityIdBanned = <ThrowOnError extends boolean
     GetApiV1ModUsersByCommunityIdBannedResponses,
     GetApiV1ModUsersByCommunityIdBannedErrors,
     ThrowOnError
-  >({ url: "/api/v1/mod-users/{communityId}/banned", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/mod-users/{communityId}/banned",
+    ...options,
+  })
 
 /**
  * List muted users (moderators with users permission)
@@ -3015,7 +5076,18 @@ export const getApiV1ModUsersByCommunityIdMuted = <ThrowOnError extends boolean 
     GetApiV1ModUsersByCommunityIdMutedResponses,
     GetApiV1ModUsersByCommunityIdMutedErrors,
     ThrowOnError
-  >({ url: "/api/v1/mod-users/{communityId}/muted", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/mod-users/{communityId}/muted",
+    ...options,
+  })
 
 /**
  * List approved users (moderators with users permission)
@@ -3031,7 +5103,18 @@ export const getApiV1ModUsersByCommunityIdApproved = <ThrowOnError extends boole
     GetApiV1ModUsersByCommunityIdApprovedResponses,
     GetApiV1ModUsersByCommunityIdApprovedErrors,
     ThrowOnError
-  >({ url: "/api/v1/mod-users/{communityId}/approved", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/mod-users/{communityId}/approved",
+    ...options,
+  })
 
 /**
  * Approve a user (moderators with users permission)
@@ -3048,6 +5131,14 @@ export const postApiV1ModUsersByCommunityIdApproved = <ThrowOnError extends bool
     PostApiV1ModUsersByCommunityIdApprovedErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/mod-users/{communityId}/approved",
     ...options,
     headers: {
@@ -3070,7 +5161,18 @@ export const getApiV1ModUsersByCommunityIdRestricted = <ThrowOnError extends boo
     GetApiV1ModUsersByCommunityIdRestrictedResponses,
     GetApiV1ModUsersByCommunityIdRestrictedErrors,
     ThrowOnError
-  >({ url: "/api/v1/mod-users/{communityId}/restricted", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/mod-users/{communityId}/restricted",
+    ...options,
+  })
 
 /**
  * List mod notes for a user (moderators with users permission)
@@ -3086,7 +5188,18 @@ export const getApiV1ModUsersByCommunityIdNotesByUsername = <ThrowOnError extend
     GetApiV1ModUsersByCommunityIdNotesByUsernameResponses,
     GetApiV1ModUsersByCommunityIdNotesByUsernameErrors,
     ThrowOnError
-  >({ url: "/api/v1/mod-users/{communityId}/notes/{username}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/mod-users/{communityId}/notes/{username}",
+    ...options,
+  })
 
 /**
  * Create a mod note for a user (moderators with users permission)
@@ -3103,6 +5216,14 @@ export const postApiV1ModUsersByCommunityIdNotesByUsername = <ThrowOnError exten
     PostApiV1ModUsersByCommunityIdNotesByUsernameErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/mod-users/{communityId}/notes/{username}",
     ...options,
     headers: {
@@ -3126,6 +5247,14 @@ export const postApiV1ModUsersByCommunityIdBan = <ThrowOnError extends boolean =
     PostApiV1ModUsersByCommunityIdBanErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/mod-users/{communityId}/ban",
     ...options,
     headers: {
@@ -3148,7 +5277,18 @@ export const deleteApiV1ModUsersByCommunityIdBanByUsername = <ThrowOnError exten
     DeleteApiV1ModUsersByCommunityIdBanByUsernameResponses,
     DeleteApiV1ModUsersByCommunityIdBanByUsernameErrors,
     ThrowOnError
-  >({ url: "/api/v1/mod-users/{communityId}/ban/{username}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/mod-users/{communityId}/ban/{username}",
+    ...options,
+  })
 
 /**
  * Mute a user (moderators with users permission)
@@ -3165,6 +5305,14 @@ export const postApiV1ModUsersByCommunityIdMute = <ThrowOnError extends boolean 
     PostApiV1ModUsersByCommunityIdMuteErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/mod-users/{communityId}/mute",
     ...options,
     headers: {
@@ -3189,7 +5337,18 @@ export const deleteApiV1ModUsersByCommunityIdMuteByUsername = <
     DeleteApiV1ModUsersByCommunityIdMuteByUsernameResponses,
     DeleteApiV1ModUsersByCommunityIdMuteByUsernameErrors,
     ThrowOnError
-  >({ url: "/api/v1/mod-users/{communityId}/mute/{username}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/mod-users/{communityId}/mute/{username}",
+    ...options,
+  })
 
 /**
  * Remove an approved user (moderators with users permission)
@@ -3207,7 +5366,18 @@ export const deleteApiV1ModUsersByCommunityIdApprovedByUsername = <
     DeleteApiV1ModUsersByCommunityIdApprovedByUsernameResponses,
     DeleteApiV1ModUsersByCommunityIdApprovedByUsernameErrors,
     ThrowOnError
-  >({ url: "/api/v1/mod-users/{communityId}/approved/{username}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/mod-users/{communityId}/approved/{username}",
+    ...options,
+  })
 
 /**
  * Delete a mod note (moderators with users permission)
@@ -3223,7 +5393,18 @@ export const deleteApiV1ModUsersNotesById = <ThrowOnError extends boolean = fals
     DeleteApiV1ModUsersNotesByIdResponses,
     DeleteApiV1ModUsersNotesByIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/mod-users/notes/{id}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/mod-users/notes/{id}",
+    ...options,
+  })
 
 /**
  * Fetch a community's moderation log (moderators)
@@ -3239,7 +5420,18 @@ export const getApiV1ModLogByCommunityId = <ThrowOnError extends boolean = false
     GetApiV1ModLogByCommunityIdResponses,
     GetApiV1ModLogByCommunityIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/mod-log/{communityId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/mod-log/{communityId}",
+    ...options,
+  })
 
 /**
  * List a community's saved responses (moderators)
@@ -3255,7 +5447,18 @@ export const getApiV1ModSavedResponseByCommunityId = <ThrowOnError extends boole
     GetApiV1ModSavedResponseByCommunityIdResponses,
     GetApiV1ModSavedResponseByCommunityIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/mod-saved-response/{communityId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/mod-saved-response/{communityId}",
+    ...options,
+  })
 
 /**
  * Create a saved response (moderators with posts_comments permission)
@@ -3272,6 +5475,14 @@ export const postApiV1ModSavedResponseByCommunityId = <ThrowOnError extends bool
     PostApiV1ModSavedResponseByCommunityIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/mod-saved-response/{communityId}",
     ...options,
     headers: {
@@ -3294,7 +5505,18 @@ export const deleteApiV1ModSavedResponseResponseById = <ThrowOnError extends boo
     DeleteApiV1ModSavedResponseResponseByIdResponses,
     DeleteApiV1ModSavedResponseResponseByIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/mod-saved-response/response/{id}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/mod-saved-response/response/{id}",
+    ...options,
+  })
 
 /**
  * Update a saved response (moderators with posts_comments permission)
@@ -3311,6 +5533,14 @@ export const patchApiV1ModSavedResponseResponseById = <ThrowOnError extends bool
     PatchApiV1ModSavedResponseResponseByIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/mod-saved-response/response/{id}",
     ...options,
     headers: {
@@ -3333,7 +5563,18 @@ export const getApiV1RemovalReasonByCommunityId = <ThrowOnError extends boolean 
     GetApiV1RemovalReasonByCommunityIdResponses,
     GetApiV1RemovalReasonByCommunityIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/removal-reason/{communityId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/removal-reason/{communityId}",
+    ...options,
+  })
 
 /**
  * Create a removal reason (config permission)
@@ -3350,6 +5591,14 @@ export const postApiV1RemovalReasonByCommunityId = <ThrowOnError extends boolean
     PostApiV1RemovalReasonByCommunityIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/removal-reason/{communityId}",
     ...options,
     headers: {
@@ -3373,6 +5622,14 @@ export const patchApiV1RemovalReasonByCommunityIdReorder = <ThrowOnError extends
     PatchApiV1RemovalReasonByCommunityIdReorderErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/removal-reason/{communityId}/reorder",
     ...options,
     headers: {
@@ -3395,7 +5652,18 @@ export const deleteApiV1RemovalReasonReasonById = <ThrowOnError extends boolean 
     DeleteApiV1RemovalReasonReasonByIdResponses,
     DeleteApiV1RemovalReasonReasonByIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/removal-reason/reason/{id}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/removal-reason/reason/{id}",
+    ...options,
+  })
 
 /**
  * Update a removal reason (config permission)
@@ -3412,6 +5680,14 @@ export const patchApiV1RemovalReasonReasonById = <ThrowOnError extends boolean =
     PatchApiV1RemovalReasonReasonByIdErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/removal-reason/reason/{id}",
     ...options,
     headers: {
@@ -3428,6 +5704,14 @@ export const postApiV1Modmail = <ThrowOnError extends boolean = false>(
 ): RequestResult<PostApiV1ModmailResponses, PostApiV1ModmailErrors, ThrowOnError> =>
   (options?.client ?? client).post<PostApiV1ModmailResponses, PostApiV1ModmailErrors, ThrowOnError>(
     {
+      security: [
+        { scheme: "bearer", type: "http" },
+        {
+          in: "cookie",
+          name: "sproutbiz_session",
+          type: "apiKey",
+        },
+      ],
       url: "/api/v1/modmail",
       ...options,
       headers: {
@@ -3444,6 +5728,14 @@ export const getApiV1ModmailMine = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1ModmailMineData, ThrowOnError>,
 ): RequestResult<GetApiV1ModmailMineResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1ModmailMineResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/modmail/mine",
     ...options,
   })
@@ -3455,6 +5747,14 @@ export const getApiV1ModmailMineAsMod = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1ModmailMineAsModData, ThrowOnError>,
 ): RequestResult<GetApiV1ModmailMineAsModResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1ModmailMineAsModResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/modmail/mine-as-mod",
     ...options,
   })
@@ -3473,7 +5773,18 @@ export const getApiV1ModmailCommunityByCommunityId = <ThrowOnError extends boole
     GetApiV1ModmailCommunityByCommunityIdResponses,
     GetApiV1ModmailCommunityByCommunityIdErrors,
     ThrowOnError
-  >({ url: "/api/v1/modmail/community/{communityId}", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/modmail/community/{communityId}",
+    ...options,
+  })
 
 /**
  * Messages in a modmail conversation (internal notes hidden from the participant)
@@ -3489,7 +5800,18 @@ export const getApiV1ModmailByIdMessages = <ThrowOnError extends boolean = false
     GetApiV1ModmailByIdMessagesResponses,
     GetApiV1ModmailByIdMessagesErrors,
     ThrowOnError
-  >({ url: "/api/v1/modmail/{id}/messages", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/modmail/{id}/messages",
+    ...options,
+  })
 
 /**
  * Reply to a modmail conversation or add an internal note (notes are mods only)
@@ -3506,6 +5828,14 @@ export const postApiV1ModmailByIdMessages = <ThrowOnError extends boolean = fals
     PostApiV1ModmailByIdMessagesErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/modmail/{id}/messages",
     ...options,
     headers: {
@@ -3528,7 +5858,18 @@ export const postApiV1ModmailByIdArchive = <ThrowOnError extends boolean = false
     PostApiV1ModmailByIdArchiveResponses,
     PostApiV1ModmailByIdArchiveErrors,
     ThrowOnError
-  >({ url: "/api/v1/modmail/{id}/archive", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/modmail/{id}/archive",
+    ...options,
+  })
 
 /**
  * Move an archived modmail conversation back to in progress (mods)
@@ -3544,7 +5885,18 @@ export const postApiV1ModmailByIdUnarchive = <ThrowOnError extends boolean = fal
     PostApiV1ModmailByIdUnarchiveResponses,
     PostApiV1ModmailByIdUnarchiveErrors,
     ThrowOnError
-  >({ url: "/api/v1/modmail/{id}/unarchive", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/modmail/{id}/unarchive",
+    ...options,
+  })
 
 /**
  * Toggle the highlight flag on a modmail conversation (mods)
@@ -3560,7 +5912,18 @@ export const postApiV1ModmailByIdHighlight = <ThrowOnError extends boolean = fal
     PostApiV1ModmailByIdHighlightResponses,
     PostApiV1ModmailByIdHighlightErrors,
     ThrowOnError
-  >({ url: "/api/v1/modmail/{id}/highlight", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/modmail/{id}/highlight",
+    ...options,
+  })
 
 /**
  * List the current user's notifications, newest first
@@ -3569,6 +5932,14 @@ export const getApiV1Notification = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1NotificationData, ThrowOnError>,
 ): RequestResult<GetApiV1NotificationResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1NotificationResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/notification",
     ...options,
   })
@@ -3580,6 +5951,14 @@ export const getApiV1NotificationUnreadCount = <ThrowOnError extends boolean = f
   options?: Options<GetApiV1NotificationUnreadCountData, ThrowOnError>,
 ): RequestResult<GetApiV1NotificationUnreadCountResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1NotificationUnreadCountResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/notification/unread-count",
     ...options,
   })
@@ -3591,6 +5970,14 @@ export const getApiV1NotificationPreferences = <ThrowOnError extends boolean = f
   options?: Options<GetApiV1NotificationPreferencesData, ThrowOnError>,
 ): RequestResult<GetApiV1NotificationPreferencesResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiV1NotificationPreferencesResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/notification/preferences",
     ...options,
   })
@@ -3610,6 +5997,14 @@ export const putApiV1NotificationPreferences = <ThrowOnError extends boolean = f
     PutApiV1NotificationPreferencesErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/notification/preferences",
     ...options,
     headers: {
@@ -3625,6 +6020,14 @@ export const postApiV1NotificationReadAll = <ThrowOnError extends boolean = fals
   options?: Options<PostApiV1NotificationReadAllData, ThrowOnError>,
 ): RequestResult<PostApiV1NotificationReadAllResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).post<PostApiV1NotificationReadAllResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/notification/read-all",
     ...options,
   })
@@ -3636,6 +6039,14 @@ export const postApiV1NotificationByIdRead = <ThrowOnError extends boolean = fal
   options: Options<PostApiV1NotificationByIdReadData, ThrowOnError>,
 ): RequestResult<PostApiV1NotificationByIdReadResponses, unknown, ThrowOnError> =>
   (options.client ?? client).post<PostApiV1NotificationByIdReadResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/v1/notification/{id}/read",
     ...options,
   })
@@ -3647,5 +6058,127 @@ export const postApiV1NotificationByIdArchive = <ThrowOnError extends boolean = 
   options: Options<PostApiV1NotificationByIdArchiveData, ThrowOnError>,
 ): RequestResult<PostApiV1NotificationByIdArchiveResponses, unknown, ThrowOnError> =>
   (options.client ?? client).post<PostApiV1NotificationByIdArchiveResponses, unknown, ThrowOnError>(
-    { url: "/api/v1/notification/{id}/archive", ...options },
+    {
+      security: [
+        { scheme: "bearer", type: "http" },
+        {
+          in: "cookie",
+          name: "sproutbiz_session",
+          type: "apiKey",
+        },
+      ],
+      url: "/api/v1/notification/{id}/archive",
+      ...options,
+    },
   )
+
+/**
+ * The current user's onboarding progress
+ */
+export const getApiV1Onboarding = <ThrowOnError extends boolean = false>(
+  options?: Options<GetApiV1OnboardingData, ThrowOnError>,
+): RequestResult<GetApiV1OnboardingResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<GetApiV1OnboardingResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/onboarding",
+    ...options,
+  })
+
+/**
+ * Advances to a step, optionally recording the chosen browser agent
+ */
+export const postApiV1OnboardingStep = <ThrowOnError extends boolean = false>(
+  options?: Options<PostApiV1OnboardingStepData, ThrowOnError>,
+): RequestResult<PostApiV1OnboardingStepResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).post<PostApiV1OnboardingStepResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/onboarding/step",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+  })
+
+/**
+ * Issues a browser-check nonce. The nonce is never returned here -- it is rendered only on the authenticated verify page.
+ */
+export const postApiV1OnboardingVerifyStart = <ThrowOnError extends boolean = false>(
+  options?: Options<PostApiV1OnboardingVerifyStartData, ThrowOnError>,
+): RequestResult<PostApiV1OnboardingVerifyStartResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).post<PostApiV1OnboardingVerifyStartResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/onboarding/verify/start",
+    ...options,
+  })
+
+/**
+ * Completes the browser check. Must be called with an agent token, carrying the nonce read from the verify page.
+ */
+export const postApiV1OnboardingVerifyComplete = <ThrowOnError extends boolean = false>(
+  options?: Options<PostApiV1OnboardingVerifyCompleteData, ThrowOnError>,
+): RequestResult<
+  PostApiV1OnboardingVerifyCompleteResponses,
+  PostApiV1OnboardingVerifyCompleteErrors,
+  ThrowOnError
+> =>
+  (options?.client ?? client).post<
+    PostApiV1OnboardingVerifyCompleteResponses,
+    PostApiV1OnboardingVerifyCompleteErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/onboarding/verify/complete",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+  })
+
+/**
+ * The copy-paste message that starts an agent's loop
+ */
+export const getApiV1OnboardingKickoff = <ThrowOnError extends boolean = false>(
+  options?: Options<GetApiV1OnboardingKickoffData, ThrowOnError>,
+): RequestResult<GetApiV1OnboardingKickoffResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<GetApiV1OnboardingKickoffResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/onboarding/kickoff",
+    ...options,
+  })

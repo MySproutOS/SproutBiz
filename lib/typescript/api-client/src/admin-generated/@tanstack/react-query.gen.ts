@@ -10,22 +10,51 @@ import {
 
 import { client } from "../client.gen"
 import {
+  getApiAdminMarketingPools,
+  getApiAdminMarketingPoolsByIdPayouts,
+  getApiAdminMarketingVideos,
   getApiAdminPosts,
   getApiAdminStats,
   getApiAdminUsers,
   type Options,
+  postApiAdminMarketingPoolsByIdCalculate,
+  postApiAdminMarketingPoolsByIdPay,
+  postApiAdminMarketingVideosByIdApprove,
+  postApiAdminMarketingVideosByIdReject,
+  postApiAdminMarketingVideosByIdViews,
   postApiAdminPostsByIdRemove,
   postApiAdminPostsByIdRestore,
   postApiAdminUsersByIdSuspend,
   postApiAdminUsersByIdUnsuspend,
+  putApiAdminMarketingPools,
 } from "../sdk.gen"
 import type {
+  GetApiAdminMarketingPoolsByIdPayoutsData,
+  GetApiAdminMarketingPoolsByIdPayoutsResponse,
+  GetApiAdminMarketingPoolsData,
+  GetApiAdminMarketingPoolsResponse,
+  GetApiAdminMarketingVideosData,
+  GetApiAdminMarketingVideosResponse,
   GetApiAdminPostsData,
   GetApiAdminPostsResponse,
   GetApiAdminStatsData,
   GetApiAdminStatsResponse,
   GetApiAdminUsersData,
   GetApiAdminUsersResponse,
+  PostApiAdminMarketingPoolsByIdCalculateData,
+  PostApiAdminMarketingPoolsByIdCalculateError,
+  PostApiAdminMarketingPoolsByIdCalculateResponse,
+  PostApiAdminMarketingPoolsByIdPayData,
+  PostApiAdminMarketingPoolsByIdPayError,
+  PostApiAdminMarketingPoolsByIdPayResponse,
+  PostApiAdminMarketingVideosByIdApproveData,
+  PostApiAdminMarketingVideosByIdApproveError,
+  PostApiAdminMarketingVideosByIdApproveResponse,
+  PostApiAdminMarketingVideosByIdRejectData,
+  PostApiAdminMarketingVideosByIdRejectResponse,
+  PostApiAdminMarketingVideosByIdViewsData,
+  PostApiAdminMarketingVideosByIdViewsError,
+  PostApiAdminMarketingVideosByIdViewsResponse,
   PostApiAdminPostsByIdRemoveData,
   PostApiAdminPostsByIdRemoveError,
   PostApiAdminPostsByIdRemoveResponse,
@@ -38,6 +67,9 @@ import type {
   PostApiAdminUsersByIdUnsuspendData,
   PostApiAdminUsersByIdUnsuspendError,
   PostApiAdminUsersByIdUnsuspendResponse,
+  PutApiAdminMarketingPoolsData,
+  PutApiAdminMarketingPoolsError,
+  PutApiAdminMarketingPoolsResponse,
 } from "../types.gen"
 
 export type QueryKey<TOptions extends Options> = [
@@ -385,3 +417,247 @@ export const getApiAdminStatsOptions = (options?: Options<GetApiAdminStatsData>)
     },
     queryKey: getApiAdminStatsQueryKey(options),
   })
+
+export const getApiAdminMarketingVideosQueryKey = (
+  options?: Options<GetApiAdminMarketingVideosData>,
+) => createQueryKey("getApiAdminMarketingVideos", options)
+
+/**
+ * The video review queue
+ */
+export const getApiAdminMarketingVideosOptions = (
+  options?: Options<GetApiAdminMarketingVideosData>,
+) =>
+  queryOptions<
+    GetApiAdminMarketingVideosResponse,
+    DefaultError,
+    GetApiAdminMarketingVideosResponse,
+    ReturnType<typeof getApiAdminMarketingVideosQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiAdminMarketingVideos({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiAdminMarketingVideosQueryKey(options),
+  })
+
+/**
+ * Approves a video and starts its 30-day counting window
+ */
+export const postApiAdminMarketingVideosByIdApproveMutation = (
+  options?: Partial<Options<PostApiAdminMarketingVideosByIdApproveData>>,
+): UseMutationOptions<
+  PostApiAdminMarketingVideosByIdApproveResponse,
+  PostApiAdminMarketingVideosByIdApproveError,
+  Options<PostApiAdminMarketingVideosByIdApproveData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiAdminMarketingVideosByIdApproveResponse,
+    PostApiAdminMarketingVideosByIdApproveError,
+    Options<PostApiAdminMarketingVideosByIdApproveData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiAdminMarketingVideosByIdApprove({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+/**
+ * Rejects a video, with a reason the submitter will see
+ */
+export const postApiAdminMarketingVideosByIdRejectMutation = (
+  options?: Partial<Options<PostApiAdminMarketingVideosByIdRejectData>>,
+): UseMutationOptions<
+  PostApiAdminMarketingVideosByIdRejectResponse,
+  DefaultError,
+  Options<PostApiAdminMarketingVideosByIdRejectData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiAdminMarketingVideosByIdRejectResponse,
+    DefaultError,
+    Options<PostApiAdminMarketingVideosByIdRejectData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiAdminMarketingVideosByIdReject({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+/**
+ * Records the view count read at the 30-day mark
+ */
+export const postApiAdminMarketingVideosByIdViewsMutation = (
+  options?: Partial<Options<PostApiAdminMarketingVideosByIdViewsData>>,
+): UseMutationOptions<
+  PostApiAdminMarketingVideosByIdViewsResponse,
+  PostApiAdminMarketingVideosByIdViewsError,
+  Options<PostApiAdminMarketingVideosByIdViewsData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiAdminMarketingVideosByIdViewsResponse,
+    PostApiAdminMarketingVideosByIdViewsError,
+    Options<PostApiAdminMarketingVideosByIdViewsData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiAdminMarketingVideosByIdViews({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const getApiAdminMarketingPoolsQueryKey = (
+  options: Options<GetApiAdminMarketingPoolsData>,
+) => createQueryKey("getApiAdminMarketingPools", options)
+
+/**
+ * Every business's pool for a month, with the 20% suggestion
+ */
+export const getApiAdminMarketingPoolsOptions = (options: Options<GetApiAdminMarketingPoolsData>) =>
+  queryOptions<
+    GetApiAdminMarketingPoolsResponse,
+    DefaultError,
+    GetApiAdminMarketingPoolsResponse,
+    ReturnType<typeof getApiAdminMarketingPoolsQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiAdminMarketingPools({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiAdminMarketingPoolsQueryKey(options),
+  })
+
+/**
+ * Sets the dollar pool a business will pay out for a month
+ */
+export const putApiAdminMarketingPoolsMutation = (
+  options?: Partial<Options<PutApiAdminMarketingPoolsData>>,
+): UseMutationOptions<
+  PutApiAdminMarketingPoolsResponse,
+  PutApiAdminMarketingPoolsError,
+  Options<PutApiAdminMarketingPoolsData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PutApiAdminMarketingPoolsResponse,
+    PutApiAdminMarketingPoolsError,
+    Options<PutApiAdminMarketingPoolsData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await putApiAdminMarketingPools({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+/**
+ * Splits the pool between the month's eligible videos
+ */
+export const postApiAdminMarketingPoolsByIdCalculateMutation = (
+  options?: Partial<Options<PostApiAdminMarketingPoolsByIdCalculateData>>,
+): UseMutationOptions<
+  PostApiAdminMarketingPoolsByIdCalculateResponse,
+  PostApiAdminMarketingPoolsByIdCalculateError,
+  Options<PostApiAdminMarketingPoolsByIdCalculateData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiAdminMarketingPoolsByIdCalculateResponse,
+    PostApiAdminMarketingPoolsByIdCalculateError,
+    Options<PostApiAdminMarketingPoolsByIdCalculateData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiAdminMarketingPoolsByIdCalculate({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const getApiAdminMarketingPoolsByIdPayoutsQueryKey = (
+  options: Options<GetApiAdminMarketingPoolsByIdPayoutsData>,
+) => createQueryKey("getApiAdminMarketingPoolsByIdPayouts", options)
+
+/**
+ * The calculated payouts for a pool
+ */
+export const getApiAdminMarketingPoolsByIdPayoutsOptions = (
+  options: Options<GetApiAdminMarketingPoolsByIdPayoutsData>,
+) =>
+  queryOptions<
+    GetApiAdminMarketingPoolsByIdPayoutsResponse,
+    DefaultError,
+    GetApiAdminMarketingPoolsByIdPayoutsResponse,
+    ReturnType<typeof getApiAdminMarketingPoolsByIdPayoutsQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiAdminMarketingPoolsByIdPayouts({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiAdminMarketingPoolsByIdPayoutsQueryKey(options),
+  })
+
+/**
+ * Sends every pending payout in the pool through Stripe
+ */
+export const postApiAdminMarketingPoolsByIdPayMutation = (
+  options?: Partial<Options<PostApiAdminMarketingPoolsByIdPayData>>,
+): UseMutationOptions<
+  PostApiAdminMarketingPoolsByIdPayResponse,
+  PostApiAdminMarketingPoolsByIdPayError,
+  Options<PostApiAdminMarketingPoolsByIdPayData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiAdminMarketingPoolsByIdPayResponse,
+    PostApiAdminMarketingPoolsByIdPayError,
+    Options<PostApiAdminMarketingPoolsByIdPayData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiAdminMarketingPoolsByIdPay({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}

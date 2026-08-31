@@ -367,6 +367,59 @@ export interface ForumRevenueDaily {
   totalRevenueUsdCents: Generated<Int8>
 }
 
+export interface MarketingPayout {
+  createdAt: Generated<Timestamp>
+  failureReason: string | null
+  feeUsdCents: Generated<Int8>
+  grossUsdCents: Generated<Int8>
+  id: string
+  netUsdCents: Generated<Int8>
+  paidAt: Timestamp | null
+  poolId: string
+  shareBp: Generated<number>
+  status: Generated<string>
+  stripeTransferId: string | null
+  userId: string
+  videoId: string
+  weightedViews: Generated<Int8>
+}
+
+export interface MarketingPayoutPool {
+  businessId: string
+  computedAt: Timestamp | null
+  createdAt: Generated<Timestamp>
+  id: string
+  month: Timestamp
+  notes: string | null
+  paidAt: Timestamp | null
+  poolUsdCents: Generated<Int8>
+  status: Generated<string>
+  suggestedUsdCents: Generated<Int8>
+}
+
+export interface MarketingVideo {
+  businessId: string
+  createdAt: Generated<Timestamp>
+  durationSeconds: number | null
+  externalVideoId: string
+  id: string
+  measureAt: Timestamp | null
+  platform: string
+  postedAt: Timestamp | null
+  rejectionReason: string | null
+  reminderDayBeforeSentAt: Timestamp | null
+  reminderDueSentAt: Timestamp | null
+  reviewedAt: Timestamp | null
+  reviewedByUserId: string | null
+  status: Generated<string>
+  submittedAt: Generated<Timestamp>
+  submitterUserId: string
+  url: string
+  viewCount: Int8 | null
+  viewCountRecordedAt: Timestamp | null
+  weightedViews: Int8 | null
+}
+
 export interface ModAction {
   action: string
   communityId: string
@@ -429,6 +482,17 @@ export interface Notification {
   previewSnapshot: Json | null
   readAt: Timestamp | null
   type: string
+  userId: string
+}
+
+export interface PayoutAccount {
+  chargesEnabled: Generated<boolean>
+  createdAt: Generated<Timestamp>
+  detailsSubmitted: Generated<boolean>
+  payoutsEnabled: Generated<boolean>
+  status: Generated<string>
+  stripeAccountId: string
+  updatedAt: Generated<Timestamp>
   userId: string
 }
 
@@ -617,6 +681,7 @@ export interface User {
   commentKarma: Generated<number>
   createdAt: Generated<Timestamp>
   displayName: string | null
+  earnTermsAcceptedAt: Timestamp | null
   email: string
   id: string
   image: string | null
@@ -756,12 +821,16 @@ export interface DB {
   customFeedCommunity: CustomFeedCommunity
   donation: Donation
   forumRevenueDaily: ForumRevenueDaily
+  marketingPayout: MarketingPayout
+  marketingPayoutPool: MarketingPayoutPool
+  marketingVideo: MarketingVideo
   modAction: ModAction
   modmailConversation: ModmailConversation
   modmailMessage: ModmailMessage
   modNote: ModNote
   modSavedResponse: ModSavedResponse
   notification: Notification
+  payoutAccount: PayoutAccount
   post: Post
   postDraft: PostDraft
   postFlairTemplate: PostFlairTemplate

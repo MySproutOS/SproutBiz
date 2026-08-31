@@ -5,6 +5,7 @@ import { Badge } from "@ui/base/ui/badge"
 import { buttonVariants } from "@ui/base/ui/button"
 import { Card, CardContent } from "@ui/base/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@ui/base/ui/table"
+import { BusinessSearch } from "@website/components/business/BusinessSearch"
 import { RevenueStats } from "@website/components/landing/RevenueStats"
 import { formatUsdCents } from "@website/components/landing/money"
 import type { Metadata } from "next"
@@ -28,10 +29,15 @@ export const metadata: Metadata = {
   description: "What every business built on SproutBiz earns and what it costs to run.",
 }
 
-export default async function RevenuePage() {
+export default async function RevenuePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>
+}) {
+  const { q } = await searchParams
   const [summary, businesses] = await Promise.all([
     fetchForumRevenueDaily(db).latest(),
-    fetchBusiness(db).listWithTotals(),
+    fetchBusiness(db).listWithTotals(100, q),
   ])
 
   return (
@@ -47,17 +53,29 @@ export default async function RevenuePage() {
 
       <RevenueStats summary={summary} />
 
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <BusinessSearch placeholder="Search businesses" />
+        <Link href="/earn" className={buttonVariants({ variant: "outline" })}>
+          Earn Money promoting these
+        </Link>
+      </div>
+
       {businesses.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-start gap-3 p-8">
-            <h2 className="text-lg font-medium">No businesses yet</h2>
+            <h2 className="text-lg font-medium">
+              {q ? `Nothing matches "${q}"` : "No businesses yet"}
+            </h2>
             <p className="text-muted-foreground">
-              Nothing has been registered so far. If you are building something, register it through
-              the API and it will appear here.
+              {q
+                ? "No business has that name or tagline. Try a shorter search."
+                : "Nothing has been registered so far. If you are building something, register it through the API and it will appear here."}
             </p>
-            <Link href="/llms.txt" className={buttonVariants({ variant: "outline" })}>
-              Read llms.txt
-            </Link>
+            {!q && (
+              <Link href="/llms.txt" className={buttonVariants({ variant: "outline" })}>
+                Read llms.txt
+              </Link>
+            )}
           </CardContent>
         </Card>
       ) : (

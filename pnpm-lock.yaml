@@ -192,9 +192,15 @@ importers:
       '@utils/aws':
         specifier: workspace:*
         version: link:../../lib/typescript/utils/aws
+      '@utils/marketing':
+        specifier: workspace:*
+        version: link:../../lib/typescript/utils/marketing
       '@utils/queues':
         specifier: workspace:*
         version: link:../../lib/typescript/utils/queues
+      '@utils/slack':
+        specifier: workspace:*
+        version: link:../../lib/typescript/utils/slack
       bullmq:
         specifier: 'catalog:'
         version: 5.80.4
@@ -312,6 +318,9 @@ importers:
       '@ui/spa-shared':
         specifier: workspace:*
         version: link:../../../lib/typescript/ui/spa-shared
+      '@utils/marketing':
+        specifier: workspace:*
+        version: link:../../../lib/typescript/utils/marketing
       lucide-react:
         specifier: 'catalog:'
         version: 1.24.0(react@19.2.7)
@@ -391,12 +400,18 @@ importers:
       '@utils/cookies':
         specifier: workspace:*
         version: link:../../lib/typescript/utils/cookies
+      '@utils/marketing':
+        specifier: workspace:*
+        version: link:../../lib/typescript/utils/marketing
       '@utils/numbers':
         specifier: workspace:*
         version: link:../../lib/typescript/utils/numbers
       '@utils/queues':
         specifier: workspace:*
         version: link:../../lib/typescript/utils/queues
+      '@utils/slack':
+        specifier: workspace:*
+        version: link:../../lib/typescript/utils/slack
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
@@ -467,6 +482,9 @@ importers:
       '@utils/cookies':
         specifier: workspace:*
         version: link:../../lib/typescript/utils/cookies
+      '@utils/marketing':
+        specifier: workspace:*
+        version: link:../../lib/typescript/utils/marketing
       arctic:
         specifier: ^3.7.0
         version: 3.7.0
@@ -563,6 +581,9 @@ importers:
       '@template-nextjs/db':
         specifier: workspace:*
         version: link:../../../packages/db
+      '@utils/marketing':
+        specifier: workspace:*
+        version: link:../utils/marketing
       kysely:
         specifier: 'catalog:'
         version: 0.29.3
@@ -687,6 +708,12 @@ importers:
 
   lib/typescript/utils/cookies: {}
 
+  lib/typescript/utils/marketing:
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.1.1
+
   lib/typescript/utils/numbers: {}
 
   lib/typescript/utils/queues:
@@ -697,6 +724,12 @@ importers:
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.1.1
+
+  lib/typescript/utils/slack:
     devDependencies:
       '@types/node':
         specifier: 'catalog:'

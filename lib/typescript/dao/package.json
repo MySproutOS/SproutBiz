@@ -21,6 +21,7 @@
   "scripts": {},
   "dependencies": {
     "@template-nextjs/db": "workspace:*",
+    "@utils/marketing": "workspace:*",
     "kysely": "catalog:",
     "uuid": "catalog:"
   }

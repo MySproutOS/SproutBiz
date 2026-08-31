@@ -54,5 +54,28 @@ export function crudUser(db: Kysely<DB>) {
     return (result.numUpdatedRows ?? 0n) > 0n
   }
 
-  return { createUser, updateUser, deleteUser, suspend, unsuspend }
+  /**
+   * Stamps when this user agreed to the Earn Money terms, once.
+   *
+   * `is null` in the WHERE clause keeps the first acceptance rather than moving it forward
+   * every time they submit another video -- the date we would need if a payout is ever
+   * disputed is the one they first agreed on.
+   */
+  async function recordEarnTermsAcceptance(id: string): Promise<void> {
+    await db
+      .updateTable("user")
+      .set({ earnTermsAcceptedAt: new Date() })
+      .where("id", "=", id)
+      .where("earnTermsAcceptedAt", "is", null)
+      .execute()
+  }
+
+  return {
+    createUser,
+    updateUser,
+    deleteUser,
+    suspend,
+    unsuspend,
+    recordEarnTermsAcceptance,
+  }
 }

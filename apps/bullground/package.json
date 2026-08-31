@@ -17,7 +17,9 @@
     "@template-nextjs/db": "workspace:*",
     "@template-nextjs/search": "workspace:*",
     "@utils/aws": "workspace:*",
+    "@utils/marketing": "workspace:*",
     "@utils/queues": "workspace:*",
+    "@utils/slack": "workspace:*",
     "bullmq": "catalog:",
     "dotenv": "^17.4.2"
   },

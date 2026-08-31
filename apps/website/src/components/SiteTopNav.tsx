@@ -41,6 +41,11 @@ export async function SiteTopNav() {
 
         {/* Right zone: actions */}
         <div className="flex flex-1 items-center justify-end gap-2">
+          {/* Shown to everyone: the whole point of the programme is that you do not have to
+              have an account here already to be worth paying. */}
+          <Link href="/earn" className={buttonVariants({ variant: "outline", size: "sm" })}>
+            Earn Money
+          </Link>
           {session === null ? (
             <Link href="/login" className={buttonVariants({ size: "sm" })}>
               Log In

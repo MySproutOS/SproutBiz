@@ -1,11 +1,12 @@
 import { getCurrentSession } from "@website/lib/auth"
-import { Compass, Home, TrendingUp } from "lucide-react"
+import { Banknote, Compass, Home, TrendingUp } from "lucide-react"
 import Link from "next/link"
 
 const MAIN_LINKS = [
   { href: "/", label: "Home", icon: Home },
   { href: "/popular", label: "Popular", icon: TrendingUp },
   { href: "/explore", label: "Explore", icon: Compass },
+  { href: "/earn", label: "Earn Money", icon: Banknote },
 ]
 
 const RESOURCE_LINKS = [

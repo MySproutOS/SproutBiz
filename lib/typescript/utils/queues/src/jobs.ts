@@ -16,6 +16,7 @@ export interface JobPayloadMap {
   "es-backfill": Record<string, never>
   "link-preview-fetch": { postId: string; linkUrl: string }
   "revenue-aggregate-daily": Record<string, never>
+  "marketing-reminder": Record<string, never>
 }
 
 export type JobName = keyof JobPayloadMap
@@ -33,6 +34,7 @@ const jobQueues: { [K in JobName]: Queue } = {
   "es-backfill": slowQueue,
   "link-preview-fetch": slowQueue,
   "revenue-aggregate-daily": slowQueue,
+  "marketing-reminder": slowQueue,
 }
 
 export async function enqueue<K extends JobName>(
@@ -169,6 +171,9 @@ const DRAFT_EXPIRY_INTERVAL_MS = 24 * 60 * 60 * 1000
 // Often enough that the public figures are never far behind, cheap enough to ignore: the
 // job is two grouped SUMs over indexed columns.
 const REVENUE_AGGREGATE_INTERVAL_MS = 10 * 60 * 1000
+// Hourly is the right granularity for a reminder a human acts on: it bounds how late a
+// "views are due now" ping can be to an hour, without filling the channel.
+const MARKETING_REMINDER_INTERVAL_MS = 60 * 60 * 1000
 
 // Registers all recurring schedulers. Idempotent — `upsertJobScheduler` reconciles the
 // schedule on every boot, so calling this on every worker start is safe.
@@ -192,5 +197,10 @@ export async function registerRepeatables(): Promise<void> {
     "revenue-aggregate-daily",
     { every: REVENUE_AGGREGATE_INTERVAL_MS },
     { name: "revenue-aggregate-daily", data: {} },
+  )
+  await slowQueue.upsertJobScheduler(
+    "marketing-reminder",
+    { every: MARKETING_REMINDER_INTERVAL_MS },
+    { name: "marketing-reminder", data: {} },
   )
 }

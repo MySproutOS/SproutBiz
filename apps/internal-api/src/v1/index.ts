@@ -5,6 +5,7 @@ import agentToken from "./agent-token"
 import auth from "./auth"
 import business from "./business"
 import comment from "./comment"
+import billing from "./billing"
 import donation from "./donation"
 import revenue from "./revenue"
 import commentAction from "./comment-action"
@@ -16,6 +17,7 @@ import communityRule from "./community-rule"
 import communityWidget from "./community-widget"
 import customFeed from "./custom-feed"
 import wiki from "./wiki"
+import earn from "./earn"
 import explore from "./explore"
 import feed from "./feed"
 import flair from "./flair"
@@ -60,6 +62,8 @@ const app = new Hono({
   .route("/agent-token", agentToken)
   .route("/revenue", revenue)
   .route("/donation", donation)
+  .route("/billing", billing)
+  .route("/earn", earn)
   .route("/business", business)
   .route("/user", user)
   .route("/user", userSettings)

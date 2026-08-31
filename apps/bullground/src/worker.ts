@@ -10,6 +10,7 @@ import { type Job, Worker } from "bullmq"
 import { processDraftExpiry } from "./jobs/draftExpiry"
 import { processEsBackfill } from "./jobs/esBackfill"
 import { processLinkPreviewFetch } from "./jobs/linkPreviewFetch"
+import { processMarketingReminder } from "./jobs/marketingReminder"
 import { runRevenueAggregate } from "./jobs/revenueAggregate"
 import {
   processEsSyncComment,
@@ -86,6 +87,9 @@ function makeSlowWorker() {
       }
       if (job.name === "revenue-aggregate-daily") {
         await runRevenueAggregate()
+      }
+      if (job.name === "marketing-reminder") {
+        await processMarketingReminder()
       }
     },
     { connection, concurrency: 5, removeOnComplete: { age: 86400 } },

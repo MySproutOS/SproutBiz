@@ -3,12 +3,32 @@
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from "./client"
 import { client } from "./client.gen"
 import type {
+  GetApiAdminMarketingPoolsByIdPayoutsData,
+  GetApiAdminMarketingPoolsByIdPayoutsResponses,
+  GetApiAdminMarketingPoolsData,
+  GetApiAdminMarketingPoolsResponses,
+  GetApiAdminMarketingVideosData,
+  GetApiAdminMarketingVideosResponses,
   GetApiAdminPostsData,
   GetApiAdminPostsResponses,
   GetApiAdminStatsData,
   GetApiAdminStatsResponses,
   GetApiAdminUsersData,
   GetApiAdminUsersResponses,
+  PostApiAdminMarketingPoolsByIdCalculateData,
+  PostApiAdminMarketingPoolsByIdCalculateErrors,
+  PostApiAdminMarketingPoolsByIdCalculateResponses,
+  PostApiAdminMarketingPoolsByIdPayData,
+  PostApiAdminMarketingPoolsByIdPayErrors,
+  PostApiAdminMarketingPoolsByIdPayResponses,
+  PostApiAdminMarketingVideosByIdApproveData,
+  PostApiAdminMarketingVideosByIdApproveErrors,
+  PostApiAdminMarketingVideosByIdApproveResponses,
+  PostApiAdminMarketingVideosByIdRejectData,
+  PostApiAdminMarketingVideosByIdRejectResponses,
+  PostApiAdminMarketingVideosByIdViewsData,
+  PostApiAdminMarketingVideosByIdViewsErrors,
+  PostApiAdminMarketingVideosByIdViewsResponses,
   PostApiAdminPostsByIdRemoveData,
   PostApiAdminPostsByIdRemoveErrors,
   PostApiAdminPostsByIdRemoveResponses,
@@ -21,6 +41,9 @@ import type {
   PostApiAdminUsersByIdUnsuspendData,
   PostApiAdminUsersByIdUnsuspendErrors,
   PostApiAdminUsersByIdUnsuspendResponses,
+  PutApiAdminMarketingPoolsData,
+  PutApiAdminMarketingPoolsErrors,
+  PutApiAdminMarketingPoolsResponses,
 } from "./types.gen"
 
 export type Options<
@@ -48,6 +71,14 @@ export const getApiAdminUsers = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiAdminUsersData, ThrowOnError>,
 ): RequestResult<GetApiAdminUsersResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiAdminUsersResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/admin/users",
     ...options,
   })
@@ -67,6 +98,14 @@ export const postApiAdminUsersByIdSuspend = <ThrowOnError extends boolean = fals
     PostApiAdminUsersByIdSuspendErrors,
     ThrowOnError
   >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/admin/users/{id}/suspend",
     ...options,
     headers: {
@@ -89,7 +128,18 @@ export const postApiAdminUsersByIdUnsuspend = <ThrowOnError extends boolean = fa
     PostApiAdminUsersByIdUnsuspendResponses,
     PostApiAdminUsersByIdUnsuspendErrors,
     ThrowOnError
-  >({ url: "/api/admin/users/{id}/unsuspend", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/users/{id}/unsuspend",
+    ...options,
+  })
 
 /**
  * Search posts by title (includes removed posts)
@@ -98,6 +148,14 @@ export const getApiAdminPosts = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiAdminPostsData, ThrowOnError>,
 ): RequestResult<GetApiAdminPostsResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiAdminPostsResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/admin/posts",
     ...options,
   })
@@ -116,7 +174,18 @@ export const postApiAdminPostsByIdRemove = <ThrowOnError extends boolean = false
     PostApiAdminPostsByIdRemoveResponses,
     PostApiAdminPostsByIdRemoveErrors,
     ThrowOnError
-  >({ url: "/api/admin/posts/{id}/remove", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/posts/{id}/remove",
+    ...options,
+  })
 
 /**
  * Restore a removed post site-wide (admin)
@@ -132,7 +201,18 @@ export const postApiAdminPostsByIdRestore = <ThrowOnError extends boolean = fals
     PostApiAdminPostsByIdRestoreResponses,
     PostApiAdminPostsByIdRestoreErrors,
     ThrowOnError
-  >({ url: "/api/admin/posts/{id}/restore", ...options })
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/posts/{id}/restore",
+    ...options,
+  })
 
 /**
  * Site-wide counts overview
@@ -141,6 +221,249 @@ export const getApiAdminStats = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiAdminStatsData, ThrowOnError>,
 ): RequestResult<GetApiAdminStatsResponses, unknown, ThrowOnError> =>
   (options?.client ?? client).get<GetApiAdminStatsResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
     url: "/api/admin/stats",
+    ...options,
+  })
+
+/**
+ * The video review queue
+ */
+export const getApiAdminMarketingVideos = <ThrowOnError extends boolean = false>(
+  options?: Options<GetApiAdminMarketingVideosData, ThrowOnError>,
+): RequestResult<GetApiAdminMarketingVideosResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<GetApiAdminMarketingVideosResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/marketing/videos",
+    ...options,
+  })
+
+/**
+ * Approves a video and starts its 30-day counting window
+ */
+export const postApiAdminMarketingVideosByIdApprove = <ThrowOnError extends boolean = false>(
+  options: Options<PostApiAdminMarketingVideosByIdApproveData, ThrowOnError>,
+): RequestResult<
+  PostApiAdminMarketingVideosByIdApproveResponses,
+  PostApiAdminMarketingVideosByIdApproveErrors,
+  ThrowOnError
+> =>
+  (options.client ?? client).post<
+    PostApiAdminMarketingVideosByIdApproveResponses,
+    PostApiAdminMarketingVideosByIdApproveErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/marketing/videos/{id}/approve",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  })
+
+/**
+ * Rejects a video, with a reason the submitter will see
+ */
+export const postApiAdminMarketingVideosByIdReject = <ThrowOnError extends boolean = false>(
+  options: Options<PostApiAdminMarketingVideosByIdRejectData, ThrowOnError>,
+): RequestResult<PostApiAdminMarketingVideosByIdRejectResponses, unknown, ThrowOnError> =>
+  (options.client ?? client).post<
+    PostApiAdminMarketingVideosByIdRejectResponses,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/marketing/videos/{id}/reject",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  })
+
+/**
+ * Records the view count read at the 30-day mark
+ */
+export const postApiAdminMarketingVideosByIdViews = <ThrowOnError extends boolean = false>(
+  options: Options<PostApiAdminMarketingVideosByIdViewsData, ThrowOnError>,
+): RequestResult<
+  PostApiAdminMarketingVideosByIdViewsResponses,
+  PostApiAdminMarketingVideosByIdViewsErrors,
+  ThrowOnError
+> =>
+  (options.client ?? client).post<
+    PostApiAdminMarketingVideosByIdViewsResponses,
+    PostApiAdminMarketingVideosByIdViewsErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/marketing/videos/{id}/views",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  })
+
+/**
+ * Every business's pool for a month, with the 20% suggestion
+ */
+export const getApiAdminMarketingPools = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiAdminMarketingPoolsData, ThrowOnError>,
+): RequestResult<GetApiAdminMarketingPoolsResponses, unknown, ThrowOnError> =>
+  (options.client ?? client).get<GetApiAdminMarketingPoolsResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/marketing/pools",
+    ...options,
+  })
+
+/**
+ * Sets the dollar pool a business will pay out for a month
+ */
+export const putApiAdminMarketingPools = <ThrowOnError extends boolean = false>(
+  options?: Options<PutApiAdminMarketingPoolsData, ThrowOnError>,
+): RequestResult<
+  PutApiAdminMarketingPoolsResponses,
+  PutApiAdminMarketingPoolsErrors,
+  ThrowOnError
+> =>
+  (options?.client ?? client).put<
+    PutApiAdminMarketingPoolsResponses,
+    PutApiAdminMarketingPoolsErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/marketing/pools",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+  })
+
+/**
+ * Splits the pool between the month's eligible videos
+ */
+export const postApiAdminMarketingPoolsByIdCalculate = <ThrowOnError extends boolean = false>(
+  options: Options<PostApiAdminMarketingPoolsByIdCalculateData, ThrowOnError>,
+): RequestResult<
+  PostApiAdminMarketingPoolsByIdCalculateResponses,
+  PostApiAdminMarketingPoolsByIdCalculateErrors,
+  ThrowOnError
+> =>
+  (options.client ?? client).post<
+    PostApiAdminMarketingPoolsByIdCalculateResponses,
+    PostApiAdminMarketingPoolsByIdCalculateErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/marketing/pools/{id}/calculate",
+    ...options,
+  })
+
+/**
+ * The calculated payouts for a pool
+ */
+export const getApiAdminMarketingPoolsByIdPayouts = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiAdminMarketingPoolsByIdPayoutsData, ThrowOnError>,
+): RequestResult<GetApiAdminMarketingPoolsByIdPayoutsResponses, unknown, ThrowOnError> =>
+  (options.client ?? client).get<
+    GetApiAdminMarketingPoolsByIdPayoutsResponses,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/marketing/pools/{id}/payouts",
+    ...options,
+  })
+
+/**
+ * Sends every pending payout in the pool through Stripe
+ */
+export const postApiAdminMarketingPoolsByIdPay = <ThrowOnError extends boolean = false>(
+  options: Options<PostApiAdminMarketingPoolsByIdPayData, ThrowOnError>,
+): RequestResult<
+  PostApiAdminMarketingPoolsByIdPayResponses,
+  PostApiAdminMarketingPoolsByIdPayErrors,
+  ThrowOnError
+> =>
+  (options.client ?? client).post<
+    PostApiAdminMarketingPoolsByIdPayResponses,
+    PostApiAdminMarketingPoolsByIdPayErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/marketing/pools/{id}/pay",
     ...options,
   })
