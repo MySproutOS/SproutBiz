@@ -59,8 +59,8 @@ jobs:
         run: |
           docker buildx build --push \
             -f apps/website/Dockerfile \
-            -t ghcr.io/sproutos-agent/forum-website:${{ github.sha }} \
-            -t ghcr.io/sproutos-agent/forum-website:latest \
+            -t ghcr.io/mysproutos/forum-website:${{ github.sha }} \
+            -t ghcr.io/mysproutos/forum-website:latest \
             --cache-from type=gha \
             --cache-to type=gha,mode=max \
             .
@@ -70,7 +70,7 @@ jobs:
         run: |
           docker buildx build --push \
             -f apps/dbmigrator/Dockerfile \
-            -t ghcr.io/sproutos-agent/forum-dbmigrator:${{ github.sha }} \
+            -t ghcr.io/mysproutos/forum-dbmigrator:${{ github.sha }} \
             --cache-from type=gha \
             --cache-to type=gha,mode=max \
             .

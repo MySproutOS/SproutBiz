@@ -67,7 +67,7 @@ services:
   website:
     <<: *app
     container_name: sproutbiz_website
-    image: ghcr.io/sproutos-agent/forum-website:${WEBSITE_TAG:-latest}
+    image: ghcr.io/mysproutos/forum-website:${WEBSITE_TAG:-latest}
     mem_limit: 2g
     cpus: 2
     healthcheck:
@@ -92,7 +92,7 @@ services:
   bullground:
     <<: *app
     container_name: sproutbiz_bullground
-    image: ghcr.io/sproutos-agent/forum-bullground:${BULLGROUND_TAG:-latest}
+    image: ghcr.io/mysproutos/forum-bullground:${BULLGROUND_TAG:-latest}
     mem_limit: 2g
     cpus: 1.5
     stop_grace_period: 120s
@@ -104,7 +104,7 @@ services:
   dbmigrator:
     <<: *app
     container_name: sproutbiz_dbmigrator
-    image: ghcr.io/sproutos-agent/forum-dbmigrator:${MIGRATOR_TAG:-latest}
+    image: ghcr.io/mysproutos/forum-dbmigrator:${MIGRATOR_TAG:-latest}
     profiles: ["migrate"]
     restart: "no"
     mem_limit: 512m
