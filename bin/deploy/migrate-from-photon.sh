@@ -85,8 +85,12 @@ if ! dig +short A sproutos.biz | grep -Fxq "$EXPECTED_IPV4"; then
   exit 1
 fi
 
-echo "==> Pulling destination images before the downtime window"
-new_ssh "cd '$NEW_DIR' && docker compose -f docker-compose.production.yml pull website bullground dbmigrator traefik"
+echo "==> Verifying destination images before the downtime window"
+# The normal deployment workflow authenticates with a short-lived GITHUB_TOKEN before pulling
+# private GHCR images. By the time an operator starts the data cutover that token may have expired,
+# even though the exact immutable images are already present on the host. Avoid turning that into a
+# false preflight failure; only contact the registry when an image is genuinely missing locally.
+new_ssh "set -e; cd '$NEW_DIR'; missing=0; for image in \$(docker compose -f docker-compose.production.yml config --images); do if ! docker image inspect \"\$image\" >/dev/null 2>&1; then echo \"    missing: \$image\"; missing=1; fi; done; if [ \"\$missing\" = 1 ]; then docker compose -f docker-compose.production.yml pull website bullground dbmigrator traefik; else echo '    all pinned images are already present'; fi"
 
 # Invoked indirectly from the EXIT trap below.
 # shellcheck disable=SC2329
