@@ -26,9 +26,18 @@ export class GithubApiError extends Error {
   }
 }
 
+export function normalizeGithubPrivateKey(value: string): string {
+  // Compose env files are frequently generated through one extra serialization layer, which
+  // turns the documented `\n` separators into `\\n`. Accept both forms so a valid GitHub App
+  // key does not become unreadable merely because it passed through a deployment UI or script.
+  return value.replaceAll("\\\\n", "\n").replaceAll("\\n", "\n")
+}
+
 function githubAppJwt(): string {
   const appId = process.env.GITHUB_APP_ID
-  const privateKey = process.env.GITHUB_APP_PRIVATE_KEY?.replaceAll("\\n", "\n")
+  const privateKey = process.env.GITHUB_APP_PRIVATE_KEY
+    ? normalizeGithubPrivateKey(process.env.GITHUB_APP_PRIVATE_KEY)
+    : undefined
   if (!appId || !privateKey)
     throw new Error("GITHUB_APP_ID and GITHUB_APP_PRIVATE_KEY are required")
   const now = Math.floor(Date.now() / 1000)
