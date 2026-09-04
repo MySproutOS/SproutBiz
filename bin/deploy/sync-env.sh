@@ -2,12 +2,12 @@
 #
 # Push the local .env.production to the OVH box.
 #
-# Production runtime config lives in /opt/forum/.env.production on the box, read
+# Production runtime config lives in /opt/sproutbiz/.env.production on the box, read
 # via `env_file:` in docker-compose.production.yml. It is not in git (it holds
 # live Stripe and OAuth credentials), so the local copy at the repo root -- also
 # gitignored -- is the working copy, and this script is how it gets deployed.
 #
-# Not covered here: /opt/forum/.env, which holds the datastore passwords used for
+# Not covered here: /opt/sproutbiz/.env, which holds the datastore passwords used for
 # compose ${...} interpolation plus the *_TAG image pins. deploy.sh rewrites those
 # tags on every deploy, so that file is machine-owned and syncing it would clobber
 # whatever is currently running.
@@ -26,12 +26,12 @@
 # when the two differ; this is the command it points you at.
 set -euo pipefail
 
-REMOTE_HOST="${FORUM_SSH_HOST:-ubuntu@135.148.122.203}"
-REMOTE_DIR="${FORUM_REMOTE_DIR:-/opt/forum}"
-SSH_KEY="${FORUM_SSH_KEY:-$HOME/.ssh/id_ovhcloud_ns1009531.ip-135-148-122.us}"
+REMOTE_HOST="${SPROUTBIZ_SSH_HOST:-ubuntu@40.160.59.152}"
+REMOTE_DIR="${SPROUTBIZ_REMOTE_DIR:-/opt/sproutbiz}"
+SSH_KEY="${SPROUTBIZ_SSH_KEY:-$HOME/.ssh/id_ovh_toyourcredit}"
 COMPOSE_FILE="$REMOTE_DIR/docker-compose.production.yml"
 # Services with `env_file: .env.production`. Datastores are deliberately absent:
-# they take their credentials from /opt/forum/.env, and bouncing Postgres or
+# they take their credentials from /opt/sproutbiz/.env, and bouncing Postgres or
 # Elasticsearch to change an app secret is needless downtime.
 SERVICES="${FORUM_ENV_SERVICES:-website bullground}"
 

@@ -8,7 +8,7 @@ COPY . .
 RUN pnpm install --frozen-lockfile
 
 # NEXT_PUBLIC_* is inlined at build time, so it has to be present here rather than at runtime.
-ARG NEXT_PUBLIC_HOST_URL=https://forum.sproutos.me
+ARG NEXT_PUBLIC_HOST_URL=https://sproutos.biz
 ENV NEXT_PUBLIC_HOST_URL=$NEXT_PUBLIC_HOST_URL
 RUN pnpm exec turbo run build --filter=website
 

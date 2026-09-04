@@ -5,8 +5,11 @@ on:
     branches: [main]
     paths:
       - "apps/website/**"
+      - "apps/dbmigrator/**"
       - "lib/**"
       - "packages/**"
+      - "bin/deploy/**"
+      - "docker-compose.production.yml"
       - "pnpm-lock.yaml"
       - "apps/website/Dockerfile"
       - ".github/workflows/deploy-website.yml"
@@ -23,7 +26,7 @@ permissions:
 
 concurrency:
   # Never let two deploys of the same service race for the same containers.
-  group: deploy-website
+  group: deploy-sproutbiz-production
   cancel-in-progress: false
 
 jobs:
@@ -80,5 +83,6 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.OVH_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan 135.148.122.203 >> ~/.ssh/known_hosts 2>/dev/null
-          bin/deploy/deploy.sh website ${{ inputs.image_tag || github.sha }}
+          ssh-keyscan 40.160.59.152 >> ~/.ssh/known_hosts 2>/dev/null
+          SPROUTBIZ_SSH_KEY="$HOME/.ssh/id_ed25519" bin/deploy/sync-env.sh --compose --yes
+          SSH_KEY="$HOME/.ssh/id_ed25519" bin/deploy/deploy.sh website ${{ inputs.image_tag || github.sha }}

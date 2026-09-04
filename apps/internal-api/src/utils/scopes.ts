@@ -5,6 +5,7 @@ export const AGENT_TOKEN_SCOPES = [
   "forum:write",
   "business:write",
   "onboarding:write",
+  "contribution:write",
 ] as const
 
 export type AgentTokenScope = (typeof AGENT_TOKEN_SCOPES)[number]

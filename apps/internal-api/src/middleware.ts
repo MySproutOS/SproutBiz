@@ -1,4 +1,13 @@
-import { authAgentToken, authUser, crudAgentToken, shouldTouchLastUsed } from "@lib/dao"
+import {
+  authAgentToken,
+  authUser,
+  crudAgentToken,
+  crudUserExternalIdentity,
+  fetchAccount,
+  fetchUser,
+  fetchUserExternalIdentity,
+  shouldTouchLastUsed,
+} from "@lib/dao"
 import type { SessionUser } from "@lib/dao/user/auth"
 import type { AgentTokenContext } from "@lib/dao"
 import { sha256 } from "@oslojs/crypto/sha2"
@@ -21,24 +30,31 @@ import { SESSION_COOKIE_NAME } from "@utils/cookies"
  *  from the edit that caused it. */
 export type { SessionUser }
 
-/** The resolved caller. Exactly one of `session` / `agentToken` is non-null:
- *  a browser presents a session cookie, an agent presents a bearer token. */
+export type OAuthTokenContext = {
+  subject: string
+  scopes: string[]
+}
+
+/** The resolved caller. Exactly one credential context is non-null. */
 export type AuthPrincipal = {
   user: SessionUser
   session: Selectable<DB["session"]> | null
   agentToken: AgentTokenContext | null
+  oauthToken: OAuthTokenContext | null
 }
 
 type AuthVariables = {
   user: SessionUser
   session: Selectable<DB["session"]> | null
   agentToken: AgentTokenContext | null
+  oauthToken: OAuthTokenContext | null
 }
 
 type AuthNoThrowVariables = {
   user: SessionUser | null
   session: Selectable<DB["session"]> | null
   agentToken: AgentTokenContext | null
+  oauthToken: OAuthTokenContext | null
 }
 
 function assertUsable(user: SessionUser): void {
@@ -47,7 +63,7 @@ function assertUsable(user: SessionUser): void {
   }
 }
 
-async function resolveBearer(token: string): Promise<AuthPrincipal> {
+async function resolveAgentBearer(token: string): Promise<AuthPrincipal> {
   let result: Awaited<ReturnType<ReturnType<typeof authAgentToken>["validateToken"]>>
   try {
     result = await authAgentToken(db).validateToken(hashAgentToken(token))
@@ -68,7 +84,121 @@ async function resolveBearer(token: string): Promise<AuthPrincipal> {
       })
   }
 
-  return { user: result.user, session: null, agentToken: result.token }
+  return { user: result.user, session: null, agentToken: result.token, oauthToken: null }
+}
+
+type SproutOSIntrospection = {
+  active?: boolean
+  sub?: string
+  scope?: string | string[]
+}
+
+type SproutOSUserinfo = {
+  github_user_id?: string
+  github_login?: string
+}
+
+async function syncGithubIdentityFromOAuth(
+  userId: string,
+  accessToken: string,
+  scopes: string[],
+): Promise<void> {
+  if (!scopes.includes("github:identity")) return
+  const existing = await fetchUserExternalIdentity(db).getForUser(userId, "github")
+  if (existing && Date.now() - existing.lastSyncedAt.getTime() < 5 * 60 * 1000) return
+  const userinfoUrl = process.env.SPROUTOS_USERINFO_URL
+  if (!userinfoUrl) return
+  try {
+    const response = await fetch(userinfoUrl, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+    if (!response.ok) {
+      console.warn(`[oauth] GitHub identity refresh returned ${response.status}`)
+      return
+    }
+    const profile = (await response.json()) as SproutOSUserinfo
+    if (profile.github_user_id && profile.github_login) {
+      const syncedAt = new Date()
+      await crudUserExternalIdentity(db).upsertForUser({
+        userId,
+        provider: "github",
+        providerSubject: profile.github_user_id,
+        handle: profile.github_login,
+        verifiedAt: syncedAt,
+        lastSyncedAt: syncedAt,
+      })
+    } else {
+      // A successful scoped response without GitHub claims means the connection was removed in
+      // SproutOS. Do not keep attributing future pull requests to a stale identity.
+      await crudUserExternalIdentity(db).deleteForUser(userId, "github")
+    }
+  } catch (error) {
+    // Introspection already authenticated the caller. A secondary identity refresh must not turn
+    // a temporary userinfo outage into an outage for every SproutBiz API endpoint.
+    console.warn("[oauth] could not refresh GitHub identity", error)
+  }
+}
+
+async function resolveOAuthBearer(token: string): Promise<AuthPrincipal> {
+  const introspectUrl = process.env.SPROUTOS_INTROSPECT_URL
+  const clientId = process.env.SPROUTOS_CLIENT_ID
+  const clientSecret = process.env.SPROUTOS_CLIENT_SECRET
+  if (!introspectUrl || !clientId || !clientSecret) {
+    return throwHTTPException(503, ErrorCode.ServiceUnavailable, "SproutOS OAuth is not configured")
+  }
+
+  let response: Response
+  try {
+    response = await fetch(introspectUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "x-client-id": clientId,
+        "x-client-secret": clientSecret,
+      },
+      body: new URLSearchParams({ token, token_type_hint: "access_token" }),
+    })
+  } catch {
+    return throwHTTPException(503, ErrorCode.ServiceUnavailable, "SproutOS OAuth is unavailable")
+  }
+  if (!response.ok) {
+    return throwHTTPException(503, ErrorCode.ServiceUnavailable, "SproutOS OAuth is unavailable")
+  }
+
+  const introspection = (await response.json()) as SproutOSIntrospection
+  if (introspection.active !== true || !introspection.sub) {
+    return throwHTTPException(401, ErrorCode.Unauthenticated, "Invalid or expired OAuth token")
+  }
+  const account = await fetchAccount(db).getOneByProvider("sproutos", introspection.sub, ["userId"])
+  if (!account) {
+    return throwHTTPException(
+      403,
+      ErrorCode.Forbidden,
+      "This SproutOS account is not linked to SproutBiz; sign in at sproutos.biz first",
+    )
+  }
+  const user = await fetchUser(db).getOne(account.userId, [
+    "id",
+    "isAdmin",
+    "name",
+    "username",
+    "email",
+    "suspendedAt",
+  ])
+  if (!user) {
+    return throwHTTPException(401, ErrorCode.Unauthenticated, "Linked SproutBiz user not found")
+  }
+  assertUsable(user)
+  const scopes = Array.isArray(introspection.scope)
+    ? introspection.scope
+    : (introspection.scope?.split(" ").filter(Boolean) ?? [])
+  await syncGithubIdentityFromOAuth(user.id, token, scopes)
+  return {
+    user,
+    session: null,
+    agentToken: null,
+    oauthToken: { subject: introspection.sub, scopes },
+  }
 }
 
 async function resolveCookie(sessionToken: string): Promise<AuthPrincipal> {
@@ -82,7 +212,7 @@ async function resolveCookie(sessionToken: string): Promise<AuthPrincipal> {
   }
   if (!session) throwHTTPException(401, ErrorCode.Unauthenticated, "Unauthenticated")
   assertUsable(session.user)
-  return { user: session.user, session: session.session, agentToken: null }
+  return { user: session.user, session: session.session, agentToken: null, oauthToken: null }
 }
 
 /**
@@ -94,7 +224,11 @@ async function resolveCookie(sessionToken: string): Promise<AuthPrincipal> {
  */
 export async function resolveAuth(c: Context): Promise<AuthPrincipal> {
   const bearer = parseBearerToken(c.req.header("Authorization"))
-  if (bearer !== null) return await resolveBearer(bearer)
+  if (bearer !== null) {
+    return bearer.startsWith("sof_")
+      ? await resolveAgentBearer(bearer)
+      : await resolveOAuthBearer(bearer)
+  }
 
   const sessionToken = getCookie(c, SESSION_COOKIE_NAME)
   if (!sessionToken) {
@@ -128,9 +262,26 @@ export const authMiddleware = createMiddleware<{ Variables: AuthVariables }>(asy
     }
   }
 
+  // OAuth establishes the human identity and verified GitHub account for the CLI. Autonomous
+  // mutations use the separately revocable, explicitly scoped SproutBiz agent token; an identity
+  // token must not silently receive every forum write permission just because SproutOS issued it.
+  if (
+    principal.oauthToken !== null &&
+    c.req.method !== "GET" &&
+    c.req.method !== "HEAD" &&
+    c.req.method !== "OPTIONS"
+  ) {
+    throwHTTPException(
+      403,
+      ErrorCode.InsufficientPermissions,
+      "SproutOS OAuth tokens are read-only here; use a scoped SproutBiz agent token",
+    )
+  }
+
   c.set("user", principal.user)
   c.set("session", principal.session)
   c.set("agentToken", principal.agentToken)
+  c.set("oauthToken", principal.oauthToken)
 
   await next()
 })
@@ -142,11 +293,13 @@ export const authNoThrowMiddleware = createMiddleware<{ Variables: AuthNoThrowVa
       c.set("user", principal.user)
       c.set("session", principal.session)
       c.set("agentToken", principal.agentToken)
+      c.set("oauthToken", principal.oauthToken)
     } catch (e) {
       if (e instanceof HTTPException && e.status === 401) {
         c.set("user", null)
         c.set("session", null)
         c.set("agentToken", null)
+        c.set("oauthToken", null)
       } else {
         throw e
       }
@@ -166,7 +319,7 @@ export const authNoThrowMiddleware = createMiddleware<{ Variables: AuthNoThrowVa
  */
 export const cookieSessionOnlyMiddleware = createMiddleware<{ Variables: AuthVariables }>(
   async (c, next) => {
-    if (c.var.agentToken !== null) {
+    if (c.var.agentToken !== null || c.var.oauthToken !== null) {
       throwHTTPException(
         403,
         ErrorCode.Forbidden,

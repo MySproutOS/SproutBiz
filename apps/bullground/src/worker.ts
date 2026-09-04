@@ -22,7 +22,21 @@ import { processMediaCleanup } from "./jobs/mediaCleanup"
 import { processRecurringPostScheduler } from "./jobs/recurringPostScheduler"
 import { processRisingRecompute } from "./jobs/risingRecompute"
 import { processScheduledPostPublish } from "./jobs/scheduledPostPublish"
+import { reconcileDurableJobs } from "./jobs/durableJobReconcile"
+import { reconcileIdeaPosts } from "./jobs/ideaPostReconcile"
+import {
+  processBusinessProvisioning,
+  processBusinessProvisioningPoll,
+} from "./jobs/businessProvisioning"
 import { ensureSearchIndexes } from "@template-nextjs/search"
+import {
+  processCodeMonthClose,
+  processCodeMonthEstimate,
+  processGithubBusinessSync,
+  processGithubPullRequestSync,
+  processGithubUserBackfill,
+  processGithubWebhook,
+} from "./jobs/githubContributions"
 
 // This process runs the cloud workers (fast/medium/slow). Each worker dispatches on
 // job.name; new milestones add cases here and the matching payload type in @utils/queues.
@@ -44,6 +58,9 @@ function makeFastWorker() {
       if (job.name === "es-sync-user") {
         await processEsSyncUser(job.data as JobPayloadMap["es-sync-user"])
       }
+      if (job.name === "github.process_webhook") {
+        await processGithubWebhook(job.data as JobPayloadMap["github.process_webhook"])
+      }
     },
     { connection, concurrency: 10, removeOnComplete: { age: 86400 } },
   )
@@ -62,6 +79,14 @@ function makeMediumWorker() {
       }
       if (job.name === "recurring-post-scheduler") {
         await processRecurringPostScheduler(job.data as JobPayloadMap["recurring-post-scheduler"])
+      }
+      if (job.name === "github.sync_pull_request") {
+        await processGithubPullRequestSync(job.data as JobPayloadMap["github.sync_pull_request"])
+      }
+      if (job.name === "contribution.estimate_code_month") {
+        await processCodeMonthEstimate(
+          job.data as JobPayloadMap["contribution.estimate_code_month"],
+        )
       }
     },
     { connection, concurrency: 5, removeOnComplete: { age: 86400 } },
@@ -91,6 +116,31 @@ function makeSlowWorker() {
       if (job.name === "marketing-reminder") {
         await processMarketingReminder()
       }
+      if (job.name === "github.sync_business_prs") {
+        await processGithubBusinessSync(job.data as JobPayloadMap["github.sync_business_prs"])
+      }
+      if (job.name === "github.backfill_user_prs") {
+        await processGithubUserBackfill(job.data as JobPayloadMap["github.backfill_user_prs"])
+      }
+      if (job.name === "contribution.close_code_month") {
+        await processCodeMonthClose(job.data as JobPayloadMap["contribution.close_code_month"])
+      }
+      if (job.name === "business.provision_accepted_idea") {
+        await processBusinessProvisioning(
+          job.data as JobPayloadMap["business.provision_accepted_idea"],
+        )
+      }
+      if (job.name === "business.poll_provisioning") {
+        await processBusinessProvisioningPoll(
+          job.data as JobPayloadMap["business.poll_provisioning"],
+        )
+      }
+      if (job.name === "durable-job-reconcile") {
+        await reconcileDurableJobs()
+      }
+      if (job.name === "idea-post-reconcile") {
+        await reconcileIdeaPosts()
+      }
     },
     { connection, concurrency: 5, removeOnComplete: { age: 86400 } },
   )
@@ -103,6 +153,8 @@ const workers: [string, Worker][] = [
 ]
 
 await registerRepeatables()
+await reconcileDurableJobs()
+await reconcileIdeaPosts()
 await ensureSearchIndexes().catch((err: unknown) => {
   console.error("[boot] ensureSearchIndexes failed:", err)
 })

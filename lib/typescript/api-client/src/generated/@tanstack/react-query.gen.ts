@@ -53,6 +53,8 @@ import {
   getApiV1CommunityNameAvailable,
   getApiV1CommunityRuleByCommunityId,
   getApiV1CommunityWidgetByCommunityName,
+  getApiV1ContributionMe,
+  getApiV1ContributionPendingFeedback,
   getApiV1CustomFeedByUsernameBySlug,
   getApiV1CustomFeedByUsernameBySlugPosts,
   getApiV1CustomFeedMine,
@@ -158,6 +160,7 @@ import {
   postApiV1CommunityRuleByCommunityId,
   postApiV1CommunityWidgetByCommunityIdBookmark,
   postApiV1CommunityWidgetByCommunityIdWidget,
+  postApiV1Contribution,
   postApiV1CustomFeed,
   postApiV1DonationCheckoutSession,
   postApiV1DonationWebhook,
@@ -165,6 +168,7 @@ import {
   postApiV1EarnVideos,
   postApiV1FlairByCommunityIdPostTemplates,
   postApiV1FlairByCommunityIdUserTemplates,
+  postApiV1GithubWebhook,
   postApiV1MediaAvatarConfirm,
   postApiV1MediaAvatarUpload,
   postApiV1MediaBannerConfirm,
@@ -346,6 +350,10 @@ import type {
   GetApiV1CommunityWidgetByCommunityNameData,
   GetApiV1CommunityWidgetByCommunityNameError,
   GetApiV1CommunityWidgetByCommunityNameResponse,
+  GetApiV1ContributionMeData,
+  GetApiV1ContributionMeResponse,
+  GetApiV1ContributionPendingFeedbackData,
+  GetApiV1ContributionPendingFeedbackResponse,
   GetApiV1CustomFeedByUsernameBySlugData,
   GetApiV1CustomFeedByUsernameBySlugError,
   GetApiV1CustomFeedByUsernameBySlugPostsData,
@@ -618,6 +626,9 @@ import type {
   PostApiV1CommunityWidgetByCommunityIdWidgetData,
   PostApiV1CommunityWidgetByCommunityIdWidgetError,
   PostApiV1CommunityWidgetByCommunityIdWidgetResponse,
+  PostApiV1ContributionData,
+  PostApiV1ContributionError,
+  PostApiV1ContributionResponse,
   PostApiV1CustomFeedData,
   PostApiV1CustomFeedError,
   PostApiV1CustomFeedResponse,
@@ -637,6 +648,9 @@ import type {
   PostApiV1FlairByCommunityIdUserTemplatesData,
   PostApiV1FlairByCommunityIdUserTemplatesError,
   PostApiV1FlairByCommunityIdUserTemplatesResponse,
+  PostApiV1GithubWebhookData,
+  PostApiV1GithubWebhookError,
+  PostApiV1GithubWebhookResponse,
   PostApiV1MediaAvatarConfirmData,
   PostApiV1MediaAvatarConfirmError,
   PostApiV1MediaAvatarConfirmResponse,
@@ -1521,6 +1535,113 @@ export const deleteApiV1BusinessByIdMutation = (
   > = {
     mutationFn: async (fnOptions) => {
       const { data } = await deleteApiV1BusinessById({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const getApiV1ContributionPendingFeedbackQueryKey = (
+  options?: Options<GetApiV1ContributionPendingFeedbackData>,
+) => createQueryKey("getApiV1ContributionPendingFeedback", options)
+
+/**
+ * Pending feedback reports available for independent validation
+ */
+export const getApiV1ContributionPendingFeedbackOptions = (
+  options?: Options<GetApiV1ContributionPendingFeedbackData>,
+) =>
+  queryOptions<
+    GetApiV1ContributionPendingFeedbackResponse,
+    DefaultError,
+    GetApiV1ContributionPendingFeedbackResponse,
+    ReturnType<typeof getApiV1ContributionPendingFeedbackQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiV1ContributionPendingFeedback({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiV1ContributionPendingFeedbackQueryKey(options),
+  })
+
+export const getApiV1ContributionMeQueryKey = (options?: Options<GetApiV1ContributionMeData>) =>
+  createQueryKey("getApiV1ContributionMe", options)
+
+/**
+ * Contribution points, submissions, and verified GitHub identity for the user
+ */
+export const getApiV1ContributionMeOptions = (options?: Options<GetApiV1ContributionMeData>) =>
+  queryOptions<
+    GetApiV1ContributionMeResponse,
+    DefaultError,
+    GetApiV1ContributionMeResponse,
+    ReturnType<typeof getApiV1ContributionMeQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiV1ContributionMe({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiV1ContributionMeQueryKey(options),
+  })
+
+/**
+ * Submits an idea, feedback report, or validation for human review
+ */
+export const postApiV1ContributionMutation = (
+  options?: Partial<Options<PostApiV1ContributionData>>,
+): UseMutationOptions<
+  PostApiV1ContributionResponse,
+  PostApiV1ContributionError,
+  Options<PostApiV1ContributionData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiV1ContributionResponse,
+    PostApiV1ContributionError,
+    Options<PostApiV1ContributionData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiV1Contribution({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+/**
+ * Receives signed GitHub App webhooks for contribution attribution
+ */
+export const postApiV1GithubWebhookMutation = (
+  options?: Partial<Options<PostApiV1GithubWebhookData>>,
+): UseMutationOptions<
+  PostApiV1GithubWebhookResponse,
+  PostApiV1GithubWebhookError,
+  Options<PostApiV1GithubWebhookData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiV1GithubWebhookResponse,
+    PostApiV1GithubWebhookError,
+    Options<PostApiV1GithubWebhookData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiV1GithubWebhook({
         ...options,
         ...fnOptions,
         throwOnError: true,

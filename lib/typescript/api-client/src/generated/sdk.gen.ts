@@ -120,6 +120,10 @@ import type {
   GetApiV1CommunityWidgetByCommunityNameData,
   GetApiV1CommunityWidgetByCommunityNameErrors,
   GetApiV1CommunityWidgetByCommunityNameResponses,
+  GetApiV1ContributionMeData,
+  GetApiV1ContributionMeResponses,
+  GetApiV1ContributionPendingFeedbackData,
+  GetApiV1ContributionPendingFeedbackResponses,
   GetApiV1CustomFeedByUsernameBySlugData,
   GetApiV1CustomFeedByUsernameBySlugErrors,
   GetApiV1CustomFeedByUsernameBySlugPostsData,
@@ -394,6 +398,9 @@ import type {
   PostApiV1CommunityWidgetByCommunityIdWidgetData,
   PostApiV1CommunityWidgetByCommunityIdWidgetErrors,
   PostApiV1CommunityWidgetByCommunityIdWidgetResponses,
+  PostApiV1ContributionData,
+  PostApiV1ContributionErrors,
+  PostApiV1ContributionResponses,
   PostApiV1CustomFeedData,
   PostApiV1CustomFeedErrors,
   PostApiV1CustomFeedResponses,
@@ -415,6 +422,9 @@ import type {
   PostApiV1FlairByCommunityIdUserTemplatesData,
   PostApiV1FlairByCommunityIdUserTemplatesErrors,
   PostApiV1FlairByCommunityIdUserTemplatesResponses,
+  PostApiV1GithubWebhookData,
+  PostApiV1GithubWebhookErrors,
+  PostApiV1GithubWebhookResponses,
   PostApiV1MediaAvatarConfirmData,
   PostApiV1MediaAvatarConfirmErrors,
   PostApiV1MediaAvatarConfirmResponses,
@@ -1235,6 +1245,87 @@ export const deleteApiV1BusinessById = <ThrowOnError extends boolean = false>(
     url: "/api/v1/business/{id}",
     ...options,
   })
+
+/**
+ * Pending feedback reports available for independent validation
+ */
+export const getApiV1ContributionPendingFeedback = <ThrowOnError extends boolean = false>(
+  options?: Options<GetApiV1ContributionPendingFeedbackData, ThrowOnError>,
+): RequestResult<GetApiV1ContributionPendingFeedbackResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<
+    GetApiV1ContributionPendingFeedbackResponses,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/contribution/pending-feedback",
+    ...options,
+  })
+
+/**
+ * Contribution points, submissions, and verified GitHub identity for the user
+ */
+export const getApiV1ContributionMe = <ThrowOnError extends boolean = false>(
+  options?: Options<GetApiV1ContributionMeData, ThrowOnError>,
+): RequestResult<GetApiV1ContributionMeResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<GetApiV1ContributionMeResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/contribution/me",
+    ...options,
+  })
+
+/**
+ * Submits an idea, feedback report, or validation for human review
+ */
+export const postApiV1Contribution = <ThrowOnError extends boolean = false>(
+  options?: Options<PostApiV1ContributionData, ThrowOnError>,
+): RequestResult<PostApiV1ContributionResponses, PostApiV1ContributionErrors, ThrowOnError> =>
+  (options?.client ?? client).post<
+    PostApiV1ContributionResponses,
+    PostApiV1ContributionErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/v1/contribution",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+  })
+
+/**
+ * Receives signed GitHub App webhooks for contribution attribution
+ */
+export const postApiV1GithubWebhook = <ThrowOnError extends boolean = false>(
+  options?: Options<PostApiV1GithubWebhookData, ThrowOnError>,
+): RequestResult<PostApiV1GithubWebhookResponses, PostApiV1GithubWebhookErrors, ThrowOnError> =>
+  (options?.client ?? client).post<
+    PostApiV1GithubWebhookResponses,
+    PostApiV1GithubWebhookErrors,
+    ThrowOnError
+  >({ url: "/api/v1/github/webhook", ...options })
 
 /**
  * Public profile for a username

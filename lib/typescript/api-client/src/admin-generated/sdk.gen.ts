@@ -3,6 +3,8 @@
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from "./client"
 import { client } from "./client.gen"
 import type {
+  GetApiAdminContributionsData,
+  GetApiAdminContributionsResponses,
   GetApiAdminMarketingPoolsByIdPayoutsData,
   GetApiAdminMarketingPoolsByIdPayoutsResponses,
   GetApiAdminMarketingPoolsData,
@@ -15,6 +17,14 @@ import type {
   GetApiAdminStatsResponses,
   GetApiAdminUsersData,
   GetApiAdminUsersResponses,
+  PostApiAdminContributionsCodeMonthsByIdFinalizeData,
+  PostApiAdminContributionsCodeMonthsByIdRejectData,
+  PostApiAdminContributionsCodeMonthsByIdRejectResponses,
+  PostApiAdminContributionsSubmissionsByIdAcceptData,
+  PostApiAdminContributionsSubmissionsByIdAcceptIdeaData,
+  PostApiAdminContributionsSubmissionsByIdAcceptIdeaErrors,
+  PostApiAdminContributionsSubmissionsByIdAcceptIdeaResponses,
+  PostApiAdminContributionsSubmissionsByIdRejectData,
   PostApiAdminMarketingPoolsByIdCalculateData,
   PostApiAdminMarketingPoolsByIdCalculateErrors,
   PostApiAdminMarketingPoolsByIdCalculateResponses,
@@ -466,4 +476,146 @@ export const postApiAdminMarketingPoolsByIdPay = <ThrowOnError extends boolean =
     ],
     url: "/api/admin/marketing/pools/{id}/pay",
     ...options,
+  })
+
+/**
+ * Pending contribution and monthly code review queues
+ */
+export const getApiAdminContributions = <ThrowOnError extends boolean = false>(
+  options?: Options<GetApiAdminContributionsData, ThrowOnError>,
+): RequestResult<GetApiAdminContributionsResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<GetApiAdminContributionsResponses, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/contributions",
+    ...options,
+  })
+
+/**
+ * Accepts an idea and atomically creates its business, community, award, and provisioning record
+ */
+export const postApiAdminContributionsSubmissionsByIdAcceptIdea = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<PostApiAdminContributionsSubmissionsByIdAcceptIdeaData, ThrowOnError>,
+): RequestResult<
+  PostApiAdminContributionsSubmissionsByIdAcceptIdeaResponses,
+  PostApiAdminContributionsSubmissionsByIdAcceptIdeaErrors,
+  ThrowOnError
+> =>
+  (options.client ?? client).post<
+    PostApiAdminContributionsSubmissionsByIdAcceptIdeaResponses,
+    PostApiAdminContributionsSubmissionsByIdAcceptIdeaErrors,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/contributions/submissions/{id}/accept-idea",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  })
+
+export const postApiAdminContributionsSubmissionsByIdAccept = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<PostApiAdminContributionsSubmissionsByIdAcceptData, ThrowOnError>,
+): RequestResult<unknown, unknown, ThrowOnError> =>
+  (options.client ?? client).post<unknown, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/contributions/submissions/{id}/accept",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  })
+
+export const postApiAdminContributionsSubmissionsByIdReject = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<PostApiAdminContributionsSubmissionsByIdRejectData, ThrowOnError>,
+): RequestResult<unknown, unknown, ThrowOnError> =>
+  (options.client ?? client).post<unknown, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/contributions/submissions/{id}/reject",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  })
+
+export const postApiAdminContributionsCodeMonthsByIdFinalize = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<PostApiAdminContributionsCodeMonthsByIdFinalizeData, ThrowOnError>,
+): RequestResult<unknown, unknown, ThrowOnError> =>
+  (options.client ?? client).post<unknown, unknown, ThrowOnError>({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/contributions/code-months/{id}/finalize",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  })
+
+export const postApiAdminContributionsCodeMonthsByIdReject = <ThrowOnError extends boolean = false>(
+  options: Options<PostApiAdminContributionsCodeMonthsByIdRejectData, ThrowOnError>,
+): RequestResult<PostApiAdminContributionsCodeMonthsByIdRejectResponses, unknown, ThrowOnError> =>
+  (options.client ?? client).post<
+    PostApiAdminContributionsCodeMonthsByIdRejectResponses,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      {
+        in: "cookie",
+        name: "sproutbiz_session",
+        type: "apiKey",
+      },
+    ],
+    url: "/api/admin/contributions/code-months/{id}/reject",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
   })

@@ -336,6 +336,7 @@ function ProfilePage() {
           bannerUrl: mediaUrl(data.bannerImageKey),
           postKarma: data.postKarma,
           commentKarma: data.commentKarma,
+          contributionPoints: data.contributionPoints,
           createdAt: data.createdAt,
         }}
         action={

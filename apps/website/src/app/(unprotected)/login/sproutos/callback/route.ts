@@ -1,5 +1,7 @@
 import { completeOAuthLogin } from "@website/lib/oauth-user"
 import { isSproutOSConfigured, sproutosConfig } from "@website/lib/oauth"
+import { crudUserExternalIdentity } from "@lib/dao/userExternalIdentity/crud"
+import { db } from "@template-nextjs/db"
 import { cookies } from "next/headers"
 
 /**
@@ -13,6 +15,8 @@ import { cookies } from "next/headers"
 type SproutOSProfile = {
   email?: string
   name?: string | null
+  github_user_id?: string | null
+  github_login?: string | null
 }
 
 /** RFC 7662 introspection. `sub` is the stable subject the account is keyed on. */
@@ -164,7 +168,7 @@ export async function GET(request: Request): Promise<Response> {
     return new Response(null, { status: 400 })
   }
 
-  const { isNewAccount } = await completeOAuthLogin(
+  const { userId, isNewAccount } = await completeOAuthLogin(
     "sproutos",
     {
       providerAccountId,
@@ -180,6 +184,20 @@ export async function GET(request: Request): Promise<Response> {
       expiresAt: null,
     },
   )
+
+  if (profile.github_user_id && profile.github_login) {
+    const syncedAt = new Date()
+    await crudUserExternalIdentity(db).upsertForUser({
+      userId,
+      provider: "github",
+      providerSubject: profile.github_user_id,
+      handle: profile.github_login,
+      verifiedAt: syncedAt,
+      lastSyncedAt: syncedAt,
+    })
+  } else {
+    await crudUserExternalIdentity(db).deleteForUser(userId, "github")
+  }
 
   return new Response(null, {
     status: 302,

@@ -14,6 +14,16 @@ export {
   postApiAdminPostsByIdRestoreMutation,
 } from "@lib/api-client/admin-generated/@tanstack/react-query.gen"
 
+export {
+  getApiAdminContributionsOptions,
+  getApiAdminContributionsQueryKey,
+  postApiAdminContributionsCodeMonthsByIdFinalizeMutation,
+  postApiAdminContributionsCodeMonthsByIdRejectMutation,
+  postApiAdminContributionsSubmissionsByIdAcceptIdeaMutation,
+  postApiAdminContributionsSubmissionsByIdAcceptMutation,
+  postApiAdminContributionsSubmissionsByIdRejectMutation,
+} from "@lib/api-client/admin-generated/@tanstack/react-query.gen"
+
 // Marketing / Earn Money. Mounted by admin/index.ts as .route("/marketing", marketing).
 export {
   getApiAdminMarketingVideosOptions,

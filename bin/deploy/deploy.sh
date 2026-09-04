@@ -4,8 +4,8 @@
 #   bin/deploy/deploy.sh <website|bullground|all> <image-tag>
 #
 # Environment:
-#   SERVER            default ubuntu@135.148.122.203
-#   SSH_KEY           default ~/.ssh/id_ovhcloud_ns1009531.ip-135-148-122.us
+#   SERVER            default ubuntu@40.160.59.152
+#   SSH_KEY           default ~/.ssh/id_ovh_toyourcredit
 #   GHCR_TOKEN        optional; when set, the server is logged into GHCR before pulling.
 #                     CI passes the ephemeral GITHUB_TOKEN.
 #   GHCR_USER         default SproutOS-Agent
@@ -27,16 +27,16 @@ case "$TARGET" in website | bullground | all) ;; *)
   ;;
 esac
 
-SERVER="${SERVER:-ubuntu@135.148.122.203}"
+SERVER="${SERVER:-ubuntu@40.160.59.152}"
 GHCR_USER="${GHCR_USER:-SproutOS-Agent}"
-REMOTE_DIR=/opt/forum
+REMOTE_DIR=/opt/sproutbiz
 COMPOSE="docker compose -f $REMOTE_DIR/docker-compose.production.yml"
 
 SSH_ARGS=()
 if [ -n "${SSH_KEY:-}" ]; then
   SSH_ARGS+=(-i "$SSH_KEY")
-elif [ -f "$HOME/.ssh/id_ovhcloud_ns1009531.ip-135-148-122.us" ]; then
-  SSH_ARGS+=(-i "$HOME/.ssh/id_ovhcloud_ns1009531.ip-135-148-122.us")
+elif [ -f "$HOME/.ssh/id_ovh_toyourcredit" ]; then
+  SSH_ARGS+=(-i "$HOME/.ssh/id_ovh_toyourcredit")
 fi
 run_remote() { ssh "${SSH_ARGS[@]}" -o BatchMode=yes "$SERVER" "$@"; }
 
@@ -120,11 +120,18 @@ deploy_service() {
   run_remote "cd $REMOTE_DIR && $COMPOSE pull $service && $COMPOSE up -d $service"
 
   echo "==> Waiting for $service to report healthy"
-  run_remote "cd $REMOTE_DIR && for i in \$(seq 1 60); do \
-      status=\$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' forum_${service} 2>/dev/null || echo missing); \
-      if [ \"\$status\" = healthy ] || [ \"\$status\" = none ]; then echo \"    \$service: \$status\"; exit 0; fi; \
+  run_remote "cd $REMOTE_DIR && stable=0; last_restarts=-1; for i in \$(seq 1 60); do \
+      status=\$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' sproutbiz_${service} 2>/dev/null || echo missing); \
+      if [ \"\$status\" = healthy ]; then echo \"    \$service: healthy\"; exit 0; fi; \
+      if [ \"\$status\" = none ]; then \
+        running=\$(docker inspect -f '{{.State.Running}}' sproutbiz_${service} 2>/dev/null || echo false); \
+        restarts=\$(docker inspect -f '{{.RestartCount}}' sproutbiz_${service} 2>/dev/null || echo -1); \
+        if [ \"\$running\" = true ] && [ \"\$restarts\" = \"\$last_restarts\" ]; then stable=\$((stable + 1)); else stable=0; fi; \
+        last_restarts=\$restarts; \
+        if [ \"\$stable\" -ge 5 ]; then echo \"    \$service: running without a restart for 10 seconds\"; exit 0; fi; \
+      fi; \
       sleep 2; \
-    done; echo 'ERROR: '$service' did not become healthy' >&2; docker logs --tail 50 forum_${service} >&2; exit 1"
+    done; echo 'ERROR: '$service' did not become healthy' >&2; docker logs --tail 50 sproutbiz_${service} >&2; exit 1"
 }
 
 if [ "$TARGET" = "website" ] || [ "$TARGET" = "all" ]; then

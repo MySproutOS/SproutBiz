@@ -5,6 +5,8 @@ import type {
   GetApiV1CommentPostByPostIdResponse,
   GetApiV1CommunityByNameResponse,
   GetApiV1CommunityJoinRequestByCommunityIdPendingResponse,
+  GetApiV1ContributionMeResponse,
+  GetApiV1ContributionPendingFeedbackResponse,
   GetApiV1CustomFeedByUsernameBySlugPostsResponse,
   GetApiV1DraftByIdResponse,
   GetApiV1DraftResponse,
@@ -55,6 +57,7 @@ import type {
   PatchApiV1DraftByIdResponse,
   PatchApiV1UserMeResponse,
   PostApiV1AgentTokenResponse,
+  PostApiV1ContributionResponse,
   PostApiV1OnboardingStepResponse,
   PostApiV1OnboardingVerifyCompleteResponse,
   PostApiV1OnboardingVerifyStartResponse,
@@ -122,6 +125,40 @@ export const getApiV1RevenueBusinessBySlugResponseTransformer = async (
   if (data.business.launchedAt) {
     data.business.launchedAt = new Date(data.business.launchedAt)
   }
+  return data
+}
+
+export const getApiV1ContributionPendingFeedbackResponseTransformer = async (
+  data: any,
+): Promise<GetApiV1ContributionPendingFeedbackResponse> => {
+  data.data = data.data.map((item: any) => {
+    item.createdAt = new Date(item.createdAt)
+    return item
+  })
+  return data
+}
+
+export const getApiV1ContributionMeResponseTransformer = async (
+  data: any,
+): Promise<GetApiV1ContributionMeResponse> => {
+  if (data.github) {
+    data.github.verifiedAt = new Date(data.github.verifiedAt)
+  }
+  data.awards = data.awards.map((item: any) => {
+    item.createdAt = new Date(item.createdAt)
+    return item
+  })
+  data.submissions = data.submissions.map((item: any) => {
+    item.createdAt = new Date(item.createdAt)
+    return item
+  })
+  return data
+}
+
+export const postApiV1ContributionResponseTransformer = async (
+  data: any,
+): Promise<PostApiV1ContributionResponse> => {
+  data.data.createdAt = new Date(data.data.createdAt)
   return data
 }
 

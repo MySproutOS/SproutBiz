@@ -4,6 +4,7 @@ import marketing from "./marketing"
 import post from "./post"
 import stats from "./stats"
 import user from "./user"
+import contribution from "./contribution"
 
 const app = new Hono({
   router: new RegExpRouter(),
@@ -13,5 +14,6 @@ const app = new Hono({
   .route("/posts", post)
   .route("/stats", stats)
   .route("/marketing", marketing)
+  .route("/contributions", contribution)
 
 export default app

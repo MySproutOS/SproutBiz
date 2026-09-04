@@ -1,7 +1,7 @@
 /**
  * The name the session cookie is keyed on.
  *
- * Deliberately not `session`. This forum is served from `forum.sproutos.me`, a subdomain of the
+ * Deliberately not `session`. This forum was originally served from `forum.sproutos.me`, a subdomain of the
  * SproutOS platform it signs users in against -- and SproutOS scopes its own session cookie to
  * `Domain=.sproutos.me`, so the browser offers that cookie to every host under the apex, this one
  * included. Both were called `session`.
@@ -19,7 +19,7 @@
  * cleared, which leaves a user signed in after pressing sign out.
  *
  * Renaming does not need a `Domain` of its own. Host-only is correct here -- the API is mounted
- * inside this same Next.js app at `/api`, so nothing off `forum.sproutos.me` ever needs to read it.
+ * inside this same Next.js app at `/api`, so nothing off `sproutos.biz` ever needs to read it.
  * If the API is ever split onto its own host, that is the moment to add a `Domain`, and the moment
  * to remember that a wider scope means this name has to stay unique across every SproutOS host.
  */

@@ -27,6 +27,26 @@ jobs:
       - name: Check formatting with Oxfmt
         run: pnpm run format --check
 
+  cli:
+    name: Rust CLI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install Linux keyring build dependencies
+        run: sudo apt-get update && sudo apt-get install --yes libdbus-1-dev pkg-config
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: packages/cli
+      - name: Check formatting
+        run: cargo fmt --check --manifest-path packages/cli/Cargo.toml
+      - name: Lint
+        run: cargo clippy --locked --manifest-path packages/cli/Cargo.toml --all-targets -- -D warnings
+      - name: Test
+        run: cargo test --locked --manifest-path packages/cli/Cargo.toml
+
   build:
     name: Build, Lint, and Test
     runs-on: ubuntu-latest

@@ -8,6 +8,7 @@ import { fetchUser } from "@lib/dao/user/fetch"
 import { crudUserSocialLink } from "@lib/dao/userSocialLink/crud"
 import { fetchUserSocialLink } from "@lib/dao/userSocialLink/fetch"
 import { fetchUserOverview } from "@lib/dao/userOverview/fetch"
+import { fetchContributionAward } from "@lib/dao"
 import { db } from "@template-nextjs/db"
 import { Hono } from "hono"
 import { describeRoute } from "hono-typebox-openapi"
@@ -104,6 +105,7 @@ const app = new Hono()
 
       if (!profile) return throwNotFound(c, "User not found")
 
+      const contributions = await fetchContributionAward(db).summarizeForUser(profile.id)
       return c.json({
         id: profile.id,
         username: profile.username,
@@ -113,6 +115,7 @@ const app = new Hono()
         bannerImageKey: profile.bannerImageKey,
         postKarma: profile.postKarma,
         commentKarma: profile.commentKarma,
+        contributionPoints: contributions.total,
         createdAt: profile.createdAt.toISOString(),
       })
     },

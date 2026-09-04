@@ -673,3 +673,163 @@ export type PostApiAdminMarketingPoolsByIdPayResponses = {
 
 export type PostApiAdminMarketingPoolsByIdPayResponse =
   PostApiAdminMarketingPoolsByIdPayResponses[keyof PostApiAdminMarketingPoolsByIdPayResponses]
+
+export type GetApiAdminContributionsData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/admin/contributions"
+}
+
+export type GetApiAdminContributionsResponses = {
+  /**
+   * Review queues
+   */
+  200: {
+    submissions: Array<{
+      id: string
+      userId: string
+      username: string
+      businessId: string | null
+      businessName: string | null
+      postId: string | null
+      feedbackSubmissionId: string | null
+      feedbackSubmittedBy: string | null
+      feedbackEvidence: {
+        [key: string]: unknown
+      } | null
+      evidence: {
+        [key: string]: unknown
+      }
+      type: string
+      status: string
+      createdAt: Date
+    }>
+    codeMonths: Array<{
+      id: string
+      userId: string
+      username: string
+      businessId: string
+      businessName: string
+      periodStart: string
+      mergedPrCount: number
+      additions: number
+      deletions: number
+      changedFiles: number
+      proposedPoints: number | null
+      proposedReason: string | null
+      pullRequests: Array<{
+        id: string
+        number: number
+        title: string
+        url: string
+        additions: number
+        deletions: number
+        changedFiles: number
+        labels: Array<string>
+      }>
+    }>
+  }
+}
+
+export type GetApiAdminContributionsResponse =
+  GetApiAdminContributionsResponses[keyof GetApiAdminContributionsResponses]
+
+export type PostApiAdminContributionsSubmissionsByIdAcceptIdeaData = {
+  body?: {
+    name: string
+    slug: string
+    communityName: string
+    repositoryName: string
+    tagline?: string | null
+    description?: string | null
+    platform?: "web" | "ios" | "android"
+  }
+  path: {
+    id: string
+  }
+  query?: never
+  url: "/api/admin/contributions/submissions/{id}/accept-idea"
+}
+
+export type PostApiAdminContributionsSubmissionsByIdAcceptIdeaErrors = {
+  /**
+   * Submission not found
+   */
+  404: ErrorResponseT
+}
+
+export type PostApiAdminContributionsSubmissionsByIdAcceptIdeaError =
+  PostApiAdminContributionsSubmissionsByIdAcceptIdeaErrors[keyof PostApiAdminContributionsSubmissionsByIdAcceptIdeaErrors]
+
+export type PostApiAdminContributionsSubmissionsByIdAcceptIdeaResponses = {
+  /**
+   * Idea accepted
+   */
+  200: {
+    awardId: string
+    points: number
+    provisioningId?: string
+  }
+}
+
+export type PostApiAdminContributionsSubmissionsByIdAcceptIdeaResponse =
+  PostApiAdminContributionsSubmissionsByIdAcceptIdeaResponses[keyof PostApiAdminContributionsSubmissionsByIdAcceptIdeaResponses]
+
+export type PostApiAdminContributionsSubmissionsByIdAcceptData = {
+  body?: {
+    points: number
+    reason: string
+  }
+  path: {
+    id: string
+  }
+  query?: never
+  url: "/api/admin/contributions/submissions/{id}/accept"
+}
+
+export type PostApiAdminContributionsSubmissionsByIdRejectData = {
+  body?: {
+    reason: string
+  }
+  path: {
+    id: string
+  }
+  query?: never
+  url: "/api/admin/contributions/submissions/{id}/reject"
+}
+
+export type PostApiAdminContributionsCodeMonthsByIdFinalizeData = {
+  body?: {
+    points: number
+    reason: string
+  }
+  path: {
+    id: string
+  }
+  query?: never
+  url: "/api/admin/contributions/code-months/{id}/finalize"
+}
+
+export type PostApiAdminContributionsCodeMonthsByIdRejectData = {
+  body?: {
+    reason: string
+  }
+  path: {
+    id: string
+  }
+  query?: never
+  url: "/api/admin/contributions/code-months/{id}/reject"
+}
+
+export type PostApiAdminContributionsCodeMonthsByIdRejectResponses = {
+  /**
+   * Code month rejected
+   */
+  200: {
+    [key: string]: unknown
+  }
+}
+
+export type PostApiAdminContributionsCodeMonthsByIdRejectResponse =
+  PostApiAdminContributionsCodeMonthsByIdRejectResponses[keyof PostApiAdminContributionsCodeMonthsByIdRejectResponses]

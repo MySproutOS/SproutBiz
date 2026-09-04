@@ -21,8 +21,10 @@ export function GET(request: Request): Response {
   const email = url.searchParams.get("email") ?? "agent@sproutos.local"
   const sub = url.searchParams.get("sub") ?? `sproutos-dev-${email}`
   const name = url.searchParams.get("name") ?? "SproutOS Dev Agent"
+  const githubUserId = url.searchParams.get("github_user_id") ?? "100000001"
+  const githubLogin = url.searchParams.get("github_login") ?? "sproutos-dev-agent"
 
-  const code = issueCode({ sub, email, name })
+  const code = issueCode({ sub, email, name, githubUserId, githubLogin })
   const target = new URL(redirectUri)
   target.searchParams.set("code", code)
   target.searchParams.set("state", state)

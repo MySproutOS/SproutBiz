@@ -24,6 +24,7 @@ export const userPublicSchemaResponse = Type.Object({
   bannerImageKey: Nullable(Type.String()),
   postKarma: Type.Number(),
   commentKarma: Type.Number(),
+  contributionPoints: Type.Number(),
   createdAt: Type.String({ format: "date-time" }),
 })
 

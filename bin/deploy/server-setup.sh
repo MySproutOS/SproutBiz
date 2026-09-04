@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 # One-time bootstrap for the OVH production host. Idempotent.
 #
-#   ssh -i ~/.ssh/id_ovhcloud_ns1009531.ip-135-148-122.us ubuntu@135.148.122.203
+#   ssh -i ~/.ssh/id_ovh_toyourcredit ubuntu@40.160.59.152
 #   bash server-setup.sh
 #
-# Deliberately does NOT install Docker. It is already present (29.7.2), and re-running an
-# installer risks restarting dockerd, which would bounce every SproutOS container on this box.
+# Deliberately does not install Docker. Verify it before running this script.
 set -euo pipefail
 
 echo "==> Checking prerequisites"
@@ -16,21 +15,21 @@ if ! command -v docker >/dev/null 2>&1; then
 fi
 docker compose version >/dev/null || { echo "ERROR: docker compose plugin missing" >&2; exit 1; }
 
-echo "==> Creating /opt/forum (config, compose, letsencrypt)"
-sudo mkdir -p /opt/forum/letsencrypt
-sudo chown -R ubuntu:ubuntu /opt/forum
-chmod 700 /opt/forum/letsencrypt
+echo "==> Creating /opt/sproutbiz (config, compose, letsencrypt)"
+sudo mkdir -p /opt/sproutbiz/letsencrypt
+sudo chown -R ubuntu:ubuntu /opt/sproutbiz
+chmod 700 /opt/sproutbiz/letsencrypt
 
-# Data lives on the root disk (nvme1n1), alongside SproutOS OpenSearch and Valkey, and
-# deliberately NOT on /data -- that spindle carries Kafka and ClickHouse, the noisiest IO on
-# the machine.
-echo "==> Creating /srv/forum data directories on the root disk"
-sudo mkdir -p /srv/forum/{postgres,valkey,elasticsearch}
-sudo chown -R ubuntu:ubuntu /srv/forum
+# Data lives on the mirrored root filesystem (/dev/md3 across both NVMe devices), separate from
+# the deactivated toyourcredit volumes. Keeping it under /srv/sproutbiz makes the backup and
+# restore boundary explicit.
+echo "==> Creating /srv/sproutbiz data directories"
+sudo mkdir -p /srv/sproutbiz/{postgres,valkey,elasticsearch}
+sudo chown -R ubuntu:ubuntu /srv/sproutbiz
 
 echo
 echo "==> Done. Next:"
-echo "    1. Copy docker-compose.production.yml and bin/deploy/*.sh to /opt/forum"
-echo "    2. Write /opt/forum/.env and /opt/forum/.env.production (chmod 600)"
+echo "    1. Copy docker-compose.production.yml and bin/deploy/*.sh to /opt/sproutbiz"
+echo "    2. Write /opt/sproutbiz/.env and /opt/sproutbiz/.env.production (chmod 600)"
 echo "    3. docker login ghcr.io -u SproutOS-Agent   (needs a token with read:packages)"
 echo "    4. bring the data services up, then run the migrator"

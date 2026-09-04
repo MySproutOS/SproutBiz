@@ -12,6 +12,7 @@ export type ProfileHeaderUser = {
   bannerUrl: string | null
   postKarma: number
   commentKarma: number
+  contributionPoints?: number
   createdAt: string | Date
 }
 
@@ -86,6 +87,14 @@ export function ProfileHeader({ user, action, sidebarExtra, children }: ProfileH
                     <p className="text-xs text-muted-foreground">Comment</p>
                   </div>
                 </div>
+              </div>
+              <div className="flex items-center justify-between border-t pt-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  Contribution credits
+                </p>
+                <p className="text-lg font-semibold">
+                  {formatCompactNumber(user.contributionPoints ?? 0)}
+                </p>
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <CakeIcon className="size-4" />

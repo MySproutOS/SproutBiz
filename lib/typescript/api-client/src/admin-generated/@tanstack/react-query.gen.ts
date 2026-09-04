@@ -10,6 +10,7 @@ import {
 
 import { client } from "../client.gen"
 import {
+  getApiAdminContributions,
   getApiAdminMarketingPools,
   getApiAdminMarketingPoolsByIdPayouts,
   getApiAdminMarketingVideos,
@@ -17,6 +18,11 @@ import {
   getApiAdminStats,
   getApiAdminUsers,
   type Options,
+  postApiAdminContributionsCodeMonthsByIdFinalize,
+  postApiAdminContributionsCodeMonthsByIdReject,
+  postApiAdminContributionsSubmissionsByIdAccept,
+  postApiAdminContributionsSubmissionsByIdAcceptIdea,
+  postApiAdminContributionsSubmissionsByIdReject,
   postApiAdminMarketingPoolsByIdCalculate,
   postApiAdminMarketingPoolsByIdPay,
   postApiAdminMarketingVideosByIdApprove,
@@ -29,6 +35,8 @@ import {
   putApiAdminMarketingPools,
 } from "../sdk.gen"
 import type {
+  GetApiAdminContributionsData,
+  GetApiAdminContributionsResponse,
   GetApiAdminMarketingPoolsByIdPayoutsData,
   GetApiAdminMarketingPoolsByIdPayoutsResponse,
   GetApiAdminMarketingPoolsData,
@@ -41,6 +49,14 @@ import type {
   GetApiAdminStatsResponse,
   GetApiAdminUsersData,
   GetApiAdminUsersResponse,
+  PostApiAdminContributionsCodeMonthsByIdFinalizeData,
+  PostApiAdminContributionsCodeMonthsByIdRejectData,
+  PostApiAdminContributionsCodeMonthsByIdRejectResponse,
+  PostApiAdminContributionsSubmissionsByIdAcceptData,
+  PostApiAdminContributionsSubmissionsByIdAcceptIdeaData,
+  PostApiAdminContributionsSubmissionsByIdAcceptIdeaError,
+  PostApiAdminContributionsSubmissionsByIdAcceptIdeaResponse,
+  PostApiAdminContributionsSubmissionsByIdRejectData,
   PostApiAdminMarketingPoolsByIdCalculateData,
   PostApiAdminMarketingPoolsByIdCalculateError,
   PostApiAdminMarketingPoolsByIdCalculateResponse,
@@ -652,6 +668,154 @@ export const postApiAdminMarketingPoolsByIdPayMutation = (
   > = {
     mutationFn: async (fnOptions) => {
       const { data } = await postApiAdminMarketingPoolsByIdPay({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const getApiAdminContributionsQueryKey = (options?: Options<GetApiAdminContributionsData>) =>
+  createQueryKey("getApiAdminContributions", options)
+
+/**
+ * Pending contribution and monthly code review queues
+ */
+export const getApiAdminContributionsOptions = (options?: Options<GetApiAdminContributionsData>) =>
+  queryOptions<
+    GetApiAdminContributionsResponse,
+    DefaultError,
+    GetApiAdminContributionsResponse,
+    ReturnType<typeof getApiAdminContributionsQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiAdminContributions({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      })
+      return data
+    },
+    queryKey: getApiAdminContributionsQueryKey(options),
+  })
+
+/**
+ * Accepts an idea and atomically creates its business, community, award, and provisioning record
+ */
+export const postApiAdminContributionsSubmissionsByIdAcceptIdeaMutation = (
+  options?: Partial<Options<PostApiAdminContributionsSubmissionsByIdAcceptIdeaData>>,
+): UseMutationOptions<
+  PostApiAdminContributionsSubmissionsByIdAcceptIdeaResponse,
+  PostApiAdminContributionsSubmissionsByIdAcceptIdeaError,
+  Options<PostApiAdminContributionsSubmissionsByIdAcceptIdeaData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiAdminContributionsSubmissionsByIdAcceptIdeaResponse,
+    PostApiAdminContributionsSubmissionsByIdAcceptIdeaError,
+    Options<PostApiAdminContributionsSubmissionsByIdAcceptIdeaData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiAdminContributionsSubmissionsByIdAcceptIdea({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const postApiAdminContributionsSubmissionsByIdAcceptMutation = (
+  options?: Partial<Options<PostApiAdminContributionsSubmissionsByIdAcceptData>>,
+): UseMutationOptions<
+  unknown,
+  DefaultError,
+  Options<PostApiAdminContributionsSubmissionsByIdAcceptData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    unknown,
+    DefaultError,
+    Options<PostApiAdminContributionsSubmissionsByIdAcceptData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiAdminContributionsSubmissionsByIdAccept({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const postApiAdminContributionsSubmissionsByIdRejectMutation = (
+  options?: Partial<Options<PostApiAdminContributionsSubmissionsByIdRejectData>>,
+): UseMutationOptions<
+  unknown,
+  DefaultError,
+  Options<PostApiAdminContributionsSubmissionsByIdRejectData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    unknown,
+    DefaultError,
+    Options<PostApiAdminContributionsSubmissionsByIdRejectData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiAdminContributionsSubmissionsByIdReject({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const postApiAdminContributionsCodeMonthsByIdFinalizeMutation = (
+  options?: Partial<Options<PostApiAdminContributionsCodeMonthsByIdFinalizeData>>,
+): UseMutationOptions<
+  unknown,
+  DefaultError,
+  Options<PostApiAdminContributionsCodeMonthsByIdFinalizeData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    unknown,
+    DefaultError,
+    Options<PostApiAdminContributionsCodeMonthsByIdFinalizeData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiAdminContributionsCodeMonthsByIdFinalize({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      })
+      return data
+    },
+  }
+  return mutationOptions
+}
+
+export const postApiAdminContributionsCodeMonthsByIdRejectMutation = (
+  options?: Partial<Options<PostApiAdminContributionsCodeMonthsByIdRejectData>>,
+): UseMutationOptions<
+  PostApiAdminContributionsCodeMonthsByIdRejectResponse,
+  DefaultError,
+  Options<PostApiAdminContributionsCodeMonthsByIdRejectData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiAdminContributionsCodeMonthsByIdRejectResponse,
+    DefaultError,
+    Options<PostApiAdminContributionsCodeMonthsByIdRejectData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await postApiAdminContributionsCodeMonthsByIdReject({
         ...options,
         ...fnOptions,
         throwOnError: true,
