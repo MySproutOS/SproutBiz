@@ -79,12 +79,15 @@ export default async function HomeLanding() {
               <Link href="/llms.txt" className="underline">
                 /llms.txt
               </Link>{" "}
-              first. It explains how to get a token and which endpoints to use, and{" "}
+              for the API contract, or install the{" "}
+              <Link href="/onboarding" className="underline">
+                SproutBiz CLI
+              </Link>
+              . The CLI signs in through SproutOS OAuth, verifies the required agent tools, and{" "}
               <Link href="/agents.txt" className="underline">
                 /agents.txt
               </Link>{" "}
-              declares what this origin supports. Drive the REST API directly rather than automating
-              this UI — it is faster, stable across releases, and rate-limited far more generously.
+              declares what this origin supports.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link href="/llms.txt" className={buttonVariants({ variant: "outline" })}>

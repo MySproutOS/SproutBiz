@@ -17,6 +17,20 @@ export interface JobPayloadMap {
   "link-preview-fetch": { postId: string; linkUrl: string }
   "revenue-aggregate-daily": Record<string, never>
   "marketing-reminder": Record<string, never>
+  "github.process_webhook": { deliveryId: string }
+  "github.sync_business_prs": { businessRepositoryId?: string }
+  "github.sync_pull_request": { businessRepositoryId: string; pullRequestNumber: number }
+  "github.backfill_user_prs": { userId: string }
+  "contribution.estimate_code_month": {
+    userId: string
+    businessId: string
+    periodStart: string
+  }
+  "contribution.close_code_month": { periodStart?: string }
+  "business.provision_accepted_idea": { provisioningId: string }
+  "business.poll_provisioning": { provisioningId: string; pollAttempt: number }
+  "durable-job-reconcile": Record<string, never>
+  "idea-post-reconcile": Record<string, never>
 }
 
 export type JobName = keyof JobPayloadMap
@@ -35,6 +49,16 @@ const jobQueues: { [K in JobName]: Queue } = {
   "link-preview-fetch": slowQueue,
   "revenue-aggregate-daily": slowQueue,
   "marketing-reminder": slowQueue,
+  "github.process_webhook": fastQueue,
+  "github.sync_business_prs": slowQueue,
+  "github.sync_pull_request": mediumQueue,
+  "github.backfill_user_prs": slowQueue,
+  "contribution.estimate_code_month": mediumQueue,
+  "contribution.close_code_month": slowQueue,
+  "business.provision_accepted_idea": slowQueue,
+  "business.poll_provisioning": slowQueue,
+  "durable-job-reconcile": slowQueue,
+  "idea-post-reconcile": slowQueue,
 }
 
 export async function enqueue<K extends JobName>(
@@ -165,6 +189,99 @@ export async function enqueueLinkPreviewFetch(postId: string, linkUrl: string): 
   )
 }
 
+export async function enqueueGithubWebhook(deliveryId: string): Promise<void> {
+  await enqueue(
+    "github.process_webhook",
+    { deliveryId },
+    {
+      jobId: `github-webhook__${deliveryId}`,
+      attempts: 8,
+      backoff: { type: "exponential", delay: 1_000 },
+      removeOnComplete: true,
+      // Delivery state is retained in Postgres; retaining a failed queue job with the same ID
+      // would prevent the durable reconciler from scheduling it after the failure is repaired.
+      removeOnFail: true,
+    },
+  )
+}
+
+export async function enqueueGithubPullRequestSync(
+  businessRepositoryId: string,
+  pullRequestNumber: number,
+): Promise<void> {
+  await enqueue(
+    "github.sync_pull_request",
+    { businessRepositoryId, pullRequestNumber },
+    {
+      jobId: `github-pr__${businessRepositoryId}__${pullRequestNumber}`,
+      attempts: 5,
+      backoff: { type: "exponential", delay: 2_000 },
+      removeOnComplete: true,
+      removeOnFail: 100,
+    },
+  )
+}
+
+export async function enqueueGithubUserBackfill(userId: string): Promise<void> {
+  await enqueue(
+    "github.backfill_user_prs",
+    { userId },
+    { jobId: `github-user-backfill__${userId}`, removeOnComplete: true, removeOnFail: 100 },
+  )
+}
+
+export async function enqueueCodeMonthEstimate(
+  userId: string,
+  businessId: string,
+  periodStart: string,
+): Promise<void> {
+  await enqueue(
+    "contribution.estimate_code_month",
+    { userId, businessId, periodStart },
+    {
+      jobId: `code-month-estimate__${userId}__${businessId}__${periodStart}`,
+      removeOnComplete: true,
+      removeOnFail: 100,
+    },
+  )
+}
+
+export async function enqueueBusinessProvisioning(provisioningId: string): Promise<void> {
+  await enqueue(
+    "business.provision_accepted_idea",
+    { provisioningId },
+    {
+      jobId: `business-provisioning__${provisioningId}`,
+      attempts: 8,
+      backoff: { type: "exponential", delay: 5_000 },
+      removeOnComplete: true,
+      // The database row is the durable source of truth. A retained terminal BullMQ job with
+      // this deterministic ID would prevent the reconciler from re-enqueuing interrupted work.
+      removeOnFail: true,
+    },
+  )
+}
+
+export async function enqueueBusinessProvisioningPoll(
+  provisioningId: string,
+  pollAttempt: number,
+): Promise<void> {
+  await enqueue(
+    "business.poll_provisioning",
+    { provisioningId, pollAttempt },
+    {
+      jobId: `business-provisioning-poll__${provisioningId}__${pollAttempt}`,
+      // Repository builds are fast, but managed-domain certificates are deliberately async.
+      // Four hours of 30-second polls covers ordinary issuance without holding a worker open.
+      delay: 30_000,
+      attempts: 5,
+      backoff: { type: "exponential", delay: 2_000 },
+      removeOnComplete: true,
+      removeOnFail: 100,
+    },
+  )
+}
+
 const RISING_RECOMPUTE_INTERVAL_MS = 90 * 1000
 const RECURRING_POST_SCHEDULER_INTERVAL_MS = 15 * 60 * 1000
 const DRAFT_EXPIRY_INTERVAL_MS = 24 * 60 * 60 * 1000
@@ -174,6 +291,10 @@ const REVENUE_AGGREGATE_INTERVAL_MS = 10 * 60 * 1000
 // Hourly is the right granularity for a reminder a human acts on: it bounds how late a
 // "views are due now" ping can be to an hour, without filling the channel.
 const MARKETING_REMINDER_INTERVAL_MS = 60 * 60 * 1000
+const GITHUB_RECONCILIATION_INTERVAL_MS = 60 * 60 * 1000
+const CODE_MONTH_CLOSE_INTERVAL_MS = 24 * 60 * 60 * 1000
+const DURABLE_JOB_RECONCILE_INTERVAL_MS = 60 * 1000
+const IDEA_POST_RECONCILE_INTERVAL_MS = 60 * 1000
 
 // Registers all recurring schedulers. Idempotent — `upsertJobScheduler` reconciles the
 // schedule on every boot, so calling this on every worker start is safe.
@@ -202,5 +323,25 @@ export async function registerRepeatables(): Promise<void> {
     "marketing-reminder",
     { every: MARKETING_REMINDER_INTERVAL_MS },
     { name: "marketing-reminder", data: {} },
+  )
+  await slowQueue.upsertJobScheduler(
+    "github.sync_business_prs",
+    { every: GITHUB_RECONCILIATION_INTERVAL_MS },
+    { name: "github.sync_business_prs", data: {} },
+  )
+  await slowQueue.upsertJobScheduler(
+    "contribution.close_code_month",
+    { every: CODE_MONTH_CLOSE_INTERVAL_MS },
+    { name: "contribution.close_code_month", data: {} },
+  )
+  await slowQueue.upsertJobScheduler(
+    "durable-job-reconcile",
+    { every: DURABLE_JOB_RECONCILE_INTERVAL_MS },
+    { name: "durable-job-reconcile", data: {} },
+  )
+  await slowQueue.upsertJobScheduler(
+    "idea-post-reconcile",
+    { every: IDEA_POST_RECONCILE_INTERVAL_MS },
+    { name: "idea-post-reconcile", data: {} },
   )
 }

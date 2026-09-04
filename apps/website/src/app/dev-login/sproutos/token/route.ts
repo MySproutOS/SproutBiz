@@ -20,6 +20,6 @@ export async function POST(request: Request): Promise<Response> {
     access_token: issueAccessToken(claims),
     token_type: "Bearer",
     expires_in: 3600,
-    scope: "openid email profile",
+    scope: "openid email profile github:identity",
   })
 }

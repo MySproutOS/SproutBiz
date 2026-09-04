@@ -6,7 +6,7 @@ import { describeRoute } from "hono-typebox-openapi"
 import { resolver, validator } from "hono-typebox-openapi/typebox"
 import type { Selectable } from "kysely"
 import type { DB } from "@template-nextjs/db"
-import { authMiddleware, cookieSessionOnlyMiddleware } from "../middleware"
+import { authMiddleware } from "../middleware"
 import { ErrorSchemaResponse } from "../utils/common.serializer"
 import { throwForbidden } from "../utils/http-exception"
 import {
@@ -79,9 +79,6 @@ const app = new Hono()
   )
   .post(
     "/verify/start",
-    // Cookie session only: the whole point is that the nonce is visible exclusively to a
-    // logged-in browser, so issuing one to a bearer token would defeat the check.
-    cookieSessionOnlyMiddleware,
     describeRoute({
       description:
         "Issues a browser-check nonce. The nonce is never returned here -- it is rendered only on the authenticated verify page.",
@@ -133,8 +130,8 @@ const app = new Hono()
       // A bearer token is mandatory here. Together with a nonce that only a logged-in browser
       // can see, one call proves three things at once: the caller holds the token, it drove a
       // browser that was actually signed in, and it can reach the API.
-      if (c.var.agentToken === null) {
-        return throwForbidden(c, "Call this with your agent token, not a browser session")
+      if (c.var.agentToken === null && c.var.oauthToken === null) {
+        return throwForbidden(c, "Call this with a bearer token, not a browser session")
       }
 
       const row = await crudUserOnboarding(db).getOrCreate(c.var.user.id)

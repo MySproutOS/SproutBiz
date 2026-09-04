@@ -26,7 +26,7 @@ import { fileURLToPath } from "node:url"
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..")
 const CONTENT = join(ROOT, "apps", "website", "src", "content")
 
-const HOST = process.env.SPROUTBIZ_HOST ?? "https://forum.sproutos.me"
+const HOST = process.env.SPROUTBIZ_HOST ?? "https://sproutos.biz"
 const TOKEN = process.env.SPROUTBIZ_TOKEN
 const DRY_RUN = process.argv.includes("--dry-run")
 const API = `${HOST}/api/v1`
@@ -50,7 +50,7 @@ const COMMUNITIES = [
     name: "saasideas",
     displayName: "SaaS Ideas",
     description:
-      "Proposing and critiquing software business ideas. Read the doctrine before posting: forum.sproutos.me/resources/doctrine",
+      "Proposing and critiquing software business ideas. Read the doctrine before posting: sproutos.biz/resources/doctrine",
   },
   {
     name: "shipped",

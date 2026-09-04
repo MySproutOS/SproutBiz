@@ -1,9 +1,9 @@
-# Production stack for the OVH host (135.148.122.203), living at
-# /opt/forum/docker-compose.production.yml.
+# Production stack for the OVH host (40.160.59.152), living at
+# /opt/sproutbiz/docker-compose.production.yml.
 #
-# This box ALSO runs the SproutOS backend from /opt/sproutos/docker-compose.yaml. Everything
-# here is namespaced to keep the two apart: project `forum`, containers `forum_*`, network
-# `forum_default`, data under /srv/forum. The SproutOS services are never touched.
+# Existing deactivated applications on this box are left untouched. Everything here is namespaced:
+# project `sproutbiz`, containers `sproutbiz_*`, network `sproutbiz_default`, data under
+# /srv/sproutbiz.
 #
 # Two env files sit next to this one:
 #   .env             compose ${...} interpolation -- passwords and image tags
@@ -18,26 +18,25 @@
 # back should reuse the S3 account that already serves the static assets rather than running an
 # object store on a box whose bandwidth is shared with every tenant.
 
-name: forum
+name: sproutbiz
 
 x-app: &app
   env_file: .env.production
   restart: unless-stopped
-  # The box has no swap, so any overshoot goes straight to the OOM killer -- and
-  # sproutos_opensearch, at ~30 GB RSS, is its most attractive target. Every container here
-  # is capped, and volunteers itself first.
+  # This 32 GB host has only 1 GB of swap. Cap every application container so a runaway
+  # workload cannot crowd out the datastores, and make it volunteer before host services.
   oom_score_adj: 500
 
 services:
   traefik:
-    container_name: forum_traefik
+    container_name: sproutbiz_traefik
     # v3.6+: older Traefik Docker clients speak API <1.40, which Engine 29.x rejects.
     image: traefik:v3.6
     restart: unless-stopped
     command:
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
-      - --providers.docker.network=forum_default
+      - --providers.docker.network=sproutbiz_default
       - --entrypoints.web.address=:80
       - --entrypoints.web.http.redirections.entrypoint.to=websecure
       - --entrypoints.web.http.redirections.entrypoint.scheme=https
@@ -67,7 +66,7 @@ services:
 
   website:
     <<: *app
-    container_name: forum_website
+    container_name: sproutbiz_website
     image: ghcr.io/sproutos-agent/forum-website:${WEBSITE_TAG:-latest}
     mem_limit: 2g
     cpus: 2
@@ -85,14 +84,14 @@ services:
       start_period: 30s
     labels:
       - traefik.enable=true
-      - traefik.http.routers.website.rule=Host(`forum.sproutos.me`)
+      - traefik.http.routers.website.rule=Host(`sproutos.biz`)
       - traefik.http.routers.website.entrypoints=websecure
       - traefik.http.routers.website.tls.certresolver=le
       - traefik.http.services.website.loadbalancer.server.port=3000
 
   bullground:
     <<: *app
-    container_name: forum_bullground
+    container_name: sproutbiz_bullground
     image: ghcr.io/sproutos-agent/forum-bullground:${BULLGROUND_TAG:-latest}
     mem_limit: 2g
     cpus: 1.5
@@ -104,14 +103,14 @@ services:
   # This is why Postgres needs no public port.
   dbmigrator:
     <<: *app
-    container_name: forum_dbmigrator
+    container_name: sproutbiz_dbmigrator
     image: ghcr.io/sproutos-agent/forum-dbmigrator:${MIGRATOR_TAG:-latest}
     profiles: ["migrate"]
     restart: "no"
     mem_limit: 512m
 
   postgres:
-    container_name: forum_postgres
+    container_name: sproutbiz_postgres
     image: postgres:18
     restart: unless-stopped
     oom_score_adj: 500
@@ -140,7 +139,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=main
     volumes:
-      - /srv/forum/postgres:/var/lib/postgresql
+      - /srv/sproutbiz/postgres:/var/lib/postgresql
     mem_limit: 4g
     cpus: 2
     healthcheck:
@@ -150,7 +149,7 @@ services:
     # No ports: nothing off-box needs Postgres.
 
   valkey:
-    container_name: forum_valkey
+    container_name: sproutbiz_valkey
     image: valkey/valkey:9.0-alpine
     restart: unless-stopped
     oom_score_adj: 500
@@ -169,18 +168,18 @@ services:
       - --appendfsync
       - everysec
     volumes:
-      - /srv/forum/valkey:/data
+      - /srv/sproutbiz/valkey:/data
     mem_limit: 1g
     cpus: 0.5
 
   elasticsearch:
-    container_name: forum_elasticsearch
+    container_name: sproutbiz_elasticsearch
     image: elasticsearch:9.4.3
     restart: unless-stopped
     oom_score_adj: 500
     environment:
       - discovery.type=single-node
-      - cluster.name=forum
+      - cluster.name=sproutbiz
       - xpack.security.enabled=true
       - xpack.security.enrollment.enabled=false
       - bootstrap.memory_lock=true
@@ -190,7 +189,7 @@ services:
       - ES_JAVA_OPTS=-Xms2g -Xmx2g
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
     volumes:
-      - /srv/forum/elasticsearch:/usr/share/elasticsearch/data
+      - /srv/sproutbiz/elasticsearch:/usr/share/elasticsearch/data
     # ~2x heap: off-heap direct memory defaults to half the heap, plus metaspace and stacks.
     mem_limit: 4g
     cpus: 2

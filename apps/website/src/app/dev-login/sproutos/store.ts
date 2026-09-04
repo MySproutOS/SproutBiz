@@ -4,7 +4,13 @@
  * Deliberately not persisted: it exists only so the real authorization-code flow has
  * something to talk to in development, and it should not survive a restart.
  */
-type StubClaims = { sub: string; email: string; name: string }
+type StubClaims = {
+  sub: string
+  email: string
+  name: string
+  githubUserId: string | null
+  githubLogin: string | null
+}
 
 const codes = new Map<string, StubClaims>()
 const accessTokens = new Map<string, StubClaims>()

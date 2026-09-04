@@ -9,7 +9,7 @@ import { LegalPage, List, P, Section } from "../legal-page"
 
 export const metadata = { title: "Terms of Service - SproutBiz" }
 
-const CONTACT = "sproutosagent@gmail.com"
+const CONTACT = "legal@sproutos.me"
 
 /** Derived from the same table the payout maths uses, so the terms cannot drift from the code. */
 const PLATFORM_TERMS = Object.entries(PLATFORMS).map(([key, rules]) => ({
@@ -26,8 +26,9 @@ export default function CommunityTermsPage() {
   return (
     <LegalPage title="Terms of Service">
       <P>
-        These terms cover your use of SproutBiz. They are deliberately short and plain, because
-        terms nobody reads protect nobody. By signing in you agree to them.
+        These terms cover your use of SproutBiz, a service operated by Ur LLC, 1617 Washtenaw Ave,
+        Ann Arbor, Michigan 48104. They are deliberately short and plain, because terms nobody reads
+        protect nobody. By signing in you agree to them.
       </P>
 
       <Section title="What SproutBiz is, and is not">
@@ -127,6 +128,31 @@ export default function CommunityTermsPage() {
           share of revenue, no influence over what gets built, and no expectation of return. They
           are not tax-deductible. Because nothing is delivered in exchange, donations are
           non-refundable — though if you gave by mistake, write to us and we will sort it out.
+        </P>
+      </Section>
+
+      <Section title="Contribution credits" id="contribution-credits">
+        <P>
+          SproutBiz may record contribution credits when we accept an idea, code contribution,
+          feedback report, or validation of feedback for a business. Credits are a record of
+          participation only. They are <strong>not money</strong>, stored value, wages, debt, a
+          promissory note, equity, securities, ownership, a profit-sharing interest, or a right to
+          payment. They cannot be redeemed, transferred, sold, or used to buy anything, and they
+          have no cash value.
+        </P>
+        <P>
+          No number of credits guarantees that any business will be profitable or that you will
+          receive a distribution. Ur LLC may, entirely at its discretion and as a matter of
+          goodwill, distribute money to contributors if a business becomes profitable. Ur LLC is
+          never required to make such a distribution, may choose the amount and recipients, and may
+          make no distribution at all. Credits create no entitlement, promise, expectation, or
+          obligation to pay now or in the future.
+        </P>
+        <P>
+          We decide whether a contribution is accepted and how many credits it receives. We may
+          correct mistakes, reject abusive or duplicative submissions, and change or end the credit
+          programme at any time. Contributing does not create employment, a partnership, a joint
+          venture, an agency relationship, or fiduciary duties between you and Ur LLC.
         </P>
       </Section>
 
@@ -267,6 +293,14 @@ export default function CommunityTermsPage() {
             Privacy Policy
           </Link>
           .
+        </P>
+      </Section>
+
+      <Section title="Governing law">
+        <P>
+          These terms are governed by the laws of the State of Michigan, without regard to its
+          conflict-of-law rules. Any dispute must be brought in a state or federal court with
+          jurisdiction in Washtenaw County, Michigan.
         </P>
       </Section>
     </LegalPage>

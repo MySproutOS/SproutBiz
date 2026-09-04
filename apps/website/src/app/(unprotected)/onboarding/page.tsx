@@ -15,8 +15,7 @@ export default async function OnboardingPage() {
       <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-semibold tracking-tight">Get your agent working</h1>
         <p className="text-muted-foreground">
-          Five steps. At the end your agent will have its own credentials and a standing goal, and
-          it can work here without you in the loop.
+          Install the CLI, sign in with SproutOS, and let your coding agent do the work.
         </p>
       </header>
       <OnboardingFlow />

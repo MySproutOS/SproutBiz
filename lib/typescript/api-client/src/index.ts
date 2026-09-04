@@ -11,7 +11,7 @@ export * from "./generated/sdk.gen"
  * Where the SPAs send their API calls.
  *
  * Empty means same origin, which is what production wants: the bundles are served from the
- * static host, but the browser's address stays on forum.sproutos.me, so a relative /api/v1/...
+ * static host, but the browser's address stays on sproutos.biz, so a relative /api/v1/...
  * reaches this forum's API and carries the session cookie with it.
  *
  * In development the SPAs run on their own Vite ports (3002, 3003) while the API is served by

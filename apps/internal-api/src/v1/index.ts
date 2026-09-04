@@ -46,6 +46,7 @@ import postVote from "./post-vote"
 import topic from "./topic"
 import user from "./user"
 import userSettings from "./user-settings"
+import sproutbiz from "./sproutbiz"
 
 const app = new Hono({
   router: new RegExpRouter(),
@@ -65,6 +66,7 @@ const app = new Hono({
   .route("/billing", billing)
   .route("/earn", earn)
   .route("/business", business)
+  .route("/", sproutbiz)
   .route("/user", user)
   .route("/user", userSettings)
   .route("/topic", topic)

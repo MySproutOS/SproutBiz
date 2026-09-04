@@ -62,7 +62,7 @@ export type GetApiV1AuthMeResponses = {
       email: string
       isAdmin: boolean
     } | null
-    authMethod: "session" | "token" | "none"
+    authMethod: "session" | "token" | "oauth" | "none"
     scopes: Array<string>
   }
 }
@@ -134,7 +134,9 @@ export type GetApiV1AgentTokenResponse =
 export type PostApiV1AgentTokenData = {
   body?: {
     name: string
-    scopes?: Array<"forum:read" | "forum:write" | "business:write" | "onboarding:write">
+    scopes?: Array<
+      "forum:read" | "forum:write" | "business:write" | "onboarding:write" | "contribution:write"
+    >
     expiresInDays?: number
   }
   path?: never
@@ -911,6 +913,157 @@ export type DeleteApiV1BusinessByIdResponses = {
 export type DeleteApiV1BusinessByIdResponse =
   DeleteApiV1BusinessByIdResponses[keyof DeleteApiV1BusinessByIdResponses]
 
+export type GetApiV1ContributionPendingFeedbackData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/contribution/pending-feedback"
+}
+
+export type GetApiV1ContributionPendingFeedbackResponses = {
+  /**
+   * Pending feedback
+   */
+  200: {
+    data: Array<{
+      id: string
+      businessId: string
+      businessName: string
+      businessSlug: string
+      submittedBy: string
+      evidence: {
+        [key: string]: unknown
+      }
+      createdAt: Date
+    }>
+  }
+}
+
+export type GetApiV1ContributionPendingFeedbackResponse =
+  GetApiV1ContributionPendingFeedbackResponses[keyof GetApiV1ContributionPendingFeedbackResponses]
+
+export type GetApiV1ContributionMeData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/contribution/me"
+}
+
+export type GetApiV1ContributionMeResponses = {
+  /**
+   * Contribution profile
+   */
+  200: {
+    totalPoints: number
+    github: {
+      userId: string
+      login: string
+      verifiedAt: Date
+    } | null
+    byBusiness: Array<{
+      businessId: string
+      businessName: string
+      points: number
+    }>
+    awards: Array<{
+      id: string
+      businessId: string
+      type: string
+      points: number
+      reason: string
+      createdAt: Date
+    }>
+    submissions: Array<{
+      id: string
+      type: string
+      businessId: string | null
+      postId: string | null
+      feedbackSubmissionId: string | null
+      status: string
+      reviewReason: string | null
+      createdAt: Date
+    }>
+  }
+}
+
+export type GetApiV1ContributionMeResponse =
+  GetApiV1ContributionMeResponses[keyof GetApiV1ContributionMeResponses]
+
+export type PostApiV1ContributionData = {
+  body?: {
+    type: "idea" | "feedback" | "validation"
+    businessId?: string | null
+    postId?: string | null
+    feedbackSubmissionId?: string | null
+    evidence: {
+      [key: string]: unknown
+    }
+  }
+  path?: never
+  query?: never
+  url: "/api/v1/contribution"
+}
+
+export type PostApiV1ContributionErrors = {
+  /**
+   * Invalid contribution relationship
+   */
+  400: ErrorResponseT
+}
+
+export type PostApiV1ContributionError =
+  PostApiV1ContributionErrors[keyof PostApiV1ContributionErrors]
+
+export type PostApiV1ContributionResponses = {
+  /**
+   * Submission created
+   */
+  201: {
+    data: {
+      id: string
+      type: string
+      businessId: string | null
+      postId: string | null
+      feedbackSubmissionId: string | null
+      status: string
+      reviewReason: string | null
+      createdAt: Date
+    }
+  }
+}
+
+export type PostApiV1ContributionResponse =
+  PostApiV1ContributionResponses[keyof PostApiV1ContributionResponses]
+
+export type PostApiV1GithubWebhookData = {
+  body?: never
+  path?: never
+  query?: never
+  url: "/api/v1/github/webhook"
+}
+
+export type PostApiV1GithubWebhookErrors = {
+  /**
+   * Signature rejected
+   */
+  401: ErrorResponseT
+}
+
+export type PostApiV1GithubWebhookError =
+  PostApiV1GithubWebhookErrors[keyof PostApiV1GithubWebhookErrors]
+
+export type PostApiV1GithubWebhookResponses = {
+  /**
+   * Delivery persisted for asynchronous processing
+   */
+  202: {
+    accepted: boolean
+  }
+}
+
+export type PostApiV1GithubWebhookResponse =
+  PostApiV1GithubWebhookResponses[keyof PostApiV1GithubWebhookResponses]
+
 export type GetApiV1UserByUsernameByUsernameData = {
   body?: never
   path: {
@@ -943,6 +1096,7 @@ export type GetApiV1UserByUsernameByUsernameResponses = {
     bannerImageKey: string | null
     postKarma: number
     commentKarma: number
+    contributionPoints: number
     createdAt: Date
   }
 }

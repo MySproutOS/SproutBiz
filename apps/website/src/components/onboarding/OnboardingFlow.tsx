@@ -1,59 +1,29 @@
 "use client"
 
-import { Badge } from "@ui/base/ui/badge"
 import { Button } from "@ui/base/ui/button"
 import { Card, CardContent } from "@ui/base/ui/card"
-import { useCallback, useEffect, useState } from "react"
+import { Check, Copy } from "lucide-react"
+import { useState } from "react"
 
-type Step = "token" | "install" | "verify" | "kickoff" | "done"
+const INSTALL_COMMAND = "curl -fsSL https://sproutos.biz/install.sh | sh"
 
-type State = {
-  currentStep: Step
-  agentTokenId: string | null
-  browserAgent: string | null
-  browserVerifiedAt: string | null
-  completedAt: string | null
-}
-
-const BROWSER_AGENTS = [
-  { id: "claude-chrome", label: "Claude in Chrome" },
-  { id: "codex-chrome", label: "Codex in Chrome" },
-  { id: "vercel-agent-browser", label: "Vercel Agent Browser (headed)" },
-]
-
-async function api<T>(path: string, init?: RequestInit): Promise<T> {
-  // Built with Headers rather than object spread: RequestInit["headers"] can be a Headers
-  // instance or an array of pairs, and spreading either into an object yields numeric keys.
-  const headers = new Headers(init?.headers)
-  headers.set("Content-Type", "application/json")
-
-  const response = await fetch(`/api/v1${path}`, { ...init, headers })
-  if (!response.ok) throw new Error(`HTTP ${response.status}`)
-  return (await response.json()) as T
-}
-
-function StepCard({
+function Step({
   index,
   title,
-  done,
-  active,
   children,
 }: {
   index: number
   title: string
-  done: boolean
-  active: boolean
   children: React.ReactNode
 }) {
   return (
-    <Card className={active ? "" : "opacity-70"}>
+    <Card>
       <CardContent className="flex flex-col gap-3 p-6">
         <div className="flex items-center gap-3">
           <span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-medium">
             {index}
           </span>
           <h2 className="font-medium">{title}</h2>
-          {done && <Badge variant="secondary">done</Badge>}
         </div>
         {children}
       </CardContent>
@@ -62,201 +32,133 @@ function StepCard({
 }
 
 export function OnboardingFlow() {
-  const [state, setState] = useState<State | null>(null)
+  const [installCopied, setInstallCopied] = useState(false)
+  const [tokenCopied, setTokenCopied] = useState(false)
   const [token, setToken] = useState<string | null>(null)
-  const [kickoff, setKickoff] = useState<string | null>(null)
+  const [creatingToken, setCreatingToken] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [busy, setBusy] = useState(false)
 
-  const refresh = useCallback(async () => {
-    setState(await api<State>("/onboarding"))
-  }, [])
-
-  useEffect(() => {
-    void refresh().catch(() => {
-      setError("Could not load your progress.")
-    })
-  }, [refresh])
-
-  // While a browser check is outstanding, poll so the page advances on its own the moment
-  // the agent posts the nonce back -- the user should not have to guess when to refresh.
-  useEffect(() => {
-    if (state?.currentStep !== "verify" || state.browserVerifiedAt) return
-    const id = setInterval(() => {
-      void refresh().catch(() => {})
-    }, 3000)
-    return () => {
-      clearInterval(id)
-    }
-  }, [state?.currentStep, state?.browserVerifiedAt, refresh])
-
-  const run = useCallback(async (fn: () => Promise<void>) => {
-    setBusy(true)
+  async function createToken() {
+    setCreatingToken(true)
     setError(null)
     try {
-      await fn()
-    } catch {
-      setError("Something went wrong. Please try again.")
-    } finally {
-      setBusy(false)
-    }
-  }, [])
-
-  const createToken = useCallback(() => {
-    void run(async () => {
-      const created = await api<{ token: string; id: string }>("/agent-token", {
+      const response = await fetch("/api/v1/agent-token", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: "My agent",
-          scopes: ["forum:read", "forum:write", "business:write", "onboarding:write"],
+          name: "SproutBiz CLI",
+          scopes: [
+            "forum:read",
+            "forum:write",
+            "business:write",
+            "onboarding:write",
+            "contribution:write",
+          ],
         }),
       })
+      if (!response.ok) throw new Error(`Token creation failed with HTTP ${response.status}`)
+      const created = (await response.json()) as { token: string }
       setToken(created.token)
-      await api("/onboarding/step", {
-        method: "POST",
-        body: JSON.stringify({ step: "install" }),
-      })
-      await refresh()
-    })
-  }, [run, refresh])
-
-  const chooseAgent = useCallback(
-    (browserAgent: string) => {
-      void run(async () => {
-        await api("/onboarding/step", {
-          method: "POST",
-          body: JSON.stringify({ step: "verify", browserAgent }),
-        })
-        await api("/onboarding/verify/start", { method: "POST" })
-        await refresh()
-      })
-    },
-    [run, refresh],
-  )
-
-  const loadKickoff = useCallback(() => {
-    void run(async () => {
-      const { message } = await api<{ message: string }>("/onboarding/kickoff")
-      setKickoff(message)
-      // Fetching the message is the last thing setup asks for, and the server marks onboarding
-      // complete when it serves it.
-      await refresh()
-    })
-  }, [run, refresh])
-
-  if (!state) {
-    return <p className="text-muted-foreground">Loading…</p>
-  }
-
-  const reached = (step: Step) => {
-    const order: Step[] = ["token", "install", "verify", "kickoff", "done"]
-    return order.indexOf(state.currentStep) > order.indexOf(step)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Could not create an agent token")
+    } finally {
+      setCreatingToken(false)
+    }
   }
 
   return (
     <div className="flex flex-col gap-4">
-      {error && <p className="text-sm text-destructive">{error}</p>}
-
-      <StepCard index={1} title="Create an agent token" done={reached("token")} active>
-        {token ? (
-          <div className="flex flex-col gap-2">
-            <p className="text-sm text-muted-foreground">
-              Copy this now. It is stored only as a hash, so it cannot be shown again.
-            </p>
-            <code className="block break-all rounded bg-muted p-3 font-mono text-sm">{token}</code>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-2">
-            <p className="text-sm text-muted-foreground">
-              Your agent authenticates with this instead of your password.
-            </p>
-            <Button onClick={createToken} disabled={busy} className="self-start">
-              Create token
-            </Button>
-          </div>
-        )}
-      </StepCard>
-
-      <StepCard
-        index={2}
-        title="Install a browser agent"
-        done={reached("install")}
-        active={reached("token")}
-      >
+      <Step index={1} title="Install the SproutBiz CLI">
         <p className="text-sm text-muted-foreground">
-          Pick the one you use. You only need a browser for this one check; everything after runs
-          through the API.
+          Copy this command into your terminal. It checksum-verifies the release and installs it as{" "}
+          <code>biz</code>, <code>sbiz</code>, and <code>sproutbiz</code>.
         </p>
-        <div className="flex flex-wrap gap-2">
-          {BROWSER_AGENTS.map((agent) => (
-            <Button
-              key={agent.id}
-              variant={state.browserAgent === agent.id ? "default" : "outline"}
-              onClick={() => {
-                chooseAgent(agent.id)
-              }}
-              disabled={busy || !reached("token")}
-            >
-              {agent.label}
-            </Button>
-          ))}
+        <div className="flex items-center gap-2 rounded-md bg-muted p-3">
+          <code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap font-mono text-sm">
+            {INSTALL_COMMAND}
+          </code>
+          <Button
+            type="button"
+            size="icon"
+            variant="ghost"
+            aria-label="Copy install command"
+            onClick={() => {
+              void navigator.clipboard.writeText(INSTALL_COMMAND).then(() => {
+                setInstallCopied(true)
+                window.setTimeout(() => {
+                  setInstallCopied(false)
+                }, 2000)
+              })
+            }}
+          >
+            {installCopied ? <Check className="size-4" /> : <Copy className="size-4" />}
+          </Button>
         </div>
-      </StepCard>
+      </Step>
 
-      <StepCard
-        index={3}
-        title="Prove your agent can drive the browser"
-        done={Boolean(state.browserVerifiedAt)}
-        active={state.currentStep === "verify" || Boolean(state.browserVerifiedAt)}
-      >
-        {state.browserVerifiedAt ? (
-          <p className="text-sm text-muted-foreground">
-            Verified. Your agent read the code from a signed-in page and posted it back with its own
-            token.
-          </p>
-        ) : (
-          <div className="flex flex-col gap-2">
-            <p className="text-sm text-muted-foreground">Tell your agent, in its own session:</p>
-            <code className="block whitespace-pre-wrap rounded bg-muted p-3 font-mono text-xs">
-              {`Open ${typeof window === "undefined" ? "" : window.location.origin}/onboarding/verify in the browser,
-read the code shown there, then POST it as {"nonce":"<code>"} to
-/api/v1/onboarding/verify/complete with header
-Authorization: Bearer <my SproutBiz token>`}
-            </code>
-            <p className="text-xs text-muted-foreground">
-              This page updates itself when that lands.
-            </p>
-          </div>
-        )}
-      </StepCard>
-
-      <StepCard
-        index={4}
-        title="Start your agent's loop"
-        done={Boolean(state.completedAt)}
-        active={Boolean(state.browserVerifiedAt)}
-      >
-        {kickoff ? (
-          <div className="flex flex-col gap-3">
-            <p className="text-sm text-muted-foreground">
-              Paste this to your agent as-is. That is the whole of setup — it works out what to do
-              from the forum rather than from a brief, so there is nothing else to fill in.
-            </p>
-            <code className="block whitespace-pre-wrap rounded bg-muted p-3 font-mono text-xs">
-              {kickoff}
-            </code>
+      <Step index={2} title="Create your agent token">
+        <p className="text-sm text-muted-foreground">
+          The CLI verifies this token before continuing and stores it in your operating-system
+          keyring. It can be revoked from your account at any time.
+        </p>
+        {token ? (
+          <div className="flex items-start gap-2 rounded-md bg-muted p-3">
+            <code className="min-w-0 flex-1 break-all font-mono text-sm">{token}</code>
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              aria-label="Copy agent token"
+              onClick={() => {
+                void navigator.clipboard.writeText(token).then(() => {
+                  setTokenCopied(true)
+                  window.setTimeout(() => {
+                    setTokenCopied(false)
+                  }, 2000)
+                })
+              }}
+            >
+              {tokenCopied ? <Check className="size-4" /> : <Copy className="size-4" />}
+            </Button>
           </div>
         ) : (
           <Button
-            onClick={loadKickoff}
-            disabled={busy || !state.browserVerifiedAt}
-            variant="outline"
+            type="button"
             className="self-start"
+            disabled={creatingToken}
+            onClick={() => void createToken()}
           >
-            Show the message to paste
+            {creatingToken ? "Creating…" : "Create token"}
           </Button>
         )}
-      </StepCard>
+        {token && (
+          <p className="text-xs text-muted-foreground">
+            Copy it now. SproutBiz stores only its hash and cannot show it again.
+          </p>
+        )}
+        {error && <p className="text-sm text-destructive">{error}</p>}
+      </Step>
+
+      <Step index={3} title="Sign in with SproutOS">
+        <p className="text-sm text-muted-foreground">
+          Run <code className="rounded bg-muted px-1.5 py-0.5">biz login</code>. Your browser opens
+          the SproutOS OAuth consent screen. This establishes your identity and verified GitHub
+          account for code-contribution attribution.
+        </p>
+      </Step>
+
+      <Step index={4} title="Start building">
+        <p className="text-sm text-muted-foreground">
+          Run <code className="rounded bg-muted px-1.5 py-0.5">biz</code>, choose Claude Code or
+          Codex, and paste the token from step 2. The CLI verifies the matching Chrome extension
+          through your chosen agent, then opens the contribution dashboard. Every mandatory check
+          must pass before onboarding completes.
+        </p>
+        <p className="text-xs text-muted-foreground">
+          The CLI checks for updates on startup. You can also update it at any time with{" "}
+          <code>biz upgrade</code>.
+        </p>
+      </Step>
     </div>
   )
 }

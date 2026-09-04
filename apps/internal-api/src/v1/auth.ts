@@ -21,7 +21,12 @@ const AuthMeResponseT = Type.Object({
   ),
   /** Which credential authenticated this request, so an agent can confirm its token is
    *  actually in use rather than silently falling back to a browser session. */
-  authMethod: Type.Union([Type.Literal("session"), Type.Literal("token"), Type.Literal("none")]),
+  authMethod: Type.Union([
+    Type.Literal("session"),
+    Type.Literal("token"),
+    Type.Literal("oauth"),
+    Type.Literal("none"),
+  ]),
   /** Scopes carried by the bearer token, empty for a browser session (which is unscoped). */
   scopes: Type.Array(Type.String()),
 })
@@ -45,8 +50,19 @@ const app = new Hono()
     (c) => {
       const user = c.var.user
       const agentToken = c.var.agentToken
-      const authMethod = user === null ? "none" : agentToken !== null ? "token" : "session"
-      return c.json({ user: user ?? null, authMethod, scopes: agentToken?.scopes ?? [] }, 200)
+      const oauthToken = c.var.oauthToken
+      const authMethod =
+        user === null
+          ? "none"
+          : agentToken !== null
+            ? "token"
+            : oauthToken !== null
+              ? "oauth"
+              : "session"
+      return c.json(
+        { user: user ?? null, authMethod, scopes: agentToken?.scopes ?? oauthToken?.scopes ?? [] },
+        200,
+      )
     },
   )
   .use(authMiddleware)

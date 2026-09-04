@@ -15,7 +15,8 @@
     }
   ],
   "scripts": {
-    "generate-specs": "tsx src/index.ts --openapi > openapi.json"
+    "generate-specs": "tsx src/index.ts --openapi > openapi.json",
+    "generate-admin-specs": "tsx src/index.ts --admin-openapi > admin-openapi.json"
   },
   "dependencies": {
     "@lib/dao": "workspace:*",

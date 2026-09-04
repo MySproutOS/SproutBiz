@@ -19,7 +19,9 @@ export const sproutosConfig = {
    *  email but no stable subject, and an email is not an identity -- it can be changed and
    *  reassigned. Introspection returns `sub`, which is what the account is keyed on. */
   introspectUrl: process.env.SPROUTOS_INTROSPECT_URL,
-  scopes: (process.env.SPROUTOS_SCOPES ?? "openid email profile").split(" ").filter(Boolean),
+  scopes: (process.env.SPROUTOS_SCOPES ?? "openid email profile github:identity")
+    .split(" ")
+    .filter(Boolean),
 }
 
 /** The button and the routes are hidden unless every endpoint is configured, so a

@@ -58,6 +58,7 @@ export interface AgentToken {
 
 export interface Business {
   communityId: string | null
+  contributionsStartedAt: Generated<Timestamp>
   createdAt: Generated<Timestamp>
   description: string | null
   id: string
@@ -98,6 +99,46 @@ export interface BusinessIntegration {
   status: Generated<string>
 }
 
+export interface BusinessProvisioning {
+  attemptCount: Generated<number>
+  businessId: string
+  completedAt: Timestamp | null
+  createdAt: Generated<Timestamp>
+  customDomain: string | null
+  customDomainStatus: string | null
+  deploymentAttemptCount: Generated<number>
+  deploymentRequestedAt: Timestamp | null
+  deploymentUrl: string | null
+  githubInstallationId: string | null
+  githubRepositoryId: string | null
+  id: string
+  lastError: string | null
+  repositoryName: string
+  repositoryOwner: Generated<string>
+  sproutosCustomDomainId: string | null
+  sproutosJobId: string | null
+  sproutosProjectId: string | null
+  startedAt: Timestamp | null
+  status: Generated<string>
+  templateOwner: Generated<string>
+  templateRepository: Generated<string>
+  updatedAt: Generated<Timestamp>
+}
+
+export interface BusinessRepository {
+  active: Generated<boolean>
+  businessId: string
+  createdAt: Generated<Timestamp>
+  defaultBranch: Generated<string>
+  githubInstallationId: string | null
+  githubRepositoryId: string
+  id: string
+  lastReconciledAt: Timestamp | null
+  name: string
+  ownerLogin: string
+  updatedAt: Generated<Timestamp>
+}
+
 export interface BusinessRevenueSnapshot {
   businessId: string
   capturedAt: Generated<Timestamp>
@@ -112,6 +153,31 @@ export interface BusinessRevenueSnapshot {
   refundsCents: Generated<Int8>
   source: string
   usdNetCents: Generated<Int8>
+}
+
+export interface CodeContributionPr {
+  additions: Generated<number>
+  authorHandle: string
+  authorProviderSubject: string
+  body: string | null
+  businessRepositoryId: string
+  changedFiles: Generated<number>
+  checks: Generated<Json>
+  commitCount: Generated<number>
+  deletions: Generated<number>
+  eligible: Generated<boolean>
+  exclusionReason: string | null
+  firstSeenAt: Generated<Timestamp>
+  githubPullRequestId: string
+  id: string
+  labels: Generated<Json>
+  lastSeenAt: Generated<Timestamp>
+  mergedAt: Timestamp | null
+  number: number
+  reviews: Generated<Json>
+  state: string
+  title: string
+  url: string
 }
 
 export interface Comment {
@@ -331,6 +397,56 @@ export interface CommunityWidget {
   title: string
 }
 
+export interface ContributionAward {
+  awardedByUserId: string | null
+  businessId: string
+  createdAt: Generated<Timestamp>
+  id: string
+  points: number
+  reason: string
+  sourceCodeMonthId: string | null
+  sourceSubmissionId: string | null
+  type: string
+  userId: string
+}
+
+export interface ContributionCodeMonth {
+  additions: Generated<number>
+  businessId: string
+  changedFiles: Generated<number>
+  createdAt: Generated<Timestamp>
+  deletions: Generated<number>
+  evidence: Generated<Json>
+  finalizedAt: Timestamp | null
+  finalizedByUserId: string | null
+  id: string
+  mergedPrCount: Generated<number>
+  periodStart: Timestamp
+  proposedPoints: number | null
+  proposedReason: string | null
+  status: Generated<string>
+  updatedAt: Generated<Timestamp>
+  userId: string
+}
+
+export interface ContributionSubmission {
+  businessId: string | null
+  codeContributionPrId: string | null
+  createdAt: Generated<Timestamp>
+  evidence: Generated<Json>
+  feedbackSubmissionId: string | null
+  id: string
+  postId: string | null
+  reviewedAt: Timestamp | null
+  reviewedByUserId: string | null
+  reviewReason: string | null
+  slackNotifiedAt: Timestamp | null
+  status: Generated<string>
+  type: string
+  updatedAt: Generated<Timestamp>
+  userId: string
+}
+
 export interface CustomFeed {
   createdAt: Generated<Timestamp>
   description: string | null
@@ -365,6 +481,20 @@ export interface ForumRevenueDaily {
   day: Timestamp
   totalCostUsdCents: Generated<Int8>
   totalRevenueUsdCents: Generated<Int8>
+}
+
+export interface GithubWebhookDelivery {
+  action: string | null
+  attemptCount: Generated<number>
+  deliveryId: string
+  eventName: string
+  githubRepositoryId: string | null
+  lastAttemptAt: Timestamp | null
+  lastError: string | null
+  payload: Json
+  processedAt: Timestamp | null
+  receivedAt: Generated<Timestamp>
+  status: Generated<string>
 }
 
 export interface MarketingPayout {
@@ -699,6 +829,18 @@ export interface UserBlock {
   createdAt: Generated<Timestamp>
 }
 
+export interface UserExternalIdentity {
+  createdAt: Generated<Timestamp>
+  handle: string
+  id: string
+  lastSyncedAt: Timestamp
+  provider: string
+  providerSubject: string
+  updatedAt: Generated<Timestamp>
+  userId: string
+  verifiedAt: Timestamp
+}
+
 export interface UserFlairTemplate {
   bgColor: string | null
   communityId: string
@@ -797,7 +939,10 @@ export interface DB {
   business: Business
   businessCostSnapshot: BusinessCostSnapshot
   businessIntegration: BusinessIntegration
+  businessProvisioning: BusinessProvisioning
+  businessRepository: BusinessRepository
   businessRevenueSnapshot: BusinessRevenueSnapshot
+  codeContributionPr: CodeContributionPr
   comment: Comment
   commentFollow: CommentFollow
   commentReport: CommentReport
@@ -817,10 +962,14 @@ export interface DB {
   communityUserFlair: CommunityUserFlair
   communityVisit: CommunityVisit
   communityWidget: CommunityWidget
+  contributionAward: ContributionAward
+  contributionCodeMonth: ContributionCodeMonth
+  contributionSubmission: ContributionSubmission
   customFeed: CustomFeed
   customFeedCommunity: CustomFeedCommunity
   donation: Donation
   forumRevenueDaily: ForumRevenueDaily
+  githubWebhookDelivery: GithubWebhookDelivery
   marketingPayout: MarketingPayout
   marketingPayoutPool: MarketingPayoutPool
   marketingVideo: MarketingVideo
@@ -849,6 +998,7 @@ export interface DB {
   topic: Topic
   user: User
   userBlock: UserBlock
+  userExternalIdentity: UserExternalIdentity
   userFlairTemplate: UserFlairTemplate
   userFollow: UserFollow
   userMutedCommunity: UserMutedCommunity

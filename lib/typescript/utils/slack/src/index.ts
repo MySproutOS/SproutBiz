@@ -2,7 +2,7 @@
  * Posting to the Slack channel where Andrew answers things only he can answer.
  *
  * `ops/monitor/monitor.mjs` does the same job by shelling out to the `slack` CLI, which is
- * fine on a laptop and useless here: this runs inside forum_bullground, where that binary
+ * fine on a laptop and useless here: this runs inside sproutbiz_bullground, where that binary
  * does not exist. Plain fetch against the Web API, no SDK.
  */
 
@@ -14,9 +14,9 @@ export type SlackConfig = {
   ownerUserId: string | undefined
 }
 
-export function slackConfig(): SlackConfig | null {
+export function slackConfig(channelOverride?: string): SlackConfig | null {
   const token = process.env.SLACK_BOT_TOKEN
-  const channel = process.env.SLACK_UNBLOCK_CHANNEL
+  const channel = channelOverride ?? process.env.SLACK_UNBLOCK_CHANNEL
   if (!token || !channel) return null
   return { token, channel, ownerUserId: process.env.SLACK_OWNER_USER_ID }
 }
@@ -34,8 +34,8 @@ export function mentionOwner(): string {
  * was going to mark it as delivered, or the next run would send the same reminder again.
  * Returns whether it actually went out, so callers only record a send that happened.
  */
-export async function postSlack(text: string): Promise<boolean> {
-  const config = slackConfig()
+export async function postSlack(text: string, channel?: string): Promise<boolean> {
+  const config = slackConfig(channel)
   if (config === null) {
     console.warn("[slack] SLACK_BOT_TOKEN/SLACK_UNBLOCK_CHANNEL unset, dropping message:", text)
     return false

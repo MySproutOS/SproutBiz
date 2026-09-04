@@ -17,5 +17,7 @@ export function GET(request: Request): Response {
     email: claims.email,
     name: claims.name,
     picture: null,
+    github_user_id: claims.githubUserId,
+    github_login: claims.githubLogin,
   })
 }
