@@ -34,6 +34,7 @@ const NEXTJS_PUBLIC_EXACT = new Set<string>([
   "/skills/sproutbiz/SKILL.md",
   "/doctrine.md",
   "/idea-sources.md",
+  "/install.sh",
   "/revenue",
   "/earn",
   "/payouts",
@@ -149,12 +150,13 @@ function handleCsrfAndCookies(request: NextRequest): NextResponse | null {
     return null
   }
 
-  // Stripe's webhook is a server-to-server POST with no Origin, and its credential is the
-  // signature in the stripe-signature header, which the route verifies against the raw body.
-  // The CSRF check has nothing to offer here and would reject every event.
+  // Provider webhooks are server-to-server POSTs with no Origin. Each route verifies its own
+  // signature against the raw body, so the CSRF check has nothing to offer and would reject every
+  // legitimate event before it reached that verification.
   if (
     request.nextUrl.pathname === "/api/v1/donation/webhook" ||
-    request.nextUrl.pathname === "/api/v1/billing/webhook"
+    request.nextUrl.pathname === "/api/v1/billing/webhook" ||
+    request.nextUrl.pathname === "/api/v1/github/webhook"
   ) {
     return null
   }
