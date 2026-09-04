@@ -152,6 +152,16 @@ describe("default fallback (non-public, non-shared route)", () => {
   })
 })
 
+describe("public machine-readable routes", () => {
+  it.each(["/agents.txt", "/agents.json", "/install.sh", "/skills/sproutbiz/SKILL.md"])(
+    "serves %s without authentication",
+    async (url) => {
+      const res = await proxy(makeRequest(url))
+      expect(res.headers.get("location")).toBeNull()
+    },
+  )
+})
+
 describe("adding a new page to (dashboard) without updating SHARED_ROUTES", () => {
   const testPageDir = path.join(appDir, "(dashboard)", "test-unregistered")
   const testPageFile = path.join(testPageDir, "page.tsx")

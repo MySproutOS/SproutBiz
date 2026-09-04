@@ -34,6 +34,7 @@ const NEXTJS_PUBLIC_EXACT = new Set<string>([
   "/skills/sproutbiz/SKILL.md",
   "/doctrine.md",
   "/idea-sources.md",
+  "/install.sh",
   "/revenue",
   "/earn",
   "/payouts",
